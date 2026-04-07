@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source "../**/*.blade.php";
+@source "../**/*.js";
+@source "../**/*.vue";
+
+@theme {
+    /* Colors */
+    --color-tertiary: #7b2600;
+    --color-tertiary-fixed: #ffdbcf;
+    --color-on-error: #ffffff;
+    --color-surface-variant: #e2e2e5;
+    --color-on-secondary-fixed-variant: #00531e;
+    --color-on-error-container: #93000a;
+    --color-surface-container-low: #f3f3f6;
+    --color-on-background: #1a1c1e;
+    --color-on-tertiary: #ffffff;
+    --color-on-secondary-fixed: #002108;
+    --color-secondary: #006e2a;
+    --color-on-tertiary-fixed: #380d00;
+    --color-tertiary-fixed-dim: #ffb59b;
+    --color-surface-dim: #dadadc;
+    --color-surface-tint: #0c56d0;
+    --color-inverse-on-surface: #f0f0f3;
+    --color-surface-container-lowest: #ffffff;
+    --color-on-tertiary-fixed-variant: #812800;
+    --color-on-secondary: #ffffff;
+    --color-secondary-container: #5cfd80;
+    --color-primary-container: #0052cc;
+    --color-primary: #003d9b;
+    --color-surface-container-highest: #e2e2e5;
+    --color-outline: #737685;
+    --color-on-surface: #1a1c1e;
+    --color-secondary-fixed: #69ff87;
+    --color-outline-variant: #c3c6d6;
+    --color-primary-fixed-dim: #b2c5ff;
+    --color-on-secondary-container: #00732c;
+    --color-secondary-fixed-dim: #3ce36a;
+    --color-on-tertiary-container: #ffc6b2;
+    --color-on-primary: #ffffff;
+    --color-inverse-primary: #b2c5ff;
+    --color-error-container: #ffdad6;
+    --color-inverse-surface: #2f3133;
+    --color-primary-fixed: #dae2ff;
+    --color-on-primary-container: #c4d2ff;
+    --color-surface-bright: #f9f9fc;
+    --color-error: #ba1a1a;
+    --color-surface-container: #eeeef0;
+    --color-on-surface-variant: #434654;
+    --color-surface-container-high: #e8e8ea;
+    --color-background: #f9f9fc;
+    --color-surface: #f9f9fc;
+    --color-tertiary-container: #a33500;
+    --color-on-primary-fixed: #001848;
+    --color-on-primary-fixed-variant: #0040a2;
+
+    /* Font Families */
+    --font-headline: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-label: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+    /* Border Radius */
+    --radius: 0.25rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 1.5rem;
+    --radius-full: 9999px;
+}
+
+/* Custom component styles */
+.material-symbols-outlined {
+    font-variation-settings:
+        "FILL" 0,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 24;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.editorial-gradient {
+    background: linear-gradient(135deg, #003d9b 0%, #0d66c7 58%, #0b8a4f 100%);
+}
+
+.promo-mesh {
+    background-color: #f9f9fc;
+    background-image:
+        radial-gradient(at 0% 0%, #dae2ff 0, transparent 50%),
+        radial-gradient(at 50% 0%, #5cfd80 0, transparent 50%),
+        radial-gradient(at 100% 0%, #ffdbcf 0, transparent 50%);
+}
+
+.glass-nav {
+    background: rgba(249, 249, 252, 0.78);
+    backdrop-filter: blur(24px);
+}
+
+.category-scroll::-webkit-scrollbar {
+    display: none;
+}
+.category-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.bg-mesh {
+    background-color: #f9f9fc;
+    background-image:
+        radial-gradient(at 0% 0%, rgba(0, 61, 155, 0.05) 0px, transparent 50%),
+        radial-gradient(
+            at 100% 100%,
+            rgba(0, 110, 42, 0.05) 0px,
+            transparent 50%
+        ),
+        radial-gradient(at 100% 0%, rgba(123, 38, 0, 0.03) 0px, transparent 50%);
+}
+
+.service-card:hover .service-icon {
+    font-variation-settings:
+        "FILL" 1,
+        "wght" 600,
+        "GRAD" 0,
+        "opsz" 24;
+}
