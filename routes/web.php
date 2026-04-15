@@ -35,7 +35,6 @@ Route::get('/', function () {
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/promos', [PromoController::class, 'index'])->name('promos.index');
-Route::post('/promos/claim', [PromoController::class, 'claim'])->middleware('auth')->name('promos.claim');
 
 // Auth routes
 Route::middleware('guest')->group(function () {

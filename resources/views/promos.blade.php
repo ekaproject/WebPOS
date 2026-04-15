@@ -41,31 +41,7 @@
 
         <div class="mt-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-5">
             <h3 class="text-lg font-headline font-bold text-primary">Klaim Kode Voucher</h3>
-            <p class="text-sm text-on-surface-variant mt-1">Masukkan kode voucher dari daftar di bawah untuk klaim kuota voucher.</p>
-            @auth
-                <form action="{{ route('promos.claim') }}" method="POST" class="mt-4 flex flex-col md:flex-row gap-3">
-                    @csrf
-                    <input type="text" name="voucher_code" value="{{ old('voucher_code') }}" placeholder="Contoh: VCR-AB12CD"
-                           class="w-full md:w-[320px] uppercase rounded-xl border border-outline-variant/30 bg-surface px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary"/>
-                    <button type="submit" class="px-6 py-3 rounded-xl bg-[#25D366] text-white font-bold text-sm hover:brightness-110 transition-all">Klaim Voucher</button>
-                </form>
-            @else
-                <div class="mt-4 p-4 rounded-xl bg-primary/10 border border-primary/20 text-sm">
-                    <span class="font-semibold text-primary">Login diperlukan.</span>
-                    <span class="text-on-surface-variant"> Silakan </span>
-                    <a href="{{ route('login') }}" class="font-bold text-primary underline">masuk</a>
-                    <span class="text-on-surface-variant"> untuk klaim voucher.</span>
-                </div>
-            @endauth
-            @if(session('success'))
-                <p class="text-sm text-secondary font-semibold mt-3">{{ session('success') }}</p>
-            @endif
-            @if(session('error'))
-                <p class="text-sm text-error font-semibold mt-3">{{ session('error') }}</p>
-            @endif
-            @error('voucher_code')
-                <p class="text-sm text-error font-semibold mt-3">{{ $message }}</p>
-            @enderror
+            <p class="text-sm text-on-surface-variant mt-1">Klaim voucher dilakukan melalui aplikasi mobile. Halaman web hanya menampilkan informasi promo voucher aktif.</p>
         </div>
     </section>
 

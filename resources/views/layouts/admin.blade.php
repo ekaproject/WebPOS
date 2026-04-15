@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>@yield('title', 'Admin Console') | Mega Retail</title>
+    <title>@yield('title', 'Admin Console') |   Indah Market</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -19,7 +19,7 @@
     <div class="px-6 mb-8">
         <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">grid_view</span>
-            <h1 class="text-lg font-bold text-primary font-headline tracking-tight">Mega Retail</h1>
+            <h1 class="text-lg font-bold text-primary font-headline tracking-tight">Indah Market</h1>
         </div>
         <p class="text-xs text-on-surface-variant mt-1">Admin Console</p>
     </div>
