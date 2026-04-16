@@ -10,6 +10,7 @@ class PromoController extends Controller
     public function index(Request $request)
     {
         $query = Promo::with(['category', 'product.category'])
+            ->where('type', 'fixed')
             ->where('is_active', true)
             ->whereDate('end_date', '>=', now()->toDateString());
 
@@ -26,10 +27,6 @@ class PromoController extends Controller
                         $productQuery->where('name', 'like', '%'.$keyword.'%');
                     });
             });
-        }
-
-        if ($request->filled('type') && in_array($request->type, ['percent', 'fixed', 'free_item'], true)) {
-            $query->where('type', $request->type);
         }
 
         $promos = $query->orderBy('start_date')->orderByDesc('discount_value')->get();

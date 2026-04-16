@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\PromoController as AdminPromoController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\SettingController;
 
@@ -52,6 +53,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
     Route::resource('categories', AdminCategoryController::class)->except(['show']);
     Route::resource('promos', AdminPromoController::class)->except(['show']);
+    Route::get('distributors', [DistributorController::class, 'index'])->name('distributors.index');
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
     Route::get('reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');

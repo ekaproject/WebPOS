@@ -10,11 +10,11 @@
 <div class="space-y-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
-            <h1 class="text-3xl font-headline font-extrabold text-primary">Form Tim</h1>
-            <p class="text-on-surface-variant mt-1">Kelola akun anggota tim, role, dan status aktif dalam satu halaman.</p>
+            <h1 class="text-3xl font-headline font-extrabold text-primary">Form User</h1>
+            <p class="text-on-surface-variant mt-1">Kelola akun user, role, dan status aktif dalam satu halaman.</p>
         </div>
-        <a href="{{ route('admin.team.index', ['show_create' => 1]) }}" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white" style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">
-            + Tambah Team
+        <a href="{{ route('admin.team.index', ['show_create' => 1]) }}" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white" style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">
+            + Tambah User
         </a>
     </div>
 
@@ -35,7 +35,7 @@
             </select>
         </div>
         <div class="mt-3 flex gap-2">
-            <button type="submit" class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">Filter Tim</button>
+            <button type="submit" class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">Filter User</button>
             <a href="{{ route('admin.team.index') }}" class="px-4 py-2 rounded-xl text-sm font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Reset</a>
         </div>
     </form>
@@ -43,7 +43,7 @@
     <form id="create-team-form" action="{{ route('admin.team.store') }}" method="POST" class="{{ $showCreateForm ? '' : 'hidden' }} bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-6">
         @csrf
         <div class="flex items-center justify-between gap-3">
-            <h2 class="text-lg font-headline font-extrabold text-on-surface">Tambah Anggota Tim</h2>
+            <h2 class="text-lg font-headline font-extrabold text-on-surface">Tambah Anggota User</h2>
             <a href="{{ route('admin.team.index') }}" class="px-3 py-2 rounded-lg text-xs font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Tutup</a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -86,7 +86,7 @@
                 <label for="is_active_create" class="text-sm font-medium text-on-surface">Akun aktif</label>
             </div>
         </div>
-        <button type="submit" class="mt-5 px-6 py-2.5 rounded-xl text-sm font-bold text-white" style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">Simpan Anggota</button>
+        <button type="submit" class="mt-5 px-6 py-2.5 rounded-xl text-sm font-bold text-white" style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">Simpan Anggota</button>
     </form>
 
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">

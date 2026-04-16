@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Login | Manajemen Indah Market</title>
+    <title>Login | Manajemen ILS Mart</title>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -23,7 +23,7 @@
         <div class="relative z-10">
             <div class="flex items-center gap-3 mb-8">
                 <span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">grid_view</span>
-                <h1 class="font-headline font-extrabold text-2xl tracking-tighter text-white">Indah Market</h1>
+                <h1 class="font-headline font-extrabold text-2xl tracking-tighter text-white">ILS Mart</h1>
             </div>
             <h2 class="font-headline font-bold text-4xl text-white leading-tight max-w-md">
                 Ekosistem untuk <span class="text-[#69ff87]">perdagangan terpadu</span> di semua sektor.
@@ -69,7 +69,7 @@
             <!-- Mobile Logo -->
             <div class="lg:hidden flex items-center gap-2 mb-12">
                 <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">grid_view</span>
-                <span class="font-headline font-bold text-xl tracking-tight text-primary">Indah Market</span>
+                <span class="font-headline font-bold text-xl tracking-tight text-primary">ILS Mart</span>
             </div>
 
             <header class="mb-10">
@@ -140,7 +140,7 @@
             </form>
 
             <footer class="mt-12 pt-8 border-t border-surface-variant">
-                <p class="text-[10px] text-outline text-center">Properti Rahasia Indah Market Corp. Akses tanpa izin dilarang. © 2024 Indah Market.</p>
+                <p class="text-[10px] text-outline text-center">Properti Rahasia ILS Mart Corp. Akses tanpa izin dilarang. © 2024 ILS Mart.</p>
             </footer>
         </div>
     </section>

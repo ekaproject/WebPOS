@@ -35,7 +35,7 @@
                        class="w-full rounded-2xl border border-outline-variant/30 bg-surface-container-lowest pl-10 pr-28 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary"/>
                 <button type="submit"
                         class="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-xl text-white text-xs font-bold hover:brightness-110 transition-all"
-                        style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">
+                        style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">
                     Cari
                 </button>
             </div>
@@ -54,15 +54,15 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
                 @foreach($categories as $category)
                     <a href="{{ route('categories.show', $category->slug) }}"
-                       class="bg-surface-container-lowest rounded-2xl p-6 text-center hover:bg-[#0ea5e9]/10 hover:shadow-lg transition-all group border border-outline-variant/10">
-                        <div class="w-16 h-16 rounded-2xl bg-primary-fixed flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0ea5e9] transition-colors">
+                       class="bg-surface-container-lowest rounded-2xl p-6 text-center hover:bg-[#0284C7]/10 hover:shadow-lg transition-all group border border-outline-variant/10">
+                        <div class="w-16 h-16 rounded-2xl bg-primary-fixed flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0284C7] transition-colors">
                             <span class="material-symbols-outlined text-3xl text-primary group-hover:text-white transition-colors">{{ $category->icon }}</span>
                         </div>
                         <h3 class="font-headline font-bold text-sm leading-tight mb-1">{{ $category->name }}</h3>
                         @if($category->description)
                             <p class="text-[11px] text-on-surface-variant mt-1">{{ $category->description }}</p>
                         @endif
-                        <p class="text-xs text-[#0ea5e9] font-bold mt-3">{{ $category->products_count }} Produk</p>
+                        <p class="text-xs text-[#0284C7] font-bold mt-3">{{ $category->products_count }} Produk</p>
                     </a>
                 @endforeach
             </div>

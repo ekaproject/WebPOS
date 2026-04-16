@@ -48,6 +48,10 @@ class Promo extends Model
 
     public function getDiscountLabelAttribute(): string
     {
+        if ($this->type === 'fixed') {
+            return 'Rp ' . number_format($this->discount_value, 0, ',', '.');
+        }
+
         return match($this->type) {
             'percent'   => $this->discount_value . '%',
             'fixed'     => 'Rp ' . number_format($this->discount_value, 0, ',', '.'),

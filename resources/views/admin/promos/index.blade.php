@@ -27,13 +27,10 @@
                        class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
             </div>
             <div>
-                <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Tipe</label>
-                <select name="type" class="rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">
-                    <option value="">Semua</option>
-                    <option value="percent" {{ request('type') === 'percent' ? 'selected' : '' }}>Diskon %</option>
-                    <option value="fixed" {{ request('type') === 'fixed' ? 'selected' : '' }}>Potongan Nominal</option>
-                    <option value="free_item" {{ request('type') === 'free_item' ? 'selected' : '' }}>Gratis Item</option>
-                </select>
+                <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Tipe Promo</label>
+                <div class="rounded-xl border border-outline-variant/40 bg-surface-container-low text-sm px-4 py-2.5 text-on-surface font-semibold">
+                    Potongan Nominal
+                </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Status</label>
@@ -55,8 +52,7 @@
                     <tr class="bg-surface-container-low text-left text-xs font-bold uppercase tracking-wider text-on-surface-variant">
                         <th class="px-6 py-3">Promo</th>
                         <th class="px-6 py-3">Produk Promo</th>
-                        <th class="px-6 py-3">Tipe</th>
-                        <th class="px-6 py-3">Benefit</th>
+                        <th class="px-6 py-3">Harga Promo</th>
                         <th class="px-6 py-3">Min. Belanja</th>
                         <th class="px-6 py-3">Kode Voucher</th>
                         <th class="px-6 py-3">Sisa Kuota</th>
@@ -76,9 +72,19 @@
                                 {{ $promo->product?->name ?? '-' }}
                             </td>
                             <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-primary-fixed text-primary">{{ strtoupper($promo->type) }}</span>
+                                @if($promo->product)
+                                    @php
+                                        $hargaNormal = $promo->product->price;
+                                        $hargaDiskon = max($promo->product->purchase_price, $hargaNormal - $promo->discount_value);
+                                    @endphp
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-on-surface-variant/60 line-through">Rp {{ number_format($hargaNormal, 0, ',', '.') }}</span>
+                                        <span class="font-extrabold text-[15px] text-error">Rp {{ number_format($hargaDiskon, 0, ',', '.') }}</span>
+                                    </div>
+                                @else
+                                    <span class="font-bold text-primary">{{ $promo->discount_label }}</span>
+                                @endif
                             </td>
-                            <td class="px-6 py-4 font-bold text-primary">{{ $promo->discount_label }}</td>
                             <td class="px-6 py-4">
                                 {{ $promo->min_purchase ? 'Rp '.number_format((float) $promo->min_purchase, 0, ',', '.') : '-' }}
                             </td>
@@ -122,7 +128,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="px-6 py-16 text-center text-on-surface-variant">
+                            <td colspan="9" class="px-6 py-16 text-center text-on-surface-variant">
                                 <span class="material-symbols-outlined text-5xl block mb-2">local_offer</span>
                                 Belum ada promo. <a href="{{ route('admin.promos.create') }}" class="text-primary font-bold">Tambah sekarang -></a>
                             </td>

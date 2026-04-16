@@ -50,7 +50,15 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="price">Harga (Rp)<span class="text-error">*</span></label>
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="purchase_price">Harga Beli (Rp)<span class="text-error">*</span></label>
+                <input type="number" id="purchase_price" name="purchase_price" value="{{ old('purchase_price') }}" min="0" required
+                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('purchase_price') border-error @enderror"
+                       placeholder="Cth: 75000"/>
+                @error('purchase_price')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="price">Harga Jual (Rp)<span class="text-error">*</span></label>
                 <input type="number" id="price" name="price" value="{{ old('price') }}" min="0" required
                        class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('price') border-error @enderror"
                        placeholder="Cth: 85000"/>

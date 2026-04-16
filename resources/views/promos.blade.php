@@ -20,23 +20,20 @@
 <main class="pt-24">
     <section class="px-6 md:px-10 py-10 bg-surface-container-low">
         <p class="text-sm text-white font-semibold uppercase tracking-[0.2em] inline-flex items-center gap-2 px-4 py-1 rounded-full"
-           style="background: linear-gradient(135deg, #003366, #22C55E);">
+           style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">
             Halaman Promo
         </p>
-        <h1 class="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-primary mt-3">Promo Produk Harian & Voucher</h1>
-        <p class="text-on-surface-variant mt-3 max-w-3xl">Nikmati promo produk harian dan voucher belanja dengan syarat minimum pembelian. Penawaran diperbarui secara berkala sesuai periode promo aktif.</p>
+        <h1 class="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-primary mt-3">Promo Potongan Harga & Voucher</h1>
+        <p class="text-on-surface-variant mt-3 max-w-3xl">Nikmati promo potongan harga nominal dan voucher belanja dengan syarat minimum pembelian. Penawaran diperbarui secara berkala sesuai periode promo aktif.</p>
 
         <form action="{{ route('promos.index') }}" method="GET" class="mt-6 flex flex-col md:flex-row gap-3">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari promo, kategori, atau deskripsi..."
                    class="w-full md:w-[420px] rounded-xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary"/>
-            <select name="type" class="rounded-xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary">
-                <option value="">Semua tipe promo</option>
-                <option value="percent" {{ request('type') === 'percent' ? 'selected' : '' }}>Diskon Persen</option>
-                <option value="fixed" {{ request('type') === 'fixed' ? 'selected' : '' }}>Potongan Nominal</option>
-                <option value="free_item" {{ request('type') === 'free_item' ? 'selected' : '' }}>Gratis Item</option>
-            </select>
+            <div class="rounded-xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 text-sm font-semibold text-on-surface">
+                Tipe Promo: Potongan Nominal
+            </div>
                 <button type="submit" class="px-6 py-3 rounded-xl text-white font-bold text-sm hover:brightness-110 transition-all"
-                    style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">Filter Promo</button>
+                    style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">Filter Promo</button>
         </form>
 
         <div class="mt-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-5">
@@ -48,7 +45,7 @@
     <section class="px-6 md:px-10 py-12">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-headline font-extrabold text-primary">Promo Produk Harian</h2>
-            <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#0ea5e9]/15 text-[#0ea5e9]">{{ $dailyPromos->count() }} Promo</span>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#0284C7]/15 text-[#0284C7]">{{ $dailyPromos->count() }} Promo</span>
         </div>
 
         @if($dailyPromos->isEmpty())
@@ -61,7 +58,7 @@
                     <article class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6 shadow-sm">
                         <div class="flex items-center justify-between mb-4">
                                 <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white"
-                                    style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">Promo Harian</span>
+                                    style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">Promo Harian</span>
                             <span class="text-xs font-semibold text-on-surface-variant">Sampai {{ $promo->end_date->format('d M Y') }}</span>
                         </div>
                         <h3 class="text-xl font-headline font-extrabold text-on-surface">{{ $promo->title }}</h3>
@@ -72,7 +69,7 @@
                                 <p class="text-2xl font-extrabold text-primary">{{ $promo->discount_label }}</p>
                             </div>
                             @if($promo->category)
-                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#0ea5e9]/15 text-[#0ea5e9]">{{ $promo->category->name }}</span>
+                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#0284C7]/15 text-[#0284C7]">{{ $promo->category->name }}</span>
                             @endif
                         </div>
                     </article>
@@ -84,7 +81,7 @@
     <section id="promo-products" class="px-6 md:px-10 py-12">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-headline font-extrabold text-primary">Daftar Produk Promo</h2>
-            <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#0ea5e9]/15 text-[#0ea5e9]">{{ $productPromos->count() }} Produk</span>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#0284C7]/15 text-[#0284C7]">{{ $productPromos->count() }} Produk</span>
         </div>
 
         @if($productPromos->isEmpty())
@@ -100,10 +97,10 @@
                                 <div class="absolute top-3 left-3 z-10">
                                     @if($promo->start_date->isFuture())
                                         <span class="text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase"
-                                              style="background: linear-gradient(135deg, #003366 0%, #0ea5e9 100%);">Mulai {{ $promo->start_date->format('d M') }}</span>
+                                              style="background: linear-gradient(135deg, #003366 0%, #0284C7 100%);">Mulai {{ $promo->start_date->format('d M') }}</span>
                                     @else
                                         <span class="text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase"
-                                              style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">Aktif</span>
+                                              style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">Aktif</span>
                                     @endif
                                 </div>
                                 @if($promo->product->image)
@@ -136,7 +133,7 @@
     <section class="px-6 md:px-10 py-12 bg-surface-container-low">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-headline font-extrabold text-primary">Voucher Promo</h2>
-            <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#0ea5e9]/15 text-[#0ea5e9]">{{ $voucherPromos->count() }} Voucher</span>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#0284C7]/15 text-[#0284C7]">{{ $voucherPromos->count() }} Voucher</span>
         </div>
 
         @if($voucherPromos->isEmpty())
@@ -147,7 +144,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 @foreach($voucherPromos as $promo)
                     <article class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6 relative overflow-hidden">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#0ea5e9]/15"></div>
+                        <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#0284C7]/15"></div>
                         <div class="relative">
                             <span class="inline-block text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white"
                                   style="background: linear-gradient(135deg, #003366 0%, #22C55E 100%);">Voucher</span>

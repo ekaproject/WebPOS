@@ -16,7 +16,7 @@
             </a>
             <a href="{{ route('admin.reports.export.excel', request()->only(['from', 'to', 'status'])) }}"
                class="px-4 py-2.5 rounded-xl text-sm font-bold text-white"
-               style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+               style="background: linear-gradient(135deg, #0369A1 0%, #16a34a 100%);">
                 Export Excel
             </a>
         </div>
@@ -45,7 +45,7 @@
             </div>
             <div class="flex items-end gap-2">
                 <button type="submit" class="w-full px-4 py-2.5 rounded-xl text-sm font-bold text-white"
-                        style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">
+                        style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">
                     Tampilkan Laporan
                 </button>
                 <a href="{{ route('admin.reports.index') }}" class="px-4 py-2.5 rounded-xl text-sm font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Reset</a>

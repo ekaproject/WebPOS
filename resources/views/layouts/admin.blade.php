@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>@yield('title', 'Admin Console') |   Indah Market</title>
+    <title>@yield('title', 'Admin Console') |   ILS Mart</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -19,7 +19,7 @@
     <div class="px-6 mb-8">
         <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">grid_view</span>
-            <h1 class="text-lg font-bold text-primary font-headline tracking-tight">Indah Market</h1>
+            <h1 class="text-lg font-bold text-primary font-headline tracking-tight">ILS Mart</h1>
         </div>
         <p class="text-xs text-on-surface-variant mt-1">Admin Console</p>
     </div>
@@ -44,6 +44,11 @@
             <span class="material-symbols-outlined">category</span>
             <span class="font-medium text-sm">Kategori</span>
         </a>
+                <a href="{{ route('admin.distributors.index') }}"
+                            class="{{ request()->routeIs('admin.distributors*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
+                        <span class="material-symbols-outlined">local_shipping</span>
+                        <span class="font-medium text-sm">Distributor</span>
+                </a>
                 <a href="{{ route('admin.promos.index') }}"
                             class="{{ request()->routeIs('admin.promos*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
                         <span class="material-symbols-outlined">local_offer</span>
@@ -57,12 +62,12 @@
           <a href="{{ route('admin.team.index') }}"
               class="{{ request()->routeIs('admin.team*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
             <span class="material-symbols-outlined">group</span>
-            <span class="font-medium text-sm">Tim</span>
+            <span class="font-medium text-sm">User</span>
         </a>
           <a href="{{ route('admin.settings.index') }}"
               class="{{ request()->routeIs('admin.settings*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
             <span class="material-symbols-outlined">settings</span>
-            <span class="font-medium text-sm">Pengaturan</span>
+            <span class="font-medium text-sm">Manajemen Konten</span>
         </a>
     </nav>
     <div class="px-4 mt-auto">

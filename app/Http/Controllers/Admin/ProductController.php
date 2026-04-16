@@ -47,16 +47,17 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0',
-            'min_stock'   => 'nullable|integer|min:0',
-            'unit'        => 'required|in:pcs,kg,liter',
-            'description' => 'nullable|string',
-            'expires_at'  => 'nullable|date',
-            'is_active'   => 'boolean',
-            'image'       => 'nullable|image|max:2048',
+            'name'           => 'required|string|max:255',
+            'category_id'    => 'required|exists:categories,id',
+            'purchase_price' => 'required|numeric|min:0',
+            'price'          => 'required|numeric|min:0',
+            'stock'          => 'required|integer|min:0',
+            'min_stock'      => 'nullable|integer|min:0',
+            'unit'           => 'required|in:pcs,kg,liter',
+            'description'    => 'nullable|string',
+            'expires_at'     => 'nullable|date',
+            'is_active'      => 'boolean',
+            'image'          => 'nullable|image|max:2048',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
@@ -72,9 +73,9 @@ class ProductController extends Controller
             ->with('success', 'Produk berhasil ditambahkan.');
     }
 
-    public function show(string $id)
+    public function show(Product $product)
     {
-        abort(404);
+        return view('admin.products.show', compact('product'));
     }
 
     public function edit(Product $product)
@@ -86,17 +87,18 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
-            'sku'         => 'required|string|max:100|unique:products,sku,'.$product->id,
-            'category_id' => 'required|exists:categories,id',
-            'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0',
-            'min_stock'   => 'nullable|integer|min:0',
-            'unit'        => 'required|in:pcs,kg,liter',
-            'description' => 'nullable|string',
-            'expires_at'  => 'nullable|date',
-            'is_active'   => 'boolean',
-            'image'       => 'nullable|image|max:2048',
+            'name'           => 'required|string|max:255',
+            'sku'            => 'required|string|max:100|unique:products,sku,'.$product->id,
+            'category_id'    => 'required|exists:categories,id',
+            'purchase_price' => 'required|numeric|min:0',
+            'price'          => 'required|numeric|min:0',
+            'stock'          => 'required|integer|min:0',
+            'min_stock'      => 'nullable|integer|min:0',
+            'unit'           => 'required|in:pcs,kg,liter',
+            'description'    => 'nullable|string',
+            'expires_at'     => 'nullable|date',
+            'is_active'      => 'boolean',
+            'image'          => 'nullable|image|max:2048',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');

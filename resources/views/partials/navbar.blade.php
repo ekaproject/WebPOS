@@ -32,15 +32,15 @@
 
         @guest
             <a href="{{ route('login') }}"
-               class="px-6 py-2.5 rounded-full font-headline font-bold text-sm text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all ring-2 ring-[#22c55e]/20"
-               style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">
+               class="px-6 py-2.5 rounded-full font-headline font-bold text-sm text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all ring-2 ring-[#0369A1]/20"
+               style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">
                 Masuk
             </a>
         @else
             @if($authVariant === 'dashboard')
                 <a href="{{ route('admin.dashboard') }}"
-                   class="px-6 py-2.5 rounded-full font-headline font-bold text-sm text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all ring-2 ring-[#22c55e]/20"
-                   style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">
+                   class="px-6 py-2.5 rounded-full font-headline font-bold text-sm text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all ring-2 ring-[#0369A1]/20"
+                   style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">
                     Dashboard
                 </a>
             @else

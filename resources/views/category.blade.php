@@ -42,13 +42,13 @@
     <section class="px-6 md:px-10 py-4 bg-surface-container-lowest border-b border-outline-variant/10 sticky top-16 z-30">
         <div class="flex gap-3 overflow-x-auto category-scroll">
             <a href="{{ route('categories.index') }}"
-               class="flex-none px-5 py-2 rounded-full bg-surface-container text-on-surface-variant font-bold text-sm hover:bg-[#0ea5e9]/15 hover:text-[#0ea5e9] transition-all whitespace-nowrap">
+               class="flex-none px-5 py-2 rounded-full bg-surface-container text-on-surface-variant font-bold text-sm hover:bg-[#0284C7]/15 hover:text-[#0284C7] transition-all whitespace-nowrap">
                 Semua Kategori
             </a>
             @foreach($categories as $cat)
                 <a href="{{ route('categories.show', $cat->slug) }}"
                    class="flex-none px-5 py-2 rounded-full font-bold text-sm transition-all whitespace-nowrap flex items-center gap-2
-                          {{ $cat->slug === $category->slug ? 'bg-[#0ea5e9] text-white shadow-md' : 'bg-surface-container text-on-surface-variant hover:bg-[#0ea5e9]/15 hover:text-[#0ea5e9]' }}">
+                          {{ $cat->slug === $category->slug ? 'bg-[#0284C7] text-white shadow-md' : 'bg-surface-container text-on-surface-variant hover:bg-[#0284C7]/15 hover:text-[#0284C7]' }}">
                     <span class="material-symbols-outlined text-base">{{ $cat->icon }}</span>
                     {{ $cat->name }}
                 </a>
@@ -68,11 +68,11 @@
                        class="w-full pl-10 pr-4 py-3 rounded-xl border-outline-variant/40 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary"/>
             </div>
             <button type="submit" class="px-6 py-3 rounded-xl text-white font-bold text-sm"
-                    style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">
+                    style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">
                 Cari
             </button>
             @if(request('search'))
-                <a href="{{ route('categories.show', $category->slug) }}" class="px-6 py-3 rounded-xl bg-surface-container text-on-surface-variant font-bold text-sm hover:bg-[#0ea5e9]/10 hover:text-[#0ea5e9] transition-all">
+                <a href="{{ route('categories.show', $category->slug) }}" class="px-6 py-3 rounded-xl bg-surface-container text-on-surface-variant font-bold text-sm hover:bg-[#0284C7]/10 hover:text-[#0284C7] transition-all">
                     Reset
                 </a>
             @endif

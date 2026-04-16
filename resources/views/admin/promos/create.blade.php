@@ -28,23 +28,21 @@
                 @error('title')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
+            <input type="hidden" name="type" value="fixed">
+
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="type">Tipe Promo <span class="text-error">*</span></label>
-                <select id="type" name="type" required
-                        class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('type') border-error @enderror">
-                    <option value="percent" {{ old('type') === 'percent' ? 'selected' : '' }}>Diskon Persen</option>
-                    <option value="fixed" {{ old('type') === 'fixed' ? 'selected' : '' }}>Potongan Nominal</option>
-                    <option value="free_item" {{ old('type') === 'free_item' ? 'selected' : '' }}>Gratis Item</option>
-                </select>
-                @error('type')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Tipe Promo</label>
+                <div class="px-4 py-2.5 rounded-xl bg-surface-container text-sm font-semibold text-on-surface border border-outline-variant/20">
+                    Potongan Nominal (Rp)
+                </div>
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="discount_value">Nilai Diskon <span class="text-error">*</span></label>
                 <input type="number" step="0.01" id="discount_value" name="discount_value" value="{{ old('discount_value') }}" required
                        class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('discount_value') border-error @enderror"
-                       placeholder="Cth: 10 atau 15000"/>
-                <p class="text-xs text-on-surface-variant mt-1">Untuk tipe persen, maksimal 100</p>
+                       placeholder="Cth: 15000"/>
+                <p class="text-xs text-on-surface-variant mt-1">Masukkan nominal potongan dalam Rupiah.</p>
                 @error('discount_value')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -79,18 +77,36 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="product_id">Produk Promo (Opsional)</label>
-                <select id="product_id" name="product_id"
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="product_id">Produk Promo <span class="text-error">*</span></label>
+                <select id="product_id" name="product_id" required
                         class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('product_id') border-error @enderror">
-                    <option value="">Tanpa Produk Spesifik</option>
+                    <option value="">Pilih Produk Promo</option>
                     @foreach($products as $product)
                         <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
                             {{ $product->name }} ({{ $product->category?->name ?? 'Tanpa Kategori' }})
                         </option>
                     @endforeach
                 </select>
-                <p class="text-xs text-on-surface-variant mt-1">Jika dipilih, promo akan tampil pada produk ini di landing page.</p>
+                <p class="text-xs text-on-surface-variant mt-1">Pilih produk promo untuk validasi anti-rugi berdasarkan harga beli produk.</p>
                 @error('product_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="md:col-span-2 bg-surface-container rounded-xl border border-outline-variant/20 p-4">
+                <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3">Informasi Harga Produk Terpilih</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                    <div>
+                        <p class="text-xs text-on-surface-variant">Harga Beli</p>
+                        <p class="font-bold text-on-surface" id="promo-product-purchase-price">-</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-on-surface-variant">Harga Jual</p>
+                        <p class="font-bold text-primary" id="promo-product-selling-price">-</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-on-surface-variant">Maks. Potongan Aman</p>
+                        <p class="font-bold text-secondary" id="promo-product-max-discount">-</p>
+                    </div>
+                </div>
             </div>
 
             <div>
@@ -136,3 +152,51 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const productSelect = document.getElementById('product_id');
+    const purchasePriceEl = document.getElementById('promo-product-purchase-price');
+    const sellingPriceEl = document.getElementById('promo-product-selling-price');
+    const maxDiscountEl = document.getElementById('promo-product-max-discount');
+
+    const formatRupiah = (value) => {
+        if (value === null || value === undefined || value === '') return '-';
+        return 'Rp ' + Number(value).toLocaleString('id-ID');
+    };
+
+    const productMap = {
+        @foreach($products as $product)
+        {{ $product->id }}: {
+            purchase_price: {{ (float) ($product->purchase_price ?? 0) }},
+            selling_price: {{ (float) $product->price }}
+        },
+        @endforeach
+    };
+
+    const renderProductPriceInfo = () => {
+        const selectedId = productSelect.value;
+        const selectedProduct = productMap[selectedId];
+
+        if (!selectedProduct) {
+            purchasePriceEl.textContent = '-';
+            sellingPriceEl.textContent = '-';
+            maxDiscountEl.textContent = '-';
+            return;
+        }
+
+        const purchasePrice = Number(selectedProduct.purchase_price || 0);
+        const sellingPrice = Number(selectedProduct.selling_price || 0);
+        const maxDiscount = Math.max(sellingPrice - purchasePrice, 0);
+
+        purchasePriceEl.textContent = formatRupiah(purchasePrice);
+        sellingPriceEl.textContent = formatRupiah(sellingPrice);
+        maxDiscountEl.textContent = formatRupiah(maxDiscount);
+    };
+
+    productSelect.addEventListener('change', renderProductPriceInfo);
+    renderProductPriceInfo();
+});
+</script>
+@endpush

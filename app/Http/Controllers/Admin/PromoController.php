@@ -27,9 +27,7 @@ class PromoController extends Controller
             $query->where('is_active', $request->status === 'active');
         }
 
-        if ($request->filled('type') && in_array($request->type, ['percent', 'fixed', 'free_item'], true)) {
-            $query->where('type', $request->type);
-        }
+        $query->where('type', 'fixed');
 
         $promos = $query->orderByDesc('created_at')->paginate(20);
 
@@ -49,21 +47,20 @@ class PromoController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'type' => 'required|in:percent,fixed,free_item',
             'discount_value' => 'required|numeric|min:0',
             'min_purchase' => 'nullable|numeric|min:0',
             'voucher_quota' => 'nullable|integer|min:1|max:100000',
             'category_id' => 'nullable|exists:categories,id',
-            'product_id' => 'nullable|exists:products,id',
+            'product_id' => 'required|exists:products,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'is_active' => 'boolean',
         ]);
 
-        if ($data['type'] === 'percent' && (float) $data['discount_value'] > 100) {
-            return back()->withInput()->withErrors([
-                'discount_value' => 'Diskon persen tidak boleh lebih dari 100%.',
-            ]);
+        $data['type'] = 'fixed';
+
+        if ($error = $this->validateDiscountNotBelowCost($data)) {
+            return back()->withInput()->withErrors(['discount_value' => $error]);
         }
 
         $data['is_active'] = $request->boolean('is_active');
@@ -88,21 +85,20 @@ class PromoController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'type' => 'required|in:percent,fixed,free_item',
             'discount_value' => 'required|numeric|min:0',
             'min_purchase' => 'nullable|numeric|min:0',
             'voucher_quota' => 'nullable|integer|min:1|max:100000',
             'category_id' => 'nullable|exists:categories,id',
-            'product_id' => 'nullable|exists:products,id',
+            'product_id' => 'required|exists:products,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'is_active' => 'boolean',
         ]);
 
-        if ($data['type'] === 'percent' && (float) $data['discount_value'] > 100) {
-            return back()->withInput()->withErrors([
-                'discount_value' => 'Diskon persen tidak boleh lebih dari 100%.',
-            ]);
+        $data['type'] = 'fixed';
+
+        if ($error = $this->validateDiscountNotBelowCost($data)) {
+            return back()->withInput()->withErrors(['discount_value' => $error]);
         }
 
         $data['is_active'] = $request->boolean('is_active');
@@ -152,5 +148,30 @@ class PromoController extends Controller
         } while (Promo::where('voucher_code', $code)->exists());
 
         return $code;
+    }
+
+    private function validateDiscountNotBelowCost(array $data): ?string
+    {
+        if (empty($data['product_id'])) {
+            return null;
+        }
+
+        $product = Product::query()->find($data['product_id']);
+        if (!$product) {
+            return null;
+        }
+
+        $discountValue = (float) $data['discount_value'];
+        $purchasePrice = (float) ($product->purchase_price ?? 0);
+        $sellingPrice = (float) $product->price;
+        $minAllowedPrice = max($purchasePrice, 0);
+        $discountedPrice = $sellingPrice - $discountValue;
+
+        if ($discountedPrice < $minAllowedPrice) {
+            $maxDiscount = max($sellingPrice - $minAllowedPrice, 0);
+            return 'Potongan terlalu besar. Harga setelah diskon (Rp '.number_format($discountedPrice, 0, ',', '.').') tidak boleh lebih kecil dari harga beli (Rp '.number_format($purchasePrice, 0, ',', '.').'). Maksimal potongan untuk produk ini adalah Rp '.number_format($maxDiscount, 0, ',', '.').'.';
+        }
+
+        return null;
     }
 }
