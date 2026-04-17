@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     @include('partials.vite-assets')
 </head>
-<body class="bg-surface font-body text-on-surface">
+<body class="landing-surface font-body text-on-surface">
 
 <!-- Top Navigation -->
 @include('partials.navbar', [
@@ -21,9 +21,9 @@
     'authVariant' => 'logout',
 ])
 
-<main class="pt-20">
+<main class="pt-6 md:pt-8">
     <!-- Hero Section -->
-    <section class="px-5 md:px-10 py-8 md:py-10">
+    <section class="px-5 md:px-10 pt-4 md:pt-6 pb-10 md:pb-12">
         @php
             $heroPromoSlides = [];
 
@@ -49,43 +49,60 @@
                     }
                 }
             }
-        @endphp
-        <div class="relative w-full min-h-[560px] md:min-h-[620px] overflow-hidden rounded-3xl bg-surface-container">
-            <div class="absolute inset-0" style="background: linear-gradient(135deg, #0F4C81 0%, #2563EB 100%);"></div>
-            <div class="absolute -top-20 -right-16 w-64 h-64 rounded-full bg-[#0284C7]/25 blur-3xl"></div>
-            <div class="absolute -bottom-24 -left-20 w-72 h-72 rounded-full bg-[#22C55E]/25 blur-3xl"></div>
 
-            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center p-8 md:p-12 lg:p-16">
-                <div class="max-w-2xl">
-                    <span class="inline-block px-4 py-1.5 rounded-full bg-white/20 text-white font-headline text-xs font-bold mb-6 tracking-widest uppercase border border-white/30 backdrop-blur-sm shadow-sm">
+            $activeCategoriesCount = ($categories ?? collect())->count();
+            $activePromoCount = ($promos ?? collect())->count();
+        @endphp
+        <div class="hero-gradient-shell min-h-[560px] md:min-h-[620px]">
+            <div class="absolute top-24 right-14 w-44 h-44 rounded-full bg-white/10 blur-2xl hero-floating-orb"></div>
+            <div class="absolute bottom-14 left-10 w-56 h-56 rounded-full bg-cyan-200/20 blur-3xl hero-floating-orb"></div>
+
+            <div class="relative z-10 grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10 items-center p-6 md:p-10 lg:p-14">
+                <div class="max-w-2xl fade-rise">
+                    <span class="inline-flex px-4 py-1.5 rounded-full bg-white/18 text-white font-headline text-xs font-bold mb-6 tracking-[0.2em] uppercase border border-white/30 backdrop-blur-sm shadow-sm">
                         {{ \App\Models\AppSetting::getValue('landing_solusi_text', 'Solusi Belanja Terlengkap') }}
                     </span>
-                    <h1 class="text-4xl md:text-6xl lg:text-[72px] font-headline font-extrabold text-white leading-[1.1] tracking-tighter mb-6">
+                    <h1 class="text-4xl md:text-6xl lg:text-[70px] font-headline font-extrabold text-white leading-[1.08] tracking-tight mb-5">
                         {{ \App\Models\AppSetting::getValue('landing_hero_title', 'Satu Tempat untuk Semua Kebutuhan.') }}
                     </h1>
-                    <p class="text-base md:text-lg text-white/90 mb-10 max-w-xl font-medium leading-relaxed">
+                    <p class="text-base md:text-lg text-white/90 mb-8 max-w-xl font-medium leading-relaxed">
                         {{ \App\Models\AppSetting::getValue('landing_hero_description', 'Mulai dari bahan makanan segar, perlengkapan rumah tangga, hingga bayar tagihan. Belanja cerdas, hidup lebih berkualitas.') }}
                     </p>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <a href="#categories" class="text-white px-8 py-4 rounded-full font-headline font-bold text-[15px] inline-flex items-center gap-2 shadow-lg hover:scale-[1.03] hover:-translate-y-0.5 transition-all bg-[#0284C7] hover:bg-[#0369A1]">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
+                        <a href="#categories" class="landing-btn">
                             Jelajahi Kategori Sekarang
                             <span class="material-symbols-outlined">trending_flat</span>
                         </a>
-                        <a href="{{ route('promos.index') }}" class="px-8 py-4 rounded-full border border-white/40 bg-white/10 text-white font-bold text-[15px] hover:bg-white/25 hover:border-white/60 transition-all backdrop-blur-sm">
+                        <a href="{{ route('promos.index') }}" class="landing-btn-soft">
                             Lihat Promo Hari Ini
+                        </a>
+                    </div>
+
+                    <div class="mt-7 grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg">
+                        <a href="{{ route('categories.index') }}" class="group rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-4 py-3 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg">
+                            <p class="text-[11px] uppercase tracking-wider text-white/70 font-semibold group-hover:text-white/90 transition-colors">Kategori Aktif</p>
+                            <p class="text-2xl font-black text-white mt-0.5">{{ $activeCategoriesCount }}</p>
+                        </a>
+                        <a href="{{ route('promos.index') }}" class="group rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-4 py-3 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg">
+                            <p class="text-[11px] uppercase tracking-wider text-white/70 font-semibold group-hover:text-white/90 transition-colors">Promo Aktif</p>
+                            <p class="text-2xl font-black text-white mt-0.5">{{ $activePromoCount }}</p>
+                        </a>
+                        <a href="#location-info" class="group rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-4 py-3 col-span-2 sm:col-span-1 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg">
+                            <p class="text-[11px] uppercase tracking-wider text-white/70 font-semibold group-hover:text-white/90 transition-colors">Lokasi</p>
+                            <p class="text-sm font-bold text-white mt-1 line-clamp-1">{{ $publicSettings['store_address'] }}</p>
                         </a>
                     </div>
                 </div>
 
-                <div class="w-full lg:max-w-[540px] lg:ml-auto">
-                    <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md p-4 md:p-5 shadow-2xl">
+                <div class="w-full xl:max-w-[520px] xl:ml-auto fade-rise" style="animation-delay: 120ms;">
+                    <div class="promo-glass-card border-white/30 bg-white/12 p-4 md:p-5">
                         <div class="flex items-center justify-between mb-3 px-1">
                             <p class="text-xs uppercase tracking-[0.2em] text-white/80 font-bold">Promo {{ $publicSettings['store_name'] ?? 'ILS Mart' }}</p>
-                            <a href="{{ route('promos.index') }}" class="text-[11px] font-bold text-white/90 hover:text-white transition-colors">Lihat Semua</a>
+                            <a href="{{ route('promos.index') }}" class="text-[11px] font-bold text-white/90 hover:text-white transition-colors underline-offset-4 hover:underline">Lihat Semua</a>
                         </div>
 
                         <div id="hero-promo-gallery" class="relative">
-                            <div class="rounded-2xl overflow-hidden border border-white/20 bg-white/10 h-[380px] md:h-[430px]">
+                            <div class="rounded-2xl overflow-hidden border border-white/25 bg-white/8 h-[340px] sm:h-[380px] md:h-[420px]">
                                 <div id="hero-promo-gallery-track" class="flex h-full transition-transform duration-700 ease-out transition-opacity duration-300 opacity-100">
                                     @forelse($heroPromoSlides as $index => $slide)
                                         <div class="w-full h-full flex-none relative">
@@ -109,16 +126,16 @@
                             </div>
 
                             @if(count($heroPromoSlides) > 1)
-                                <button type="button" id="hero-promo-gallery-prev" aria-label="Promo Sebelumnya" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/45 text-white inline-flex items-center justify-center hover:bg-black/60 transition-colors">
+                                <button type="button" id="hero-promo-gallery-prev" aria-label="Promo Sebelumnya" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white inline-flex items-center justify-center hover:bg-black/60 transition-colors backdrop-blur-sm">
                                     <span class="material-symbols-outlined text-[18px]">chevron_left</span>
                                 </button>
-                                <button type="button" id="hero-promo-gallery-next" aria-label="Promo Selanjutnya" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/45 text-white inline-flex items-center justify-center hover:bg-black/60 transition-colors">
+                                <button type="button" id="hero-promo-gallery-next" aria-label="Promo Selanjutnya" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white inline-flex items-center justify-center hover:bg-black/60 transition-colors backdrop-blur-sm">
                                     <span class="material-symbols-outlined text-[18px]">chevron_right</span>
                                 </button>
 
                                 <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2">
                                     @foreach($heroPromoSlides as $index => $slide)
-                                        <button type="button" data-slide-to="{{ $index }}" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white transition-colors" aria-label="Ke promo {{ $index + 1 }}"></button>
+                                        <button type="button" data-slide-to="{{ $index }}" class="w-2.5 h-2.5 rounded-full bg-white/55 hover:bg-white transition-colors" aria-label="Ke promo {{ $index + 1 }}"></button>
                                     @endforeach
                                 </div>
                             @endif
@@ -130,107 +147,114 @@
     </section>
 
     <!-- Categories -->
-    <section id="categories" class="px-6 md:px-10 py-16">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-3xl font-headline font-extrabold tracking-tight text-primary">Kategori Belanja</h2>
-            <a href="{{ route('categories.index') }}" class="text-[#0284C7] font-bold flex items-center gap-1 group px-4 py-2 rounded-xl bg-[#0284C7]/15 hover:bg-[#0284C7] hover:text-white transition-all">
-                Lihat Semua
-                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">trending_flat</span>
-            </a>
-        </div>
-        <div class="flex gap-4 overflow-x-auto category-scroll pb-4">
-                <a href="{{ route('categories.index') }}"
-                   class="flex-none px-6 py-3 rounded-full text-white font-bold shadow-md whitespace-nowrap transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-                    style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">Semua</a>
-            @foreach($categories->take(8) as $cat)
-                <a href="{{ route('categories.show', $cat->slug) }}"
-                       class="flex-none px-6 py-3 rounded-full bg-surface-container text-on-surface-variant font-bold hover:bg-[#0284C7]/15 hover:text-[#0284C7] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap flex items-center gap-2">
-                    <span class="material-symbols-outlined text-base">{{ $cat->icon }}</span>
-                    {{ $cat->name }}
+    <section id="categories" class="px-6 md:px-10 py-14">
+        <div class="rounded-[2rem] border border-white/65 bg-white/70 backdrop-blur-sm p-6 md:p-8 shadow-[0_16px_36px_rgba(2,54,97,0.08)]">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-primary/70">Belanja Lebih Mudah</p>
+                    <h2 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-primary mt-1">Kategori Favorit</h2>
+                </div>
+                <a href="{{ route('categories.index') }}" class="landing-btn btn-inline">
+                    Lihat Semua
+                    <span class="material-symbols-outlined">trending_flat</span>
                 </a>
-            @endforeach
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8">
-            @foreach($categories->take(6) as $cat)
-                <a href="{{ route('categories.show', $cat->slug) }}"
-                   class="bg-surface-container-low p-6 rounded-2xl text-center hover:bg-primary/10 hover:shadow-lg transition-all cursor-pointer group">
-                    <span class="material-symbols-outlined text-4xl text-primary mb-3 block group-hover:scale-110 transition-transform">{{ $cat->icon }}</span>
-                    <h3 class="font-bold text-sm">{{ $cat->name }}</h3>
-                    @if($cat->description)
-                        <p class="text-[10px] text-on-surface-variant mt-1">{{ $cat->description }}</p>
-                    @endif
-                </a>
-            @endforeach
+            </div>
+
+            <div class="flex gap-3 overflow-x-auto category-scroll pb-3">
+                <a href="{{ route('categories.index') }}" class="nav-link-pill nav-link-pill-active flex-none">Semua</a>
+                @foreach($categories->take(8) as $cat)
+                    <a href="{{ route('categories.show', $cat->slug) }}" class="nav-link-pill bg-white border border-white/75 flex-none whitespace-nowrap flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">{{ $cat->icon }}</span>
+                        {{ $cat->name }}
+                    </a>
+                @endforeach
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-7">
+                @foreach($categories->take(6) as $cat)
+                    <a href="{{ route('categories.show', $cat->slug) }}" class="promo-glass-card p-5 text-center group bg-white/80 border-white/80">
+                        <span class="material-symbols-outlined text-4xl text-primary mb-3 block group-hover:scale-110 transition-transform">{{ $cat->icon }}</span>
+                        <h3 class="font-bold text-sm">{{ $cat->name }}</h3>
+                        @if($cat->description)
+                            <p class="text-[10px] text-on-surface-variant mt-1 line-clamp-2">{{ $cat->description }}</p>
+                        @endif
+                    </a>
+                @endforeach
+            </div>
         </div>
     </section>
 
     <!-- Featured Products -->
-    <section id="promo" class="px-6 md:px-10 py-16 bg-surface-container-low">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-            <div>
-                <h2 class="text-4xl font-headline font-extrabold tracking-tight text-primary">Pilihan Terbaik Hari Ini</h2>
-                <p class="text-on-surface-variant font-medium mt-2">Menampilkan produk yang sedang promo hari ini.</p>
+    <section id="promo" class="px-6 md:px-10 pb-16">
+        <div class="rounded-[2rem] border border-white/60 bg-white/70 backdrop-blur-sm p-6 md:p-8 shadow-[0_16px_36px_rgba(2,54,97,0.08)]">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-primary/70">Pilihan Spesial</p>
+                    <h2 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-primary mt-1">Promo Produk Hari Ini</h2>
+                    <p class="text-on-surface-variant font-medium mt-2">Menampilkan produk yang sedang promo dengan harga terbaik.</p>
+                </div>
+                <a class="landing-btn btn-inline" href="{{ route('promos.index') }}#promo-products">
+                    Lihat Semua
+                    <span class="material-symbols-outlined">trending_flat</span>
+                </a>
             </div>
-            <a class="text-[#0284C7] font-bold flex items-center gap-1 group px-4 py-2 rounded-xl bg-[#0284C7]/15 hover:bg-[#0284C7] hover:text-white transition-all" href="{{ route('promos.index') }}#promo-products">
-                Lihat Semua
-                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">trending_flat</span>
-            </a>
-        </div>
-        @if(($featuredProducts ?? collect())->isNotEmpty())
-            <div class="flex gap-6 overflow-x-auto pb-2">
-                @foreach($featuredProducts as $promoProduct)
-                    @php
-                        $product = $promoProduct->product;
-                    @endphp
-                    @continue(!$product)
-                    <div class="w-[280px] flex-none bg-surface-container-lowest rounded-2xl overflow-hidden group transition-all hover:shadow-xl border border-outline-variant/20">
-                        <div class="h-44 bg-gradient-to-br from-primary/20 to-secondary/10 relative overflow-hidden flex items-center justify-center">
-                            <div class="absolute top-3 left-3 z-10">
-                                @if($promoProduct->start_date->isFuture())
-                                    <span class="bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase">Mulai {{ $promoProduct->start_date->format('d M') }}</span>
+
+            @if(($featuredProducts ?? collect())->isNotEmpty())
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    @foreach($featuredProducts as $promoProduct)
+                        @php
+                            $product = $promoProduct->product;
+                        @endphp
+                        @continue(!$product)
+                        <article class="promo-glass-card bg-white/88 border-white/80 overflow-hidden">
+                            <div class="h-44 bg-gradient-to-br from-primary/20 to-secondary/10 relative overflow-hidden flex items-center justify-center">
+                                <div class="absolute top-3 left-3 z-10">
+                                    @if($promoProduct->start_date->isFuture())
+                                        <span class="bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase">Mulai {{ $promoProduct->start_date->format('d M') }}</span>
+                                    @else
+                                        <span class="bg-secondary text-on-secondary text-[10px] font-bold px-3 py-1 rounded-full uppercase">Aktif</span>
+                                    @endif
+                                </div>
+                                @if($product->image)
+                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover"/>
                                 @else
-                                    <span class="bg-secondary text-on-secondary text-[10px] font-bold px-3 py-1 rounded-full uppercase">Aktif</span>
+                                    <span class="material-symbols-outlined text-8xl text-primary/20" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
                                 @endif
                             </div>
-                            @if($product->image)
-                                <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover"/>
-                            @else
-                                <span class="material-symbols-outlined text-8xl text-primary/20" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
-                            @endif
-                        </div>
-                        <div class="p-6">
-                            <p class="text-xs text-primary font-bold uppercase tracking-wider mb-2">{{ $product->category?->name ?? 'Produk' }}</p>
-                            <h3 class="text-lg font-headline font-bold mb-2">{{ $product->name }}</h3>
-                            <p class="text-sm text-on-surface-variant line-clamp-2">{{ $product->description ?: 'Produk terbaru yang sudah ditambahkan di admin.' }}</p>
-                            
-                            @php
-                                $hargaNormal = $product->price;
-                                $hargaDiskon = max($product->purchase_price, $hargaNormal - $promoProduct->discount_value);
-                            @endphp
+                            <div class="p-5">
+                                <p class="text-xs text-primary font-bold uppercase tracking-wider mb-2">{{ $product->category?->name ?? 'Produk' }}</p>
+                                <h3 class="text-lg font-headline font-bold mb-2 line-clamp-2">{{ $product->name }}</h3>
+                                <p class="text-sm text-on-surface-variant line-clamp-2">{{ $product->description ?: 'Produk terbaru yang sudah ditambahkan di admin.' }}</p>
 
-                            <div class="mt-4 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                    <span class="text-[11px] font-medium text-on-surface-variant/60 line-through">Rp {{ number_format($hargaNormal, 0, ',', '.') }}</span>
-                                    <span class="text-xl font-extrabold text-error">Rp {{ number_format($hargaDiskon, 0, ',', '.') }}</span>
+                                @php
+                                    $hargaNormal = $product->price;
+                                    $hargaDiskon = max($product->purchase_price, $hargaNormal - $promoProduct->discount_value);
+                                @endphp
+
+                                <div class="mt-4 flex items-center justify-between">
+                                    <div class="flex flex-col">
+                                        <span class="text-[11px] font-medium text-on-surface-variant/60 line-through">Rp {{ number_format($hargaNormal, 0, ',', '.') }}</span>
+                                        <span class="text-xl font-extrabold text-error">Rp {{ number_format($hargaDiskon, 0, ',', '.') }}</span>
+                                    </div>
+                                    <a href="{{ $product->category ? route('categories.show', $product->category->slug) : route('categories.index') }}" class="landing-btn-neutral p-2.5 rounded-xl">
+                                        <span class="material-symbols-outlined">arrow_outward</span>
+                                    </a>
                                 </div>
-                                <a href="{{ $product->category ? route('categories.show', $product->category->slug) : route('categories.index') }}" class="bg-primary/10 text-primary p-2 rounded-xl hover:bg-primary hover:text-on-primary transition-colors inline-flex">
-                                    <span class="material-symbols-outlined">arrow_outward</span>
-                                </a>
+                                <p class="mt-2 text-xs text-on-surface-variant">Stok: {{ $product->stock }} {{ $product->unit }}</p>
                             </div>
-                            <p class="mt-2 text-xs text-on-surface-variant">Stok: {{ $product->stock }} {{ $product->unit }}</p>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-10 text-center text-on-surface-variant">
-                Belum ada produk aktif saat ini. Produk dari admin akan tampil di sini.
-            </div>
-        @endif
+                        </article>
+                    @endforeach
+                </div>
+            @else
+                <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-10 text-center text-on-surface-variant">
+                    Belum ada produk aktif saat ini. Produk dari admin akan tampil di sini.
+                </div>
+            @endif
+        </div>
     </section>
 
     <!-- Lokasi Kami -->
-    <section class="px-5 md:px-10 py-16">
+    <section id="location-info" class="px-5 md:px-10 py-16">
         @php
             $locationPhotos = [
                 \App\Models\AppSetting::getValue('landing_location_photo_1'),
@@ -271,7 +295,7 @@
                 <div class="rounded-[20px] p-5 md:p-6 border border-white/20 bg-surface-container-low/60">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-xl md:text-2xl font-headline font-extrabold text-on-surface">Galeri Toko</h3>
-                        <span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Lokasi Kami</span>
+                
                     </div>
 
                     <div id="location-gallery" class="relative">
