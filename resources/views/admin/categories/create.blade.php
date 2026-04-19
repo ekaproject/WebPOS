@@ -25,7 +25,7 @@
                     Nama Kategori <span class="text-error">*</span>
                 </label>
                 <input type="text" id="name" name="name" value="{{ old('name') }}" required
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('name') border-error @enderror"
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('name') border-error @enderror"
                        placeholder="Cth: Produk Segar"/>
                 @error('name')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
@@ -36,7 +36,7 @@
                 </label>
                 <div class="flex gap-3 items-center">
                     <input type="text" id="icon" name="icon" value="{{ old('icon', 'category') }}" required
-                           class="flex-1 rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('icon') border-error @enderror"
+                           class="flex-1 rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('icon') border-error @enderror"
                            placeholder="Cth: nutrition, restaurant, clean_hands"
                            oninput="document.getElementById('icon-preview').textContent = this.value"/>
                     <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center flex-none">
@@ -52,7 +52,7 @@
                     Tipe <span class="text-error">*</span>
                 </label>
                 <select id="type" name="type" required
-                        class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('type') border-error @enderror">
+                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('type') border-error @enderror">
                     <option value="fmcg"    {{ old('type') === 'fmcg'    ? 'selected' : '' }}>FMCG (Barang Umum)</option>
                     <option value="fresh"   {{ old('type') === 'fresh'   ? 'selected' : '' }}>Fresh (Produk Segar)</option>
                     <option value="fnb"     {{ old('type') === 'fnb'     ? 'selected' : '' }}>F&B (Makanan & Minuman)</option>
@@ -66,7 +66,7 @@
                     Deskripsi Singkat
                 </label>
                 <input type="text" id="description" name="description" value="{{ old('description') }}"
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
                        placeholder="Cth: Buah, Sayur, Daging"/>
                 <p class="text-xs text-on-surface-variant mt-1">Tampil sebagai subtitle di kartu kategori</p>
             </div>

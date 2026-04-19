@@ -24,7 +24,7 @@
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="title">Judul Promo <span class="text-error">*</span></label>
                 <input type="text" id="title" name="title" value="{{ old('title', $promo->title) }}" required
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('title') border-error @enderror"/>
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('title') border-error @enderror"/>
                 @error('title')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -40,21 +40,21 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="discount_value">Nilai Diskon <span class="text-error">*</span></label>
                 <input type="number" step="0.01" id="discount_value" name="discount_value" value="{{ old('discount_value', $promo->discount_value) }}" required
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('discount_value') border-error @enderror"/>
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('discount_value') border-error @enderror"/>
                 @error('discount_value')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="min_purchase">Minimum Belanja</label>
                 <input type="number" step="0.01" id="min_purchase" name="min_purchase" value="{{ old('min_purchase', $promo->min_purchase) }}"
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('min_purchase') border-error @enderror"/>
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('min_purchase') border-error @enderror"/>
                 @error('min_purchase')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="voucher_quota">Kuota Voucher</label>
                 <input type="number" id="voucher_quota" name="voucher_quota" value="{{ old('voucher_quota', $promo->voucher_quota ?? 10) }}" min="1"
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('voucher_quota') border-error @enderror"/>
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('voucher_quota') border-error @enderror"/>
                 <p class="text-xs text-on-surface-variant mt-1">Kode voucher otomatis jika promo memakai minimum belanja</p>
                 @error('voucher_quota')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
@@ -76,7 +76,7 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="category_id">Kategori (Opsional)</label>
                 <select id="category_id" name="category_id"
-                        class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
+                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ old('category_id', $promo->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -88,7 +88,7 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="product_id">Produk Promo <span class="text-error">*</span></label>
                 <select id="product_id" name="product_id" required
-                        class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('product_id') border-error @enderror">
+                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('product_id') border-error @enderror">
                     <option value="">Pilih Produk Promo</option>
                     @foreach($products as $product)
                         <option value="{{ $product->id }}" {{ old('product_id', $promo->product_id) == $product->id ? 'selected' : '' }}>
@@ -121,21 +121,21 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="start_date">Tanggal Mulai <span class="text-error">*</span></label>
                 <input type="date" id="start_date" name="start_date" value="{{ old('start_date', $promo->start_date->format('Y-m-d')) }}" required
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('start_date') border-error @enderror"/>
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('start_date') border-error @enderror"/>
                 @error('start_date')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="end_date">Tanggal Berakhir <span class="text-error">*</span></label>
                 <input type="date" id="end_date" name="end_date" value="{{ old('end_date', $promo->end_date->format('Y-m-d')) }}" required
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('end_date') border-error @enderror"/>
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('end_date') border-error @enderror"/>
                 @error('end_date')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="description">Deskripsi Promo</label>
                 <textarea id="description" name="description" rows="3"
-                          class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary @error('description') border-error @enderror">{{ old('description', $promo->description) }}</textarea>
+                          class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('description') border-error @enderror">{{ old('description', $promo->description) }}</textarea>
                 @error('description')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 

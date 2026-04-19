@@ -29,6 +29,13 @@ class Product extends Model
         return $this->hasMany(TransactionItem::class);
     }
 
+    public function distributors()
+    {
+        return $this->belongsToMany(Distributor::class, 'distributor_product')
+                    ->withPivot('purchase_price')
+                    ->withTimestamps();
+    }
+
     public function isLowStock(): bool
     {
         return $this->stock <= $this->min_stock;

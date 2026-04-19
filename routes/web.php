@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\ReturnController;
 
 // Public landing page
 Route::get('/', function () {
@@ -54,10 +55,19 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('categories', AdminCategoryController::class)->except(['show']);
     Route::resource('promos', AdminPromoController::class)->except(['show']);
     Route::get('distributors', [DistributorController::class, 'index'])->name('distributors.index');
+    Route::get('distributors/create', [DistributorController::class, 'create'])->name('distributors.create');
+    Route::post('distributors', [DistributorController::class, 'store'])->name('distributors.store');
+    Route::get('distributors/{distributor}', [DistributorController::class, 'show'])->name('distributors.show');
+    Route::get('distributors/{distributor}/edit', [DistributorController::class, 'edit'])->name('distributors.edit');
+    Route::put('distributors/{distributor}', [DistributorController::class, 'update'])->name('distributors.update');
+    Route::delete('distributors/{distributor}', [DistributorController::class, 'destroy'])->name('distributors.destroy');
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
     Route::get('reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
     Route::resource('team', TeamController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+    // Retur Barang
+    Route::get('returns/create', [ReturnController::class, 'create'])->name('returns.create');
+    Route::post('returns', [ReturnController::class, 'store'])->name('returns.store');
 });

@@ -24,17 +24,17 @@
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Cari Promo</label>
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Judul atau deskripsi promo..."
-                       class="w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Tipe Promo</label>
-                <div class="rounded-xl border border-outline-variant/40 bg-surface-container-low text-sm px-4 py-2.5 text-on-surface font-semibold">
+                <div class="rounded-xl border border border-outline-variant/30 bg-white text-sm px-4 py-2.5 text-on-surface font-semibold">
                     Potongan Nominal
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Status</label>
-                <select name="status" class="rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">
+                <select name="status" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="">Semua</option>
                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>

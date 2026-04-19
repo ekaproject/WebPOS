@@ -11,17 +11,17 @@
     --color-tertiary: #7b2600;
     --color-tertiary-fixed: #ffdbcf;
     --color-on-error: #ffffff;
-    --color-surface-variant: #e2e2e5;
+    --color-surface-variant: #dcdee8;
     --color-on-secondary-fixed-variant: #00531e;
     --color-on-error-container: #93000a;
-    --color-surface-container-low: #f3f3f6;
+    --color-surface-container-low: #eef0f7;
     --color-on-background: #1a1c1e;
     --color-on-tertiary: #ffffff;
     --color-on-secondary-fixed: #002108;
     --color-secondary: #006e2a;
     --color-on-tertiary-fixed: #380d00;
     --color-tertiary-fixed-dim: #ffb59b;
-    --color-surface-dim: #dadadc;
+    --color-surface-dim: #d4d7e2;
     --color-surface-tint: #0284c7;
     --color-inverse-on-surface: #f0f0f3;
     --color-surface-container-lowest: #ffffff;
@@ -30,11 +30,11 @@
     --color-secondary-container: #5cfd80;
     --color-primary-container: #0369a1;
     --color-primary: #0284c7;
-    --color-surface-container-highest: #e2e2e5;
+    --color-surface-container-highest: #d2d5e0;
     --color-outline: #737685;
     --color-on-surface: #1a1c1e;
     --color-secondary-fixed: #69ff87;
-    --color-outline-variant: #c3c6d6;
+    --color-outline-variant: #bcc0d0;
     --color-primary-fixed-dim: #b2c5ff;
     --color-on-secondary-container: #00732c;
     --color-secondary-fixed-dim: #3ce36a;
@@ -45,13 +45,13 @@
     --color-inverse-surface: #2f3133;
     --color-primary-fixed: #e0f2fe;
     --color-on-primary-container: #e0f2fe;
-    --color-surface-bright: #f9f9fc;
+    --color-surface-bright: #f9fafd;
     --color-error: #ba1a1a;
-    --color-surface-container: #eeeef0;
+    --color-surface-container: #e4e6ef;
     --color-on-surface-variant: #434654;
-    --color-surface-container-high: #e8e8ea;
-    --color-background: #f9f9fc;
-    --color-surface: #f9f9fc;
+    --color-surface-container-high: #dadde8;
+    --color-background: #f6f7fc;
+    --color-surface: #f6f7fc;
     --color-tertiary-container: #a33500;
     --color-on-primary-fixed: #001848;
     --color-on-primary-fixed-variant: #0369a1;
@@ -83,8 +83,35 @@
     background: linear-gradient(135deg, #0284c7 0%, #0369a1 58%, #075985 100%);
 }
 
+/* Admin form inputs baseline */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+input[type="search"],
+select,
+textarea {
+    padding: 0.625rem 1rem;
+    line-height: 1.5;
+}
+
+/* Admin panel depth */
+.admin-card {
+    box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.04),
+        0 1px 2px -1px rgba(0, 0, 0, 0.03);
+}
+
+.admin-sidebar {
+    border-right: 1px solid rgba(188, 192, 208, 0.3);
+    box-shadow: 2px 0 8px 0 rgba(0, 0, 0, 0.03);
+}
+
 .promo-mesh {
-    background-color: #f9f9fc;
+    background-color: #f6f7fc;
     background-image:
         radial-gradient(at 0% 0%, #dae2ff 0, transparent 50%),
         radial-gradient(at 50% 0%, #5cfd80 0, transparent 50%),
@@ -92,7 +119,7 @@
 }
 
 .glass-nav {
-    background: rgba(249, 249, 252, 0.78);
+    background: rgba(246, 247, 252, 0.78);
     backdrop-filter: blur(24px);
 }
 
@@ -105,7 +132,7 @@
 }
 
 .bg-mesh {
-    background-color: #f9f9fc;
+    background-color: #f6f7fc;
     background-image:
         radial-gradient(at 0% 0%, rgba(0, 61, 155, 0.05) 0px, transparent 50%),
         radial-gradient(
@@ -148,9 +175,21 @@
 .landing-surface {
     background-color: #f9fbff;
     background-image:
-        radial-gradient(circle at 8% 10%, rgba(2, 132, 199, 0.12), transparent 38%),
-        radial-gradient(circle at 88% 4%, rgba(34, 197, 94, 0.1), transparent 32%),
-        radial-gradient(circle at 80% 88%, rgba(6, 182, 212, 0.08), transparent 35%);
+        radial-gradient(
+            circle at 8% 10%,
+            rgba(2, 132, 199, 0.12),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 88% 4%,
+            rgba(34, 197, 94, 0.1),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 80% 88%,
+            rgba(6, 182, 212, 0.08),
+            transparent 35%
+        );
 }
 
 .sticky-blur-nav {
@@ -201,7 +240,11 @@
     height: 300px;
     top: -120px;
     right: -60px;
-    background: radial-gradient(circle, rgba(125, 211, 252, 0.34), transparent 72%);
+    background: radial-gradient(
+        circle,
+        rgba(125, 211, 252, 0.34),
+        transparent 72%
+    );
 }
 
 .hero-gradient-shell::after {
@@ -209,7 +252,11 @@
     height: 360px;
     bottom: -180px;
     left: -100px;
-    background: radial-gradient(circle, rgba(34, 197, 94, 0.24), transparent 70%);
+    background: radial-gradient(
+        circle,
+        rgba(34, 197, 94, 0.24),
+        transparent 70%
+    );
 }
 
 .hero-floating-orb {
@@ -229,7 +276,10 @@
     color: #ffffff;
     background: linear-gradient(135deg, #0284c7 0%, #0369a1 58%, #0f4c81 100%);
     box-shadow: 0 14px 24px rgba(5, 90, 150, 0.22);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
 }
 
 .landing-btn:hover {
@@ -293,12 +343,18 @@
     overflow: hidden;
     border-radius: 1.35rem;
     border: 1px solid rgba(255, 255, 255, 0.6);
-    background: linear-gradient(150deg, rgba(255, 255, 255, 0.72), rgba(238, 247, 255, 0.46));
+    background: linear-gradient(
+        150deg,
+        rgba(255, 255, 255, 0.72),
+        rgba(238, 247, 255, 0.46)
+    );
     backdrop-filter: blur(16px);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.55),
         0 18px 32px rgba(6, 60, 104, 0.12);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .promo-glass-card::after {
@@ -306,7 +362,11 @@
     position: absolute;
     inset: -65% 35% auto -35%;
     height: 180px;
-    background: radial-gradient(circle, rgba(125, 211, 252, 0.35), transparent 70%);
+    background: radial-gradient(
+        circle,
+        rgba(125, 211, 252, 0.35),
+        transparent 70%
+    );
     pointer-events: none;
 }
 
@@ -334,7 +394,11 @@
     border-radius: 9999px;
     top: -80px;
     right: -40px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 72%);
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.22),
+        transparent 72%
+    );
 }
 
 .fade-rise {

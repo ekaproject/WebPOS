@@ -15,7 +15,7 @@
 <body class="bg-surface font-body text-on-surface">
 
 <!-- Sidebar -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low flex flex-col py-6 pr-4 z-50">
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low admin-sidebar flex flex-col py-6 pr-4 z-50">
     <div class="px-6 mb-8">
         <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">grid_view</span>
@@ -54,6 +54,11 @@
                         <span class="material-symbols-outlined">local_offer</span>
                         <span class="font-medium text-sm">Promo</span>
                 </a>
+                <a href="{{ route('admin.returns.create') }}"
+            class="{{ request()->routeIs('admin.returns*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
+            <span class="material-symbols-outlined">undo</span>
+            <span class="font-medium text-sm">Retur Barang</span>
+        </a>
           <a href="{{ route('admin.reports.index') }}"
               class="{{ request()->routeIs('admin.reports*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
             <span class="material-symbols-outlined">analytics</span>
@@ -91,11 +96,11 @@
 <!-- Main Content -->
 <main class="ml-64 min-h-screen">
     <!-- Top Header -->
-    <header class="h-16 bg-surface flex items-center justify-between px-8 sticky top-0 z-40 border-b border-outline-variant/10">
+    <header class="h-16 bg-surface-container-lowest flex items-center justify-between px-8 sticky top-0 z-40 border-b border-outline-variant/20 admin-card">
         <div class="flex items-center flex-1 max-w-xl">
             <div class="relative w-full">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-                <input class="w-full bg-surface-container-highest border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary"
+                <input class="w-full bg-white border border-outline-variant/30 rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary"
                        placeholder="Cari produk, transaksi..." type="text"/>
             </div>
         </div>

@@ -28,12 +28,12 @@
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
                     <input type="text" name="search" value="{{ request('search') }}"
                            placeholder="Nama atau SKU..."
-                           class="pl-10 w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                           class="pl-10 w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Kategori</label>
-                <select name="category" class="rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">
+                <select name="category" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="">Semua</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -42,7 +42,7 @@
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Stok</label>
-                <select name="stock" class="rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">
+                <select name="stock" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="">Semua</option>
                     <option value="low" {{ request('stock') === 'low' ? 'selected' : '' }}>Stok Kritis</option>
                     <option value="ok" {{ request('stock') === 'ok' ? 'selected' : '' }}>Stok Aman</option>

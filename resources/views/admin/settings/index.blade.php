@@ -26,32 +26,32 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Nama Toko</label>
-                <input data-settings-field type="text" name="store_name" value="{{ old('store_name', $settings['store_name']) }}" required class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input data-settings-field type="text" name="store_name" value="{{ old('store_name', $settings['store_name']) }}" required class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('store_name')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Email Toko</label>
-                <input data-settings-field type="email" name="store_email" value="{{ old('store_email', $settings['store_email']) }}" required class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input data-settings-field type="email" name="store_email" value="{{ old('store_email', $settings['store_email']) }}" required class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('store_email')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">No. Telepon Toko</label>
-                <input data-settings-field type="text" name="store_phone" value="{{ old('store_phone', $settings['store_phone']) }}" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input data-settings-field type="text" name="store_phone" value="{{ old('store_phone', $settings['store_phone']) }}" class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('store_phone')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Pajak (%)</label>
-                <input data-settings-field type="number" step="0.01" min="0" max="100" name="tax_percent" value="{{ old('tax_percent', $settings['tax_percent'] ?? 11) }}" required class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input data-settings-field type="number" step="0.01" min="0" max="100" name="tax_percent" value="{{ old('tax_percent', $settings['tax_percent'] ?? 11) }}" required class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('tax_percent')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Alamat Toko</label>
-                <textarea data-settings-field name="store_address" rows="3" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">{{ old('store_address', $settings['store_address']) }}</textarea>
+                <textarea data-settings-field name="store_address" rows="3" class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">{{ old('store_address', $settings['store_address']) }}</textarea>
                 @error('store_address')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Teks Footer Aplikasi</label>
-                <input data-settings-field type="text" name="footer_text" value="{{ old('footer_text', $settings['footer_text'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input data-settings-field type="text" name="footer_text" value="{{ old('footer_text', $settings['footer_text'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('footer_text')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             
@@ -63,12 +63,12 @@
             <div class="md:col-span-2 bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 space-y-4">
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-primary mb-1.5">Hero Title (Judul Banner Utama)</label>
-                    <input data-settings-field type="text" name="landing_hero_title" value="{{ old('landing_hero_title', $settings['landing_hero_title'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary"/>
+                    <input data-settings-field type="text" name="landing_hero_title" value="{{ old('landing_hero_title', $settings['landing_hero_title'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary"/>
                     @error('landing_hero_title')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-primary mb-1.5">Hero Description (Deskripsi Banner Utama)</label>
-                    <textarea data-settings-field name="landing_hero_description" rows="2" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_hero_description', $settings['landing_hero_description'] ?? '') }}</textarea>
+                    <textarea data-settings-field name="landing_hero_description" rows="2" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_hero_description', $settings['landing_hero_description'] ?? '') }}</textarea>
                     @error('landing_hero_description')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
@@ -76,12 +76,12 @@
             <div class="md:col-span-2 bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 space-y-4">
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-secondary mb-1.5">Title Fitur / Solusi</label>
-                    <input data-settings-field type="text" name="landing_solusi_text" value="{{ old('landing_solusi_text', $settings['landing_solusi_text'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary"/>
+                    <input data-settings-field type="text" name="landing_solusi_text" value="{{ old('landing_solusi_text', $settings['landing_solusi_text'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary"/>
                     @error('landing_solusi_text')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-secondary mb-1.5">Deskripsi Fitur / Solusi</label>
-                    <textarea data-settings-field name="landing_solusi_desc" rows="2" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_solusi_desc', $settings['landing_solusi_desc'] ?? '') }}</textarea>
+                    <textarea data-settings-field name="landing_solusi_desc" rows="2" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_solusi_desc', $settings['landing_solusi_desc'] ?? '') }}</textarea>
                     @error('landing_solusi_desc')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
@@ -89,12 +89,12 @@
             <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 space-y-4">
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-tertiary mb-1.5">Fitur Poin 1 (Judul)</label>
-                    <input data-settings-field type="text" name="landing_feature_1_title" value="{{ old('landing_feature_1_title', $settings['landing_feature_1_title'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary"/>
+                    <input data-settings-field type="text" name="landing_feature_1_title" value="{{ old('landing_feature_1_title', $settings['landing_feature_1_title'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary"/>
                     @error('landing_feature_1_title')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-tertiary mb-1.5">Fitur Poin 1 (Deskripsi)</label>
-                    <textarea data-settings-field name="landing_feature_1_desc" rows="2" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_feature_1_desc', $settings['landing_feature_1_desc'] ?? '') }}</textarea>
+                    <textarea data-settings-field name="landing_feature_1_desc" rows="2" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_feature_1_desc', $settings['landing_feature_1_desc'] ?? '') }}</textarea>
                     @error('landing_feature_1_desc')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
@@ -102,12 +102,12 @@
             <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 space-y-4">
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-tertiary mb-1.5">Fitur Poin 2 (Judul)</label>
-                    <input data-settings-field type="text" name="landing_feature_2_title" value="{{ old('landing_feature_2_title', $settings['landing_feature_2_title'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary"/>
+                    <input data-settings-field type="text" name="landing_feature_2_title" value="{{ old('landing_feature_2_title', $settings['landing_feature_2_title'] ?? '') }}" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary"/>
                     @error('landing_feature_2_title')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-tertiary mb-1.5">Fitur Poin 2 (Deskripsi)</label>
-                    <textarea data-settings-field name="landing_feature_2_desc" rows="2" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_feature_2_desc', $settings['landing_feature_2_desc'] ?? '') }}</textarea>
+                    <textarea data-settings-field name="landing_feature_2_desc" rows="2" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_feature_2_desc', $settings['landing_feature_2_desc'] ?? '') }}</textarea>
                     @error('landing_feature_2_desc')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
@@ -115,7 +115,7 @@
             <div class="md:col-span-2 bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 space-y-4">
                 <div>
                     <label class="block text-xs font-bold tracking-wider text-primary mb-1.5">Deskripsi Tentang Perusahaan (Footer)</label>
-                    <textarea data-settings-field name="landing_about_desc" rows="2" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_about_desc', $settings['landing_about_desc'] ?? '') }}</textarea>
+                    <textarea data-settings-field name="landing_about_desc" rows="2" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm focus:ring-2 focus:ring-primary">{{ old('landing_about_desc', $settings['landing_about_desc'] ?? '') }}</textarea>
                     @error('landing_about_desc')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
@@ -132,7 +132,7 @@
                         @if(!empty($settings['landing_location_photo_1']))
                             <img src="{{ asset('storage/'.$settings['landing_location_photo_1']) }}" alt="Foto Lokasi 1" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
                         @endif
-                        <input data-settings-field type="file" name="landing_location_photo_1" accept="image/*" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
+                        <input data-settings-field type="file" name="landing_location_photo_1" accept="image/*" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
                         @error('landing_location_photo_1')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
@@ -141,7 +141,7 @@
                         @if(!empty($settings['landing_location_photo_2']))
                             <img src="{{ asset('storage/'.$settings['landing_location_photo_2']) }}" alt="Foto Lokasi 2" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
                         @endif
-                        <input data-settings-field type="file" name="landing_location_photo_2" accept="image/*" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
+                        <input data-settings-field type="file" name="landing_location_photo_2" accept="image/*" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
                         @error('landing_location_photo_2')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
@@ -150,7 +150,7 @@
                         @if(!empty($settings['landing_location_photo_3']))
                             <img src="{{ asset('storage/'.$settings['landing_location_photo_3']) }}" alt="Foto Lokasi 3" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
                         @endif
-                        <input data-settings-field type="file" name="landing_location_photo_3" accept="image/*" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
+                        <input data-settings-field type="file" name="landing_location_photo_3" accept="image/*" class="w-full rounded-xl border border-outline-variant/30 bg-whiteest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
                         @error('landing_location_photo_3')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                 </div>

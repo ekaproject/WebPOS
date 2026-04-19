@@ -21,12 +21,12 @@
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
                     <input type="text" name="search" value="{{ request('search') }}"
                            placeholder="No. Invoice..."
-                           class="pl-10 w-full rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                           class="pl-10 w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Status</label>
-                <select name="status" class="rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">
+                <select name="status" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="">Semua</option>
                     <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>Lunas</option>
                     <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
@@ -36,12 +36,12 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Dari Tanggal</label>
                 <input type="date" name="from" value="{{ request('from') }}"
-                       class="rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                       class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Sampai Tanggal</label>
                 <input type="date" name="to" value="{{ request('to') }}"
-                       class="rounded-xl border-outline-variant/40 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                       class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
             </div>
             <button type="submit" class="px-5 py-2 bg-primary text-on-primary rounded-xl font-bold text-sm">Filter</button>
             <a href="{{ route('admin.transactions.index') }}" class="px-5 py-2 bg-surface-container text-on-surface-variant rounded-xl font-bold text-sm">Reset</a>

@@ -21,14 +21,14 @@
     <form method="GET" action="{{ route('admin.team.index') }}" class="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-5">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, email, atau nomor..."
-                class="md:col-span-2 rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
-            <select name="role" class="rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">
+                class="md:col-span-2 rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
+            <select name="role" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                 <option value="">Semua Role</option>
                 @foreach(['admin' => 'Admin', 'supervisor' => 'Supervisor', 'cashier' => 'Kasir', 'staff' => 'Staff'] as $value => $label)
                     <option value="{{ $value }}" {{ request('role') === $value ? 'selected' : '' }}>{{ $label }}</option>
                 @endforeach
             </select>
-            <select name="is_active" class="rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">
+            <select name="is_active" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                 <option value="">Semua Status</option>
                 <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Aktif</option>
                 <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Nonaktif</option>
@@ -49,17 +49,17 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Nama</label>
-                <input type="text" name="name" value="{{ old('name') }}" required class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input type="text" name="name" value="{{ old('name') }}" required class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('name')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Email</label>
-                <input type="email" name="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input type="email" name="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('email')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Role</label>
-                <select name="role" required class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary">
+                <select name="role" required class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="supervisor" {{ old('role') === 'supervisor' ? 'selected' : '' }}>Supervisor</option>
                     <option value="cashier" {{ old('role') === 'cashier' ? 'selected' : '' }}>Kasir</option>
@@ -69,17 +69,17 @@
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">No. Telepon</label>
-                <input type="text" name="phone" value="{{ old('phone') }}" class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input type="text" name="phone" value="{{ old('phone') }}" class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('phone')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Password</label>
-                <input type="password" name="password" required class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input type="password" name="password" required class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 @error('password')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Konfirmasi Password</label>
-                <input type="password" name="password_confirmation" required class="w-full rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                <input type="password" name="password_confirmation" required class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
             </div>
             <div class="md:col-span-2 flex items-center gap-2">
                 <input type="checkbox" id="is_active_create" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="w-4 h-4 text-primary rounded border-outline-variant focus:ring-primary"/>
@@ -110,16 +110,16 @@
                 <form id="edit-team-{{ $member->id }}" method="POST" action="{{ route('admin.team.update', $member) }}" class="{{ $editMemberId === $member->id ? '' : 'hidden' }} mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                     @csrf
                     @method('PUT')
-                    <input type="text" name="name" value="{{ old('name', $member->name) }}" class="rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary" required/>
-                    <input type="email" name="email" value="{{ old('email', $member->email) }}" class="rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary" required/>
-                    <select name="role" class="rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary" required>
+                    <input type="text" name="name" value="{{ old('name', $member->name) }}" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required/>
+                    <input type="email" name="email" value="{{ old('email', $member->email) }}" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required/>
+                    <select name="role" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required>
                         @foreach(['admin' => 'Admin', 'supervisor' => 'Supervisor', 'cashier' => 'Kasir', 'staff' => 'Staff'] as $value => $label)
                             <option value="{{ $value }}" {{ $member->role === $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
-                    <input type="text" name="phone" value="{{ old('phone', $member->phone) }}" placeholder="No. telepon" class="rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
-                    <input type="password" name="password" placeholder="Password baru (opsional)" class="rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
-                    <input type="password" name="password_confirmation" placeholder="Konfirmasi password baru" class="rounded-xl border border-outline-variant/80 bg-surface-container-low text-sm focus:ring-2 focus:ring-primary"/>
+                    <input type="text" name="phone" value="{{ old('phone', $member->phone) }}" placeholder="No. telepon" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
+                    <input type="password" name="password" placeholder="Password baru (opsional)" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
+                    <input type="password" name="password_confirmation" placeholder="Konfirmasi password baru" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                     <label class="md:col-span-2 flex items-center gap-2 text-sm">
                         <input type="checkbox" name="is_active" value="1" {{ $member->is_active ? 'checked' : '' }} class="w-4 h-4 text-primary rounded border-outline-variant focus:ring-primary"/>
                         Akun aktif
