@@ -40,8 +40,6 @@
                 <thead>
                     <tr class="bg-surface-container-low text-left text-xs font-bold uppercase tracking-wider text-on-surface-variant">
                         <th class="px-6 py-3">Kategori</th>
-                        <th class="px-6 py-3">Slug</th>
-                        <th class="px-6 py-3">Tipe</th>
                         <th class="px-6 py-3">Produk</th>
                         <th class="px-6 py-3">Status</th>
                         <th class="px-6 py-3">Aksi</th>
@@ -62,16 +60,6 @@
                                     @endif
                                 </div>
                             </div>
-                        </td>
-                        <td class="px-6 py-4 font-mono text-xs text-on-surface-variant">{{ $category->slug }}</td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold
-                                @if($category->type === 'fresh') bg-secondary-container text-on-secondary-container
-                                @elseif($category->type === 'fnb') bg-tertiary-fixed text-on-background
-                                @elseif($category->type === 'digital') bg-primary-fixed text-primary
-                                @else bg-surface-container-high text-on-surface-variant @endif">
-                                {{ ucfirst($category->type) }}
-                            </span>
                         </td>
                         <td class="px-6 py-4 font-bold">{{ $category->products_count }}</td>
                         <td class="px-6 py-4">
@@ -112,7 +100,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-16 text-center text-on-surface-variant">
+                        <td colspan="4" class="px-6 py-16 text-center text-on-surface-variant">
                             <span class="material-symbols-outlined text-5xl block mb-2">category</span>
                             Belum ada kategori. <a href="{{ route('admin.categories.create') }}" class="text-primary font-bold">Tambah sekarang →</a>
                         </td>

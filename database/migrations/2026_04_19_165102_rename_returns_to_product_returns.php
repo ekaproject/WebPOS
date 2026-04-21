@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('returns', 'product_returns');
+        if (Schema::hasTable('returns') && !Schema::hasTable('product_returns')) {
+            Schema::rename('returns', 'product_returns');
+        }
     }
 
     /**
@@ -19,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('product_returns', 'returns');
+        if (Schema::hasTable('product_returns') && !Schema::hasTable('returns')) {
+            Schema::rename('product_returns', 'returns');
+        }
     }
 };

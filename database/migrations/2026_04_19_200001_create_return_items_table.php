@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('return_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('return_id')->constrained('returns')->onDelete('cascade');
+            $table->foreignId('return_id')->constrained('product_returns')->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->integer('quantity');
             $table->integer('purchase_price');
