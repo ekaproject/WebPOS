@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Serve existing files and directories in the project root.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Serve files that live inside the Laravel public directory.
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -d
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # Send everything else to the Laravel front controller.
+    RewriteRule ^ public/index.php [L]
+</IfModule>
