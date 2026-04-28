@@ -29,10 +29,10 @@
 
     {{-- Search --}}
     <form method="GET" class="flex gap-3">
-        <div class="relative flex-1 max-w-md">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+        <div class="flex-1 max-w-md flex items-center gap-2">
+            <span class="material-symbols-outlined text-on-surface-variant text-xl">search</span>
             <input type="text" name="search" value="{{ request('search') }}"
-                   class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
+                   class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
                    placeholder="Cari nama, kode, atau kontak..."/>
         </div>
         <button type="submit" class="px-5 py-2.5 rounded-xl bg-primary text-on-primary text-sm font-bold">Cari</button>
@@ -51,7 +51,7 @@
                         <th class="px-6 py-3">Kode</th>
                         <th class="px-6 py-3">Kontak</th>
                         <th class="px-6 py-3">Telepon</th>
-                        <th class="px-6 py-3">Produk</th>
+                        <th class="px-6 py-3">Inbound</th>
                         <th class="px-6 py-3">Status</th>
                         <th class="px-6 py-3">Aksi</th>
                     </tr>
@@ -75,7 +75,7 @@
                         <td class="px-6 py-4 font-mono text-xs text-on-surface-variant">{{ $distributor->code }}</td>
                         <td class="px-6 py-4">{{ $distributor->contact_person ?? '-' }}</td>
                         <td class="px-6 py-4">{{ $distributor->phone ?? '-' }}</td>
-                        <td class="px-6 py-4 font-bold">{{ $distributor->products_count }}</td>
+                        <td class="px-6 py-4 font-bold text-primary">{{ $distributor->inbound_items_count }}</td>
                         <td class="px-6 py-4">
                             @if($distributor->is_active)
                                 <span class="flex items-center gap-1 text-secondary text-xs font-bold">
@@ -89,6 +89,11 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
+                                <a href="{{ route('admin.inbound-items.create', ['distributor_id' => $distributor->id]) }}"
+                                   class="p-2 rounded-xl bg-primary-fixed hover:bg-primary hover:text-on-primary text-primary transition-colors"
+                                   title="Input Barang Masuk">
+                                    <span class="material-symbols-outlined text-base">box_add</span>
+                                </a>
                                 <a href="{{ route('admin.distributors.show', $distributor) }}"
                                    class="p-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant transition-colors"
                                    title="Detail">

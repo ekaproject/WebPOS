@@ -11,6 +11,11 @@ class Category extends Model
 
     protected $fillable = ['name', 'slug', 'icon', 'description', 'type', 'is_active'];
 
+    public function scopeVisibleForMenu($query)
+    {
+        return $query->where('slug', '!=', 'inventory-qc');
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);

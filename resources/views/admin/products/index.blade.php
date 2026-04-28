@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Produk')
+@section('title', 'Produk Aktif Hasil QC')
 
 @section('content')
 <div class="space-y-6">
@@ -8,14 +8,14 @@
     {{-- Header --}}
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-headline font-extrabold text-primary">Manajemen Produk</h1>
-            <p class="text-on-surface-variant mt-1">Kelola semua produk toko Anda</p>
+            <h1 class="text-3xl font-headline font-extrabold text-primary">Produk Aktif Hasil QC</h1>
+            <p class="text-on-surface-variant mt-1">Menampilkan batch barang baik dari hasil QC dan barang pengganti retur.</p>
         </div>
-        <a href="{{ route('admin.products.create') }}"
+        <a href="{{ route('admin.inbound-items.create') }}"
            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-on-primary"
            style="background: linear-gradient(135deg, #003d9b 0%, #0052cc 100%);">
             <span class="material-symbols-outlined text-xl">add</span>
-            Tambah Produk
+            Input Barang Masuk
         </a>
     </div>
 
@@ -24,16 +24,16 @@
         <form action="{{ route('admin.products.index') }}" method="GET" class="flex flex-wrap gap-4 items-end">
             <div class="flex-1 min-w-[200px]">
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Cari Produk</label>
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-on-surface-variant text-xl">search</span>
                     <input type="text" name="search" value="{{ request('search') }}"
                            placeholder="Nama atau SKU..."
-                           class="pl-10 w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
+                           class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Kategori</label>
-                <select name="category" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
+                <select name="category" class="h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="">Semua</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -42,7 +42,7 @@
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Stok</label>
-                <select name="stock" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
+                <select name="stock" class="h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="">Semua</option>
                     <option value="low" {{ request('stock') === 'low' ? 'selected' : '' }}>Stok Kritis</option>
                     <option value="ok" {{ request('stock') === 'ok' ? 'selected' : '' }}>Stok Aman</option>
@@ -61,9 +61,12 @@
                     <tr class="bg-surface-container-low text-left text-xs font-bold uppercase tracking-wider text-on-surface-variant">
                         <th class="px-6 py-3">Produk</th>
                         <th class="px-6 py-3">Kategori</th>
+                        <th class="px-6 py-3">Distributor</th>
+                        <th class="px-6 py-3">Sumber</th>
                         <th class="px-6 py-3">Harga Beli</th>
                         <th class="px-6 py-3">Harga Jual</th>
                         <th class="px-6 py-3">Stok</th>
+                        <th class="px-6 py-3">Expired</th>
                         <th class="px-6 py-3">Status</th>
                         <th class="px-6 py-3 text-center border-l border-outline-variant/10">Aksi</th>
                     </tr>
@@ -93,6 +96,14 @@
                                 {{ $product->category->name ?? '-' }}
                             </span>
                         </td>
+                        <td class="px-6 py-4 text-on-surface">{{ $product->distributor->name ?? '-' }}</td>
+                        <td class="px-6 py-4">
+                            @if($product->source_type === 'return_replacement')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-tertiary-fixed text-tertiary">Pengganti Retur</span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">QC</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 font-bold text-on-surface-variant">Rp {{ number_format($product->purchase_price, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 font-bold text-primary">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                         <td class="px-6 py-4">
@@ -105,6 +116,7 @@
                                 <span class="text-on-surface font-semibold">{{ $product->stock }}</span>
                             @endif
                         </td>
+                        <td class="px-6 py-4 text-xs text-on-surface-variant">{{ optional($product->expires_at)->format('d M Y') ?? '-' }}</td>
                         <td class="px-6 py-4">
                             @if($product->is_active)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">Aktif</span>
@@ -123,10 +135,10 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-16 text-center">
+                        <td colspan="10" class="px-6 py-16 text-center">
                             <span class="material-symbols-outlined text-5xl text-on-surface-variant/30 block mb-3">inventory_2</span>
-                            <p class="text-on-surface-variant font-medium">Belum ada produk</p>
-                            <a href="{{ route('admin.products.create') }}" class="text-primary font-bold text-sm mt-2 inline-block hover:underline">+ Tambah Produk Pertama</a>
+                            <p class="text-on-surface-variant font-medium">Belum ada produk aktif hasil QC</p>
+                            <a href="{{ route('admin.inbound-items.create') }}" class="text-primary font-bold text-sm mt-2 inline-block hover:underline">+ Input Barang Masuk</a>
                         </td>
                     </tr>
                     @endforelse

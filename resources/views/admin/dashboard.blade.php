@@ -24,7 +24,7 @@
         <div class="text-sm">
             <span class="font-bold text-on-error-container">Perhatian Segera: </span>
             @if($lowStockProducts > 0)
-                <span class="text-on-error-container">{{ $lowStockProducts }} produk stok kritis</span>
+                <span class="text-on-error-container">Ada {{ $lowStockProducts }} produk dengan stok hampir habis</span>
             @endif
             @if($lowStockProducts > 0 && $expiringProducts > 0)
                 <span class="text-on-error-container"> &amp; </span>
@@ -35,6 +35,38 @@
         </div>
         <a href="{{ route('admin.products.index') }}" class="ml-auto text-xs font-bold text-error hover:underline">Lihat Produk &rarr;</a>
     </div>
+
+    @if($lowStockProducts > 0)
+    <div class="bg-error-container/60 border border-error/30 rounded-2xl p-5">
+        <div class="flex items-center justify-between gap-3">
+            <h2 class="text-base font-headline font-extrabold text-error flex items-center gap-2">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">error</span>
+                Stok Hampir Habis
+            </h2>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-error text-on-error">
+                {{ $lowStockProducts }} Produk
+            </span>
+        </div>
+        <p class="text-xs text-on-error-container mt-1.5">Menampilkan 5 produk dengan stok terendah.</p>
+
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            @foreach($lowStockProductList as $product)
+            <div class="bg-surface-container-lowest border border-error/20 rounded-xl p-3.5">
+                <div class="flex items-start justify-between gap-2">
+                    <p class="text-sm font-bold text-on-surface line-clamp-2">{{ $product->name }}</p>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-error-container text-error whitespace-nowrap">
+                        Stok Hampir Habis
+                    </span>
+                </div>
+                <div class="mt-3 text-xs text-on-surface-variant space-y-1">
+                    <p>Stok Saat Ini: <span class="font-bold text-error">{{ $product->stock }}</span></p>
+                    <p>Batas Minimum: <span class="font-semibold text-on-surface">{{ $product->min_stock }}</span></p>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
     @endif
 
     {{-- Stat Cards --}}

@@ -13,7 +13,9 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with('category');
+        $query = Product::with(['category', 'distributor'])
+            ->where('is_active', true)
+            ->whereIn('source_type', ['qc', 'return_replacement']);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -27,20 +29,20 @@ class ProductController extends Controller
         }
 
         if ($request->stock === 'low') {
-            $query->whereColumn('stock', '<=', 'min_stock');
+            $query->whereColumn('stock', '<', 'min_stock');
         } elseif ($request->stock === 'ok') {
-            $query->whereColumn('stock', '>', 'min_stock');
+            $query->whereColumn('stock', '>=', 'min_stock');
         }
 
         $products = $query->latest()->paginate(20);
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::query()->visibleForMenu()->orderBy('name')->get();
 
         return view('admin.products.index', compact('products', 'categories'));
     }
 
     public function create()
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::query()->visibleForMenu()->orderBy('name')->get();
         return view('admin.products.create', compact('categories'));
     }
 
@@ -52,7 +54,6 @@ class ProductController extends Controller
             'purchase_price' => 'required|numeric|min:0',
             'price'          => 'required|numeric|min:0',
             'stock'          => 'required|integer|min:0',
-            'min_stock'      => 'nullable|integer|min:0',
             'unit'           => 'required|in:pcs,kg,liter',
             'description'    => 'nullable|string',
             'expires_at'     => 'nullable|date',
@@ -61,6 +62,7 @@ class ProductController extends Controller
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
+        $data['min_stock'] = 20;
         $data['sku'] = $this->generateNextSku((int) $data['category_id']);
 
         if ($request->hasFile('image')) {
@@ -80,7 +82,7 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::query()->visibleForMenu()->orderBy('name')->get();
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
@@ -93,7 +95,6 @@ class ProductController extends Controller
             'purchase_price' => 'required|numeric|min:0',
             'price'          => 'required|numeric|min:0',
             'stock'          => 'required|integer|min:0',
-            'min_stock'      => 'nullable|integer|min:0',
             'unit'           => 'required|in:pcs,kg,liter',
             'description'    => 'nullable|string',
             'expires_at'     => 'nullable|date',
@@ -102,6 +103,7 @@ class ProductController extends Controller
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
+        $data['min_stock'] = 20;
 
         if ($request->hasFile('image')) {
             if ($product->image) {

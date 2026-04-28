@@ -24,13 +24,13 @@
                 Halaman Promo
             </p>
             <h1 class="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-white mt-3">Promo Potongan Harga & Voucher</h1>
-            <p class="text-white/85 mt-3 max-w-3xl">Nikmati promo potongan harga nominal dan voucher belanja dengan syarat minimum pembelian. Penawaran diperbarui secara berkala sesuai periode promo aktif.</p>
+            <p class="text-white/85 mt-3 max-w-3xl">Nikmati promo potongan harga nominal maupun persen dan voucher belanja dengan syarat minimum pembelian. Penawaran diperbarui secara berkala sesuai periode promo aktif.</p>
 
             <form action="{{ route('promos.index') }}" method="GET" class="mt-6 flex flex-col md:flex-row gap-3 md:items-center">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari promo, kategori, atau deskripsi..."
                        class="w-full md:w-[420px] rounded-2xl border border-white/45 bg-white/90 px-4 py-3 text-sm text-on-surface focus:ring-2 focus:ring-primary focus:border-primary"/>
                 <div class="rounded-2xl border border-white/45 bg-white/18 px-4 py-3 text-sm font-semibold text-white">
-                    Tipe Promo: Potongan Nominal
+                    Tipe Promo: Nominal & Persen
                 </div>
                 <button type="submit" class="landing-btn btn-inline">Filter Promo</button>
             </form>

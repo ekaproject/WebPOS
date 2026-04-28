@@ -10,7 +10,9 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Category::where('is_active', true)
+        $query = Category::query()
+            ->visibleForMenu()
+            ->where('is_active', true)
             ->withCount('products');
 
         if ($request->filled('search')) {
@@ -36,6 +38,10 @@ class CategoryController extends Controller
 
     public function show(Request $request, Category $category)
     {
+        if ($category->slug === 'inventory-qc') {
+            abort(404);
+        }
+
         $query = Product::with('category')
             ->where('category_id', $category->id)
             ->where('is_active', true);
@@ -45,7 +51,11 @@ class CategoryController extends Controller
         }
 
         $products = $query->orderBy('name')->paginate(12);
-        $categories = Category::where('is_active', true)->orderBy('name')->get();
+        $categories = Category::query()
+            ->visibleForMenu()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
 
         return view('category', compact('category', 'products', 'categories'));
     }

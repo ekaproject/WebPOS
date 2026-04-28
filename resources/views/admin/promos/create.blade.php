@@ -3,15 +3,43 @@
 @section('title', 'Tambah Promo')
 
 @section('content')
-<div class="max-w-3xl mx-auto space-y-6">
+@php
+    $defaultStartDate = now()->format('Y-m-d');
+    $defaultEndDate = now()->addDays(7)->format('Y-m-d');
+    $oldProducts = old('products', [[
+        'product_id' => '',
+        'type' => 'fixed',
+        'discount_value' => '',
+        'start_date' => $defaultStartDate,
+        'end_date' => $defaultEndDate,
+    ]]);
+@endphp
 
+<div class="max-w-5xl mx-auto space-y-6">
     <div class="flex items-center gap-4">
         <a href="{{ route('admin.promos.index') }}" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors">
             <span class="material-symbols-outlined">arrow_back</span>
         </a>
         <div>
-            <h1 class="text-3xl font-headline font-extrabold text-primary">Tambah Promo</h1>
-            <p class="text-on-surface-variant mt-0.5">Buat promo harian atau voucher belanja tanpa banner</p>
+            <h1 class="text-3xl font-headline font-extrabold text-primary">Tambah Promo Multi Produk</h1>
+            <p class="text-on-surface-variant mt-0.5">Pilih produk terlebih dulu, lalu isi detail promo per produk.</p>
+        </div>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-5">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="rounded-xl border border-outline-variant/20 bg-surface-container-low p-4">
+                <p class="text-xs font-bold uppercase tracking-wider text-primary mb-1">Step 1</p>
+                <p class="font-semibold text-on-surface">Pilih produk yang akan dipromo.</p>
+            </div>
+            <div class="rounded-xl border border-outline-variant/20 bg-surface-container-low p-4">
+                <p class="text-xs font-bold uppercase tracking-wider text-primary mb-1">Step 2</p>
+                <p class="font-semibold text-on-surface">Isi jenis promo, nilai diskon, dan periode.</p>
+            </div>
+            <div class="rounded-xl border border-outline-variant/20 bg-surface-container-low p-4">
+                <p class="text-xs font-bold uppercase tracking-wider text-primary mb-1">Step 3</p>
+                <p class="font-semibold text-on-surface">Gunakan tombol tambah produk untuk input produk berikutnya.</p>
+            </div>
         </div>
     </div>
 
@@ -19,124 +47,47 @@
           class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-8 space-y-6">
         @csrf
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="title">Judul Promo <span class="text-error">*</span></label>
-                <input type="text" id="title" name="title" value="{{ old('title') }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('title') border-error @enderror"
-                       placeholder="Cth: Diskon Belanja Akhir Pekan"/>
-                @error('title')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
+        @error('products')
+            <div class="rounded-xl bg-error-container/40 border border-error/20 px-4 py-3 text-sm text-error">{{ $message }}</div>
+        @enderror
 
-            <input type="hidden" name="type" value="fixed">
-
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Tipe Promo</label>
-                <div class="px-4 py-2.5 rounded-xl bg-surface-container text-sm font-semibold text-on-surface border border-outline-variant/20">
-                    Potongan Nominal (Rp)
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="discount_value">Nilai Diskon <span class="text-error">*</span></label>
-                <input type="number" step="0.01" id="discount_value" name="discount_value" value="{{ old('discount_value') }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('discount_value') border-error @enderror"
-                       placeholder="Cth: 15000"/>
-                <p class="text-xs text-on-surface-variant mt-1">Masukkan nominal potongan dalam Rupiah.</p>
-                @error('discount_value')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="min_purchase">Minimum Belanja</label>
-                <input type="number" step="0.01" id="min_purchase" name="min_purchase" value="{{ old('min_purchase') }}"
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('min_purchase') border-error @enderror"
-                       placeholder="Cth: 100000"/>
-                <p class="text-xs text-on-surface-variant mt-1">Kosongkan jika promo harian tanpa syarat minimum</p>
-                @error('min_purchase')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="voucher_quota">Kuota Voucher</label>
-                <input type="number" id="voucher_quota" name="voucher_quota" value="{{ old('voucher_quota', 10) }}" min="1"
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('voucher_quota') border-error @enderror"
-                       placeholder="Default: 10"/>
-                <p class="text-xs text-on-surface-variant mt-1">Dipakai saat Minimum Belanja diisi. Kode voucher dibuat otomatis.</p>
-                @error('voucher_quota')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="category_id">Kategori (Opsional)</label>
-                <select id="category_id" name="category_id"
-                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
-                    <option value="">Semua Kategori</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                    @endforeach
-                </select>
-                @error('category_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="product_id">Produk Promo <span class="text-error">*</span></label>
-                <select id="product_id" name="product_id" required
-                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('product_id') border-error @enderror">
-                    <option value="">Pilih Produk Promo</option>
-                    @foreach($products as $product)
-                        <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
-                            {{ $product->name }} ({{ $product->category?->name ?? 'Tanpa Kategori' }})
-                        </option>
-                    @endforeach
-                </select>
-                <p class="text-xs text-on-surface-variant mt-1">Pilih produk promo untuk validasi anti-rugi berdasarkan harga beli produk.</p>
-                @error('product_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div class="md:col-span-2 bg-surface-container rounded-xl border border-outline-variant/20 p-4">
-                <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3">Informasi Harga Produk Terpilih</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-                    <div>
-                        <p class="text-xs text-on-surface-variant">Harga Beli</p>
-                        <p class="font-bold text-on-surface" id="promo-product-purchase-price">-</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-on-surface-variant">Harga Jual</p>
-                        <p class="font-bold text-primary" id="promo-product-selling-price">-</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-on-surface-variant">Maks. Potongan Aman</p>
-                        <p class="font-bold text-secondary" id="promo-product-max-discount">-</p>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="start_date">Tanggal Mulai <span class="text-error">*</span></label>
-                <input type="date" id="start_date" name="start_date" value="{{ old('start_date', now()->format('Y-m-d')) }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('start_date') border-error @enderror"/>
-                @error('start_date')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="end_date">Tanggal Berakhir <span class="text-error">*</span></label>
-                <input type="date" id="end_date" name="end_date" value="{{ old('end_date', now()->addDays(7)->format('Y-m-d')) }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('end_date') border-error @enderror"/>
-                @error('end_date')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="description">Deskripsi Promo</label>
-                <textarea id="description" name="description" rows="3"
-                          class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('description') border-error @enderror"
-                          placeholder="Cth: Min belanja 100 ribu dapat diskon 10% untuk kategori makanan.">{{ old('description') }}</textarea>
-                @error('description')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div class="md:col-span-2 flex items-center gap-3">
-                <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', '1') ? 'checked' : '' }}
-                       class="rounded border-outline-variant text-primary focus:ring-primary"/>
-                <label for="is_active" class="text-sm font-medium">Aktifkan promo</label>
-            </div>
+        <div class="flex items-center gap-3">
+            <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', '1') ? 'checked' : '' }}
+                   class="rounded border-outline-variant text-primary focus:ring-primary"/>
+            <label for="is_active" class="text-sm font-medium">Aktifkan promo setelah disimpan</label>
         </div>
+
+        <div id="promo-products-container" class="space-y-4">
+            @foreach($oldProducts as $index => $row)
+                @include('admin.promos.partials.product-row', [
+                    'index' => $index,
+                    'row' => $row,
+                    'products' => $products,
+                ])
+            @endforeach
+        </div>
+
+        <div class="pt-1">
+            <button type="button" id="add-promo-product"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-primary bg-primary-fixed hover:bg-primary hover:text-on-primary transition-colors">
+                <span class="material-symbols-outlined text-lg">add</span>
+                Tambah Produk
+            </button>
+        </div>
+
+        <template id="promo-product-template">
+            @include('admin.promos.partials.product-row', [
+                'index' => '__INDEX__',
+                'row' => [
+                    'product_id' => '',
+                    'type' => 'fixed',
+                    'discount_value' => '',
+                    'start_date' => $defaultStartDate,
+                    'end_date' => $defaultEndDate,
+                ],
+                'products' => $products,
+            ])
+        </template>
 
         <div class="flex gap-3 pt-2 border-t border-outline-variant/10">
             <button type="submit"
@@ -156,10 +107,13 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const productSelect = document.getElementById('product_id');
-    const purchasePriceEl = document.getElementById('promo-product-purchase-price');
-    const sellingPriceEl = document.getElementById('promo-product-selling-price');
-    const maxDiscountEl = document.getElementById('promo-product-max-discount');
+    const container = document.getElementById('promo-products-container');
+    const addButton = document.getElementById('add-promo-product');
+    const template = document.getElementById('promo-product-template');
+
+    if (!container || !addButton || !template) {
+        return;
+    }
 
     const formatRupiah = (value) => {
         if (value === null || value === undefined || value === '') return '-';
@@ -175,28 +129,162 @@ document.addEventListener('DOMContentLoaded', function () {
         @endforeach
     };
 
-    const renderProductPriceInfo = () => {
-        const selectedId = productSelect.value;
-        const selectedProduct = productMap[selectedId];
+    const getItems = () => Array.from(container.querySelectorAll('[data-promo-item]'));
+
+    const setInputRules = (item) => {
+        const typeSelect = item.querySelector('[data-key="type"]');
+        const discountInput = item.querySelector('[data-key="discount_value"]');
+
+        if (!typeSelect || !discountInput) {
+            return;
+        }
+
+        if (typeSelect.value === 'percent') {
+            discountInput.max = '100';
+            discountInput.placeholder = 'Contoh: 15';
+        } else {
+            discountInput.removeAttribute('max');
+            discountInput.placeholder = 'Contoh: 15000';
+        }
+    };
+
+    const updatePriceHint = (item) => {
+        const productSelect = item.querySelector('[data-key="product_id"]');
+        const typeSelect = item.querySelector('[data-key="type"]');
+        const discountInput = item.querySelector('[data-key="discount_value"]');
+        const hint = item.querySelector('[data-price-hint]');
+
+        if (!productSelect || !typeSelect || !discountInput || !hint) {
+            return;
+        }
+
+        const selectedProduct = productMap[productSelect.value];
 
         if (!selectedProduct) {
-            purchasePriceEl.textContent = '-';
-            sellingPriceEl.textContent = '-';
-            maxDiscountEl.textContent = '-';
+            hint.textContent = 'Pilih produk untuk melihat batas diskon aman berdasarkan harga beli.';
+            discountInput.setCustomValidity('');
             return;
         }
 
         const purchasePrice = Number(selectedProduct.purchase_price || 0);
         const sellingPrice = Number(selectedProduct.selling_price || 0);
-        const maxDiscount = Math.max(sellingPrice - purchasePrice, 0);
+        const maxFixed = Math.max(sellingPrice - purchasePrice, 0);
+        const maxPercent = sellingPrice > 0 ? Math.max((maxFixed / sellingPrice) * 100, 0) : 0;
+        const discountValue = Number(discountInput.value || 0);
 
-        purchasePriceEl.textContent = formatRupiah(purchasePrice);
-        sellingPriceEl.textContent = formatRupiah(sellingPrice);
-        maxDiscountEl.textContent = formatRupiah(maxDiscount);
+        if (typeSelect.value === 'percent') {
+            const safePercent = Number(maxPercent.toFixed(2));
+            hint.textContent = `Harga beli ${formatRupiah(purchasePrice)} | harga jual ${formatRupiah(sellingPrice)} | maksimal diskon aman ${safePercent}%`;
+            if (discountValue > safePercent + 0.0001) {
+                discountInput.setCustomValidity('Diskon terlalu besar. Harga setelah diskon tidak boleh di bawah harga beli.');
+            } else {
+                discountInput.setCustomValidity('');
+            }
+        } else {
+            hint.textContent = `Harga beli ${formatRupiah(purchasePrice)} | harga jual ${formatRupiah(sellingPrice)} | maksimal potongan aman ${formatRupiah(maxFixed)}`;
+            if (discountValue > maxFixed + 0.0001) {
+                discountInput.setCustomValidity('Potongan terlalu besar. Harga setelah diskon tidak boleh di bawah harga beli.');
+            } else {
+                discountInput.setCustomValidity('');
+            }
+        }
     };
 
-    productSelect.addEventListener('change', renderProductPriceInfo);
-    renderProductPriceInfo();
+    const updateRemoveButtons = () => {
+        const hasSingleItem = getItems().length <= 1;
+
+        getItems().forEach((item) => {
+            const removeButton = item.querySelector('[data-remove-product]');
+            if (!removeButton) {
+                return;
+            }
+
+            removeButton.disabled = hasSingleItem;
+            removeButton.classList.toggle('opacity-50', hasSingleItem);
+            removeButton.classList.toggle('cursor-not-allowed', hasSingleItem);
+        });
+    };
+
+    const reindexItems = () => {
+        getItems().forEach((item, index) => {
+            const numberEl = item.querySelector('[data-item-number]');
+            if (numberEl) {
+                numberEl.textContent = String(index + 1);
+            }
+
+            item.querySelectorAll('[data-key]').forEach((field) => {
+                field.name = `products[${index}][${field.dataset.key}]`;
+            });
+        });
+
+        updateRemoveButtons();
+    };
+
+    const bindItemEvents = (item) => {
+        const productSelect = item.querySelector('[data-key="product_id"]');
+        const typeSelect = item.querySelector('[data-key="type"]');
+        const discountInput = item.querySelector('[data-key="discount_value"]');
+        const removeButton = item.querySelector('[data-remove-product]');
+
+        if (productSelect) {
+            productSelect.addEventListener('change', function () {
+                updatePriceHint(item);
+            });
+        }
+
+        if (typeSelect) {
+            typeSelect.addEventListener('change', function () {
+                setInputRules(item);
+                updatePriceHint(item);
+            });
+        }
+
+        if (discountInput) {
+            discountInput.addEventListener('input', function () {
+                updatePriceHint(item);
+            });
+        }
+
+        if (removeButton) {
+            removeButton.addEventListener('click', function () {
+                if (getItems().length <= 1) {
+                    return;
+                }
+
+                item.remove();
+                reindexItems();
+            });
+        }
+
+        setInputRules(item);
+        updatePriceHint(item);
+    };
+
+    const addProductRow = () => {
+        const nextIndex = getItems().length;
+        const rowMarkup = template.innerHTML.replaceAll('__INDEX__', String(nextIndex)).trim();
+        if (!rowMarkup) {
+            return;
+        }
+
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = rowMarkup;
+        const newItem = wrapper.firstElementChild;
+
+        if (!newItem) {
+            return;
+        }
+
+        container.appendChild(newItem);
+        bindItemEvents(newItem);
+        reindexItems();
+        newItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    getItems().forEach((item) => bindItemEvents(item));
+    reindexItems();
+
+    addButton.addEventListener('click', addProductRow);
 });
 </script>
 @endpush

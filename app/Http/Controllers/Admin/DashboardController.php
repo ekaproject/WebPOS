@@ -15,7 +15,14 @@ class DashboardController extends Controller
         $digitalSales      = Transaction::where('status', 'paid')
             ->whereHas('items.product.category', fn ($q) => $q->where('type', 'digital'))
             ->sum('total_amount');
-        $lowStockProducts  = Product::whereColumn('stock', '<=', 'min_stock')->count();
+        $lowStockProducts  = Product::whereColumn('stock', '<', 'min_stock')->count();
+        $lowStockProductList = Product::query()
+            ->select(['id', 'name', 'stock', 'min_stock'])
+            ->whereColumn('stock', '<', 'min_stock')
+            ->orderBy('stock')
+            ->orderBy('name')
+            ->take(5)
+            ->get();
         $expiringProducts  = Product::whereNotNull('expires_at')
             ->whereDate('expires_at', '<=', now()->addDays(3))
             ->count();
@@ -30,7 +37,7 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', compact(
             'totalRevenue', 'digitalSales', 'lowStockProducts',
-            'expiringProducts', 'recentTransactions', 'topProducts'
+            'lowStockProductList', 'expiringProducts', 'recentTransactions', 'topProducts'
         ));
     }
 }

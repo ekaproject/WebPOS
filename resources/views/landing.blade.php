@@ -69,7 +69,7 @@
                         {{ \App\Models\AppSetting::getValue('landing_hero_description', 'Mulai dari bahan makanan segar, perlengkapan rumah tangga, hingga bayar tagihan. Belanja cerdas, hidup lebih berkualitas.') }}
                     </p>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
-                        <a href="#categories" class="landing-btn">
+                        <a href="{{ route('categories.index') }}" class="landing-btn">
                             Jelajahi Kategori Sekarang
                             <span class="material-symbols-outlined">trending_flat</span>
                         </a>
@@ -161,26 +161,61 @@
             </div>
 
             <div class="flex gap-3 overflow-x-auto category-scroll pb-3">
-                <a href="{{ route('categories.index') }}" class="nav-link-pill nav-link-pill-active flex-none">Semua</a>
-                @foreach($categories->take(8) as $cat)
-                    <a href="{{ route('categories.show', $cat->slug) }}" class="nav-link-pill bg-white border border-white/75 flex-none whitespace-nowrap flex items-center gap-2">
+                <button type="button" data-category-filter="all" class="nav-link-pill nav-link-pill-active flex-none">Semua</button>
+                @foreach($categories as $cat)
+                    <button type="button" data-category-filter="{{ $cat->slug }}" class="nav-link-pill bg-white border border-white/75 flex-none whitespace-nowrap flex items-center gap-2">
                         <span class="material-symbols-outlined text-base">{{ $cat->icon }}</span>
                         {{ $cat->name }}
-                    </a>
+                    </button>
                 @endforeach
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-7">
-                @foreach($categories->take(6) as $cat)
-                    <a href="{{ route('categories.show', $cat->slug) }}" class="promo-glass-card p-5 text-center group bg-white/80 border-white/80">
-                        <span class="material-symbols-outlined text-4xl text-primary mb-3 block group-hover:scale-110 transition-transform">{{ $cat->icon }}</span>
-                        <h3 class="font-bold text-sm">{{ $cat->name }}</h3>
-                        @if($cat->description)
-                            <p class="text-[10px] text-on-surface-variant mt-1 line-clamp-2">{{ $cat->description }}</p>
-                        @endif
-                    </a>
-                @endforeach
-            </div>
+            <p id="landing-products-count" class="mt-5 text-sm text-on-surface-variant font-medium">
+                Menampilkan {{ ($landingProducts ?? collect())->count() }} produk
+            </p>
+
+            @if(($landingProducts ?? collect())->isNotEmpty())
+                <div id="landing-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-5">
+                    @foreach($landingProducts as $product)
+                        @continue(!$product->category)
+                        <article
+                            data-product-card
+                            data-product-category="{{ $product->category->slug }}"
+                            class="promo-glass-card bg-white/88 border-white/80 overflow-hidden"
+                        >
+                            <div class="h-40 bg-gradient-to-br from-primary/18 to-secondary/12 relative overflow-hidden flex items-center justify-center">
+                                @if($product->image)
+                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover"/>
+                                @else
+                                    <span class="material-symbols-outlined text-7xl text-primary/25" style="font-variation-settings: 'FILL' 1;">{{ $product->category->icon ?: 'inventory_2' }}</span>
+                                @endif
+                            </div>
+                            <div class="p-5">
+                                <p class="text-xs text-primary font-bold uppercase tracking-wider mb-2">{{ $product->category->name }}</p>
+                                <h3 class="text-base font-headline font-bold mb-2 line-clamp-2">{{ $product->name }}</h3>
+                                <p class="text-sm text-on-surface-variant line-clamp-2">{{ $product->description ?: 'Produk aktif yang tersedia untuk pembelian.' }}</p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <div class="flex flex-col">
+                                        <span class="text-lg font-extrabold text-primary">Rp {{ number_format((float) $product->price, 0, ',', '.') }}</span>
+                                        <span class="text-xs text-on-surface-variant">Stok: {{ $product->stock }} {{ $product->unit }}</span>
+                                    </div>
+                                    <a href="{{ route('categories.show', $product->category->slug) }}" class="landing-btn-neutral p-2.5 rounded-xl inline-flex">
+                                        <span class="material-symbols-outlined">arrow_outward</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+
+                <div id="landing-products-empty" class="hidden bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-10 text-center text-on-surface-variant mt-5">
+                    Tidak ada produk aktif untuk kategori ini.
+                </div>
+            @else
+                <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-10 text-center text-on-surface-variant mt-5">
+                    Belum ada produk aktif saat ini. Produk dari admin akan tampil di sini.
+                </div>
+            @endif
         </div>
     </section>
 
@@ -228,7 +263,10 @@
 
                                 @php
                                     $hargaNormal = $product->price;
-                                    $hargaDiskon = max($product->purchase_price, $hargaNormal - $promoProduct->discount_value);
+                                    $nilaiPotongan = $promoProduct->type === 'percent'
+                                        ? ($hargaNormal * ((float) $promoProduct->discount_value / 100))
+                                        : (float) $promoProduct->discount_value;
+                                    $hargaDiskon = max($product->purchase_price, $hargaNormal - $nilaiPotongan);
                                 @endphp
 
                                 <div class="mt-4 flex items-center justify-between">
@@ -340,7 +378,7 @@
 
 <!-- Footer -->
 <footer class="bg-surface-container-low pt-16 pb-10 px-6 md:px-10 mt-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 mb-12 items-stretch">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mb-12 items-stretch">
         <div class="h-full flex flex-col">
             <span class="text-3xl font-black text-primary font-headline tracking-tighter mb-6 block">{{ $publicSettings['store_name'] }}</span>
             <p class="text-on-surface-variant text-sm font-medium leading-relaxed">
@@ -379,17 +417,6 @@
                         <p>{{ $publicSettings['store_email'] }}</p>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="h-full flex flex-col">
-            <h4 class="font-headline font-extrabold text-on-surface mb-6 uppercase tracking-widest text-xs">BERLANGGANAN</h4>
-            <p class="text-sm text-on-surface-variant mb-4">Dapatkan info produk terbaru langsung di email Anda.</p>
-            <div class="flex gap-2">
-                <input class="bg-surface-container-highest border-none rounded-full px-4 py-2 text-sm w-full focus:ring-2 focus:ring-primary"
-                       placeholder="Alamat Email Anda" type="email"/>
-                <button class="editorial-gradient text-on-primary p-2 rounded-full">
-                    <span class="material-symbols-outlined">send</span>
-                </button>
             </div>
         </div>
     </div>
@@ -509,6 +536,53 @@ document.addEventListener('DOMContentLoaded', function () {
         startAutoSlide();
     };
 
+    const initCategoryProductFilter = () => {
+        const filterButtons = Array.from(document.querySelectorAll('[data-category-filter]'));
+        const productCards = Array.from(document.querySelectorAll('[data-product-card]'));
+        const countEl = document.getElementById('landing-products-count');
+        const emptyEl = document.getElementById('landing-products-empty');
+
+        if (filterButtons.length === 0 || productCards.length === 0) {
+            return;
+        }
+
+        const applyFilter = (slug) => {
+            let visibleCount = 0;
+
+            productCards.forEach((card) => {
+                const matches = slug === 'all' || card.dataset.productCategory === slug;
+                card.classList.toggle('hidden', !matches);
+                if (matches) {
+                    visibleCount += 1;
+                }
+            });
+
+            filterButtons.forEach((button) => {
+                const isActive = button.dataset.categoryFilter === slug;
+                button.classList.toggle('nav-link-pill-active', isActive);
+                button.classList.toggle('bg-white', !isActive);
+                button.classList.toggle('border', !isActive);
+                button.classList.toggle('border-white/75', !isActive);
+            });
+
+            if (countEl) {
+                countEl.textContent = `Menampilkan ${visibleCount} produk`;
+            }
+
+            if (emptyEl) {
+                emptyEl.classList.toggle('hidden', visibleCount > 0);
+            }
+        };
+
+        filterButtons.forEach((button) => {
+            button.addEventListener('click', function () {
+                applyFilter(button.dataset.categoryFilter || 'all');
+            });
+        });
+
+        applyFilter('all');
+    };
+
     initCarousel({
         galleryId: 'hero-promo-gallery',
         trackId: 'hero-promo-gallery-track',
@@ -524,6 +598,8 @@ document.addEventListener('DOMContentLoaded', function () {
         nextId: 'location-gallery-next',
         intervalMs: 3500,
     });
+
+    initCategoryProductFilter();
 });
 </script>
 
