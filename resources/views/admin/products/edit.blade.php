@@ -23,22 +23,22 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="name">Nama Produk<span class="text-error">*</span></label>
-                <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('name') border-error @enderror"/>
+                  <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('name') border-error @enderror"/>
                 @error('name')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="sku">SKU<span class="text-error">*</span></label>
-                <input type="text" id="sku" name="sku" value="{{ old('sku', $product->sku) }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm font-mono focus:ring-2 focus:ring-primary @error('sku') border-error @enderror"/>
+                  <input type="text" id="sku" name="sku" value="{{ old('sku', $product->sku) }}" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm font-mono focus:ring-2 focus:ring-primary @error('sku') border-error @enderror"/>
                 @error('sku')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="category_id">Kategori<span class="text-error">*</span></label>
                 <select id="category_id" name="category_id" required
-                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
                     <option value="">-- Pilih Kategori --</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}" {{ old('category_id', $product->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -49,22 +49,22 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="purchase_price">Harga Beli (Rp)<span class="text-error">*</span></label>
-                <input type="number" id="purchase_price" name="purchase_price" value="{{ old('purchase_price', $product->purchase_price) }}" min="0" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('purchase_price') border-error @enderror"/>
+                  <input type="number" id="purchase_price" name="purchase_price" value="{{ old('purchase_price', $product->purchase_price) }}" min="0" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('purchase_price') border-error @enderror"/>
                 @error('purchase_price')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="price">Harga Jual (Rp)<span class="text-error">*</span></label>
-                <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" min="0" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('price') border-error @enderror"/>
+                  <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" min="0" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('price') border-error @enderror"/>
                 @error('price')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="unit">Satuan<span class="text-error">*</span></label>
                 <select id="unit" name="unit" required
-                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('unit') border-error @enderror">
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('unit') border-error @enderror">
                     <option value="pcs" {{ old('unit', $product->unit) === 'pcs' ? 'selected' : '' }}>pcs</option>
                     <option value="kg" {{ old('unit', $product->unit) === 'kg' ? 'selected' : '' }}>kg</option>
                     <option value="liter" {{ old('unit', $product->unit) === 'liter' ? 'selected' : '' }}>liter</option>
@@ -74,28 +74,30 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="stock">Stok<span class="text-error">*</span></label>
-                <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" min="0" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('stock') border-error @enderror"/>
+                  <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" min="0" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('stock') border-error @enderror"/>
                 @error('stock')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="min_stock">Stok Minimum</label>
-                <input type="number" id="min_stock" name="min_stock" value="{{ old('min_stock', $product->min_stock) }}" min="0"
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Stok Minimum</label>
+                <div class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-surface-container text-sm text-on-surface">
+                    20 (default sistem)
+                </div>
+                <p class="text-xs text-on-surface-variant mt-1">Nilai stok minimum dikunci ke 20.</p>
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="expires_at">Tanggal Kadaluarsa</label>
-                <input type="date" id="expires_at" name="expires_at"
-                       value="{{ old('expires_at', $product->expires_at?->format('Y-m-d')) }}"
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
+                  <input type="date" id="expires_at" name="expires_at"
+                      value="{{ old('expires_at', $product->expires_at?->format('Y-m-d')) }}"
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
             </div>
 
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="description">Deskripsi</label>
                 <textarea id="description" name="description" rows="3"
-                          class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">{{ old('description', $product->description) }}</textarea>
+                          class="w-full min-h-[100px] px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">{{ old('description', $product->description) }}</textarea>
             </div>
 
             <div>
@@ -106,8 +108,8 @@
                         Foto saat ini: <span class="font-mono">{{ $product->image }}</span>
                     </div>
                 @endif
-                <input type="file" id="image" name="image" accept="image/*"
-                       class="w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-primary-fixed file:text-primary hover:file:bg-primary hover:file:text-on-primary"/>
+                  <input type="file" id="image" name="image" accept="image/*"
+                      class="w-full h-11 px-4 py-2.5 leading-normal text-sm text-on-surface-variant file:mr-4 file:rounded-full file:border-0 file:bg-primary-fixed file:px-4 file:py-2 file:text-sm file:font-bold file:text-primary hover:file:bg-primary hover:file:text-on-primary"/>
             </div>
 
             <div class="flex items-center gap-3">

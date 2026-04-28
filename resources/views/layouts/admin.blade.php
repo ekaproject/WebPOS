@@ -49,12 +49,17 @@
                         <span class="material-symbols-outlined">local_shipping</span>
                         <span class="font-medium text-sm">Distributor</span>
                 </a>
+                <a href="{{ route('admin.inbound-items.index') }}"
+                            class="{{ request()->routeIs('admin.inbound-items*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
+                        <span class="material-symbols-outlined">box_add</span>
+                        <span class="font-medium text-sm">Barang Masuk &amp; QC</span>
+                </a>
                 <a href="{{ route('admin.promos.index') }}"
                             class="{{ request()->routeIs('admin.promos*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
                         <span class="material-symbols-outlined">local_offer</span>
                         <span class="font-medium text-sm">Promo</span>
                 </a>
-                <a href="{{ route('admin.returns.create') }}"
+                <a href="{{ route('admin.returns.index') }}"
             class="{{ request()->routeIs('admin.returns*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
             <span class="material-symbols-outlined">undo</span>
             <span class="font-medium text-sm">Retur Barang</span>
@@ -76,9 +81,9 @@
         </a>
     </nav>
     <div class="px-4 mt-auto">
-        <a href="{{ route('admin.products.create') }}"
+        <a href="{{ route('admin.inbound-items.create') }}"
            class="w-full bg-primary-container text-on-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:scale-95 duration-200 text-sm">
-            <span class="material-symbols-outlined">add</span> Tambah Produk
+            <span class="material-symbols-outlined">box_add</span> Input Barang Masuk
         </a>
         <div class="mt-6 border-t border-outline-variant/20 pt-4 space-y-1">
             <form method="POST" action="{{ route('logout') }}">
@@ -104,12 +109,7 @@
                        placeholder="Cari produk, transaksi..." type="text"/>
             </div>
         </div>
-        <div class="flex items-center gap-6">
-            <button class="relative p-2 hover:bg-surface-container-low rounded-full transition-colors">
-                <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
-                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
-            </button>
-            <div class="h-8 w-px bg-outline-variant/20"></div>
+        <div class="flex items-center gap-3">
             <div class="flex items-center gap-3">
                 <div class="text-right">
                     <p class="text-sm font-bold font-headline leading-tight">{{ auth()->user()->name }}</p>

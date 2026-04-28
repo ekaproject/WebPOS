@@ -3,23 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductReturn;
-use App\Models\ReturnItem;
 use App\Models\Distributor;
-use App\Models\Product;
+use App\Models\InventoryReturn;
+use App\Services\Inventory\InventoryWorkflowService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ReturnController extends Controller
 {
-
-    // API: Get products by distributor
+    // Legacy API: keep endpoint for existing integrations.
     public function getProductsByDistributor($id)
     {
-        $distributor = Distributor::with(['products' => function($q) {
+        $distributor = Distributor::with(['products' => function ($q) {
             $q->where('is_active', true);
         }])->findOrFail($id);
-        $products = $distributor->products->map(function($p) {
+
+        $products = $distributor->products->map(function ($p) {
             return [
                 'id' => $p->id,
                 'name' => $p->name,
@@ -27,45 +25,61 @@ class ReturnController extends Controller
                 'purchase_price' => $p->pivot->purchase_price,
             ];
         });
+
         return response()->json(['products' => $products]);
     }
-    public function create()
+
+    public function index(Request $request)
     {
-        $distributors = Distributor::where('is_active', true)->get();
-        $products = Product::where('is_active', true)->get();
-        return view('admin.returns.create', compact('distributors', 'products'));
+        $status = in_array($request->status, ['pending', 'completed'], true)
+            ? $request->status
+            : 'pending';
+
+        $query = InventoryReturn::query()
+            ->with(['distributor', 'inboundItem'])
+            ->where('status', $status)
+            ->latest();
+
+        if ($request->filled('search')) {
+            $keyword = $request->search;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('product_name', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('distributor', function ($dq) use ($keyword) {
+                        $dq->where('name', 'like', '%' . $keyword . '%');
+                    });
+            });
+        }
+
+        $returns = $query->paginate(20);
+
+        return view('admin.returns.index', compact('returns', 'status'));
     }
 
-    public function store(Request $request)
+    public function show(InventoryReturn $inventoryReturn)
     {
+        $inventoryReturn->load(['distributor', 'inboundItem', 'replacementProducts']);
+
+        return view('admin.returns.show', compact('inventoryReturn'));
+    }
+
+    public function complete(
+        Request $request,
+        InventoryReturn $inventoryReturn,
+        InventoryWorkflowService $workflowService
+    ) {
         $data = $request->validate([
-            'distributor_id' => 'required|exists:distributors,id',
-            'return_date' => 'required|date',
-            'note' => 'nullable|string',
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.purchase_price' => 'required|integer|min:0',
-            'items.*.note' => 'nullable|string',
+            'replacement_qty' => 'required|integer|min:1',
+            'replacement_expired_date' => 'required|date',
         ]);
 
-        DB::transaction(function () use ($data) {
-            $retur = ProductReturn::create([
-                'distributor_id' => $data['distributor_id'],
-                'return_date' => $data['return_date'],
-                'note' => $data['note'] ?? null,
-            ]);
-            foreach ($data['items'] as $item) {
-                ReturnItem::create([
-                    'return_id' => $retur->id,
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'purchase_price' => $item['purchase_price'],
-                    'note' => $item['note'] ?? null,
-                ]);
-            }
-        });
+        $workflowService->completeReturn(
+            inventoryReturn: $inventoryReturn,
+            replacementQty: (int) $data['replacement_qty'],
+            replacementExpiredDate: $data['replacement_expired_date']
+        );
 
-        return redirect()->route('admin.returns.create')->with('success', 'Retur berhasil disimpan!');
+        return redirect()
+            ->route('admin.returns.show', $inventoryReturn)
+            ->with('success', 'Retur selesai. Barang pengganti disimpan sebagai batch produk baru dan langsung aktif.');
     }
 }

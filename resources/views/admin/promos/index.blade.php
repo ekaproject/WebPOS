@@ -22,19 +22,19 @@
         <form action="{{ route('admin.promos.index') }}" method="GET" class="flex flex-wrap gap-4 items-end">
             <div class="flex-1 min-w-[220px]">
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Cari Promo</label>
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Judul atau deskripsi promo..."
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
+                  <input type="text" name="search" value="{{ request('search') }}"
+                      placeholder="Judul atau deskripsi promo..."
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Tipe Promo</label>
-                <div class="rounded-xl border border border-outline-variant/30 bg-white text-sm px-4 py-2.5 text-on-surface font-semibold">
-                    Potongan Nominal
+                <div class="h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm text-on-surface font-semibold">
+                    Nominal & Persen
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Status</label>
-                <select name="status" class="rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
+                <select name="status" class="h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="">Semua</option>
                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
@@ -67,6 +67,7 @@
                             <td class="px-6 py-4">
                                 <p class="font-bold">{{ $promo->title }}</p>
                                 <p class="text-xs text-on-surface-variant mt-1">{{ $promo->category?->name ?? 'Semua Kategori' }}</p>
+                                <p class="text-xs text-on-surface-variant mt-1">Jenis: {{ $promo->type === 'percent' ? 'Persen' : 'Nominal' }}</p>
                             </td>
                             <td class="px-6 py-4 text-xs">
                                 {{ $promo->product?->name ?? '-' }}
@@ -75,11 +76,15 @@
                                 @if($promo->product)
                                     @php
                                         $hargaNormal = $promo->product->price;
-                                        $hargaDiskon = max($promo->product->purchase_price, $hargaNormal - $promo->discount_value);
+                                        $nilaiPotongan = $promo->type === 'percent'
+                                            ? ($hargaNormal * ((float) $promo->discount_value / 100))
+                                            : (float) $promo->discount_value;
+                                        $hargaDiskon = max($promo->product->purchase_price, $hargaNormal - $nilaiPotongan);
                                     @endphp
                                     <div class="flex flex-col">
                                         <span class="text-xs text-on-surface-variant/60 line-through">Rp {{ number_format($hargaNormal, 0, ',', '.') }}</span>
                                         <span class="font-extrabold text-[15px] text-error">Rp {{ number_format($hargaDiskon, 0, ',', '.') }}</span>
+                                        <span class="text-[11px] text-on-surface-variant mt-1">{{ $promo->discount_label }}</span>
                                     </div>
                                 @else
                                     <span class="font-bold text-primary">{{ $promo->discount_label }}</span>

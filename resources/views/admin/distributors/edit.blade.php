@@ -31,8 +31,8 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="name">
                         Nama Distributor <span class="text-error">*</span>
                     </label>
-                    <input type="text" id="name" name="name" value="{{ old('name', $distributor->name) }}" required
-                           class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('name') border-error @enderror"
+                          <input type="text" id="name" name="name" value="{{ old('name', $distributor->name) }}" required
+                              class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('name') border-error @enderror"
                            placeholder="Cth: PT Indofood Sukses Makmur"/>
                     @error('name')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
@@ -41,8 +41,8 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="code">
                         Kode Distributor <span class="text-error">*</span>
                     </label>
-                    <input type="text" id="code" name="code" value="{{ old('code', $distributor->code) }}" required
-                           class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('code') border-error @enderror"
+                          <input type="text" id="code" name="code" value="{{ old('code', $distributor->code) }}" required
+                              class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('code') border-error @enderror"
                            placeholder="Cth: DIST-001"/>
                     @error('code')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
@@ -51,8 +51,8 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="contact_person">
                         Kontak Person
                     </label>
-                    <input type="text" id="contact_person" name="contact_person" value="{{ old('contact_person', $distributor->contact_person) }}"
-                           class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
+                          <input type="text" id="contact_person" name="contact_person" value="{{ old('contact_person', $distributor->contact_person) }}"
+                              class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
                            placeholder="Cth: Pak Budi"/>
                 </div>
 
@@ -60,8 +60,8 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="phone">
                         No. Telepon
                     </label>
-                    <input type="text" id="phone" name="phone" value="{{ old('phone', $distributor->phone) }}"
-                           class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
+                          <input type="text" id="phone" name="phone" value="{{ old('phone', $distributor->phone) }}"
+                              class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
                            placeholder="Cth: 08123456789"/>
                 </div>
 
@@ -69,8 +69,8 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="email">
                         Email
                     </label>
-                    <input type="email" id="email" name="email" value="{{ old('email', $distributor->email) }}"
-                           class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('email') border-error @enderror"
+                          <input type="email" id="email" name="email" value="{{ old('email', $distributor->email) }}"
+                              class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('email') border-error @enderror"
                            placeholder="Cth: distributor@email.com"/>
                     @error('email')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
@@ -80,7 +80,7 @@
                         Alamat
                     </label>
                     <textarea id="address" name="address" rows="2"
-                              class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
+                              class="w-full min-h-[100px] px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
                               placeholder="Cth: Jl. Sudirman No. 10, Jakarta Pusat">{{ old('address', $distributor->address) }}</textarea>
                 </div>
 
@@ -91,25 +91,6 @@
                     <label for="is_active" class="text-sm font-medium">Aktif</label>
                 </div>
             </div>
-        </div>
-
-        {{-- Produk --}}
-        <div class="border-t border-outline-variant/10 pt-6">
-            <h2 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">inventory_2</span>
-                Produk yang Disupply
-            </h2>
-            <p class="text-xs text-on-surface-variant mb-4">Kelola produk beserta harga beli dari distributor ini.</p>
-
-            <div id="product-rows" class="space-y-3">
-                {{-- Existing products will be populated by JS --}}
-            </div>
-
-            <button type="button" onclick="addProductRow()"
-                    class="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-fixed text-primary text-sm font-bold hover:bg-primary hover:text-on-primary transition-colors">
-                <span class="material-symbols-outlined text-lg">add</span>
-                Tambah Produk
-            </button>
         </div>
 
         <div class="flex gap-3 pt-2 border-t border-outline-variant/10">
@@ -125,41 +106,4 @@
         </div>
     </form>
 </div>
-
-<script>
-    const allProducts = @json($products->map(fn($p) => ['id' => $p->id, 'name' => $p->name, 'sku' => $p->sku]));
-    const existingProducts = @json($distributor->products->map(fn($p) => ['id' => $p->id, 'purchase_price' => $p->pivot->purchase_price]));
-    let rowIndex = 0;
-
-    function addProductRow(productId = '', purchasePrice = '') {
-        const container = document.getElementById('product-rows');
-        const div = document.createElement('div');
-        div.className = 'flex flex-col md:flex-row gap-3 items-start md:items-end';
-        div.innerHTML = `
-            <div class="flex-1">
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Produk</label>
-                <select name="products[${rowIndex}][id]" required
-                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
-                    <option value="">-- Pilih Produk --</option>
-                    ${allProducts.map(p => `<option value="${p.id}" ${p.id == productId ? 'selected' : ''}>${p.name} (${p.sku})</option>`).join('')}
-                </select>
-            </div>
-            <div class="w-full md:w-48">
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Harga Beli (Rp)</label>
-                <input type="number" name="products[${rowIndex}][purchase_price]" value="${purchasePrice}" required min="0"
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"
-                       placeholder="0"/>
-            </div>
-            <button type="button" onclick="this.closest('.flex').remove()"
-                    class="p-2.5 rounded-xl bg-error-container hover:bg-error hover:text-on-error text-on-error-container transition-colors flex-none">
-                <span class="material-symbols-outlined text-base">close</span>
-            </button>
-        `;
-        container.appendChild(div);
-        rowIndex++;
-    }
-
-    // Load existing products
-    existingProducts.forEach(p => addProductRow(p.id, p.purchase_price));
-</script>
 @endsection

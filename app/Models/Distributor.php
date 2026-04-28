@@ -20,4 +20,14 @@ class Distributor extends Model
                     ->withPivot('purchase_price')
                     ->withTimestamps();
     }
+
+    public function inboundItems()
+    {
+        return $this->hasMany(InboundItem::class);
+    }
+
+    public function inventoryReturns()
+    {
+        return $this->hasMany(InventoryReturn::class);
+    }
 }

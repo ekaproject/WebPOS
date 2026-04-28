@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Distributor;
-use App\Models\Product;
 use Illuminate\Http\Request;
 
 class DistributorController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Distributor::withCount('products');
+        $query = Distributor::withCount('inboundItems');
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -28,36 +27,24 @@ class DistributorController extends Controller
 
     public function create()
     {
-        $products = Product::where('is_active', true)->orderBy('name')->get();
-        return view('admin.distributors.create', compact('products'));
+        return view('admin.distributors.create');
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'           => 'required|string|max:255',
+            'name'           => 'required|string|max:255|unique:distributors,name',
             'code'           => 'required|string|max:50|unique:distributors,code',
             'contact_person' => 'nullable|string|max:255',
             'phone'          => 'nullable|string|max:30',
             'email'          => 'nullable|email|max:255',
             'address'        => 'nullable|string|max:500',
             'is_active'      => 'boolean',
-            'products'       => 'nullable|array',
-            'products.*.id'  => 'required|exists:products,id',
-            'products.*.purchase_price' => 'required|numeric|min:0',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
 
-        $distributor = Distributor::create($data);
-
-        if (!empty($data['products'])) {
-            $sync = [];
-            foreach ($data['products'] as $p) {
-                $sync[$p['id']] = ['purchase_price' => $p['purchase_price']];
-            }
-            $distributor->products()->sync($sync);
-        }
+        Distributor::create($data);
 
         return redirect()->route('admin.distributors.index')
             ->with('success', 'Distributor berhasil ditambahkan.');
@@ -65,43 +52,29 @@ class DistributorController extends Controller
 
     public function show(Distributor $distributor)
     {
-        $distributor->load('products');
         return view('admin.distributors.show', compact('distributor'));
     }
 
     public function edit(Distributor $distributor)
     {
-        $distributor->load('products');
-        $products = Product::where('is_active', true)->orderBy('name')->get();
-        return view('admin.distributors.edit', compact('distributor', 'products'));
+        return view('admin.distributors.edit', compact('distributor'));
     }
 
     public function update(Request $request, Distributor $distributor)
     {
         $data = $request->validate([
-            'name'           => 'required|string|max:255',
+            'name'           => 'required|string|max:255|unique:distributors,name,'.$distributor->id,
             'code'           => 'required|string|max:50|unique:distributors,code,'.$distributor->id,
             'contact_person' => 'nullable|string|max:255',
             'phone'          => 'nullable|string|max:30',
             'email'          => 'nullable|email|max:255',
             'address'        => 'nullable|string|max:500',
             'is_active'      => 'boolean',
-            'products'       => 'nullable|array',
-            'products.*.id'  => 'required|exists:products,id',
-            'products.*.purchase_price' => 'required|numeric|min:0',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
 
         $distributor->update($data);
-
-        $sync = [];
-        if (!empty($data['products'])) {
-            foreach ($data['products'] as $p) {
-                $sync[$p['id']] = ['purchase_price' => $p['purchase_price']];
-            }
-        }
-        $distributor->products()->sync($sync);
 
         return redirect()->route('admin.distributors.index')
             ->with('success', 'Distributor berhasil diperbarui.');

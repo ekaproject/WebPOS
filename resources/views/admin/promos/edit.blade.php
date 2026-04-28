@@ -23,52 +23,54 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="title">Judul Promo <span class="text-error">*</span></label>
-                <input type="text" id="title" name="title" value="{{ old('title', $promo->title) }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('title') border-error @enderror"/>
+                  <input type="text" id="title" name="title" value="{{ old('title', $promo->title) }}" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('title') border-error @enderror"/>
                 @error('title')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
-            <input type="hidden" name="type" value="fixed">
-
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Tipe Promo</label>
-                <div class="px-4 py-2.5 rounded-xl bg-surface-container text-sm font-semibold text-on-surface border border-outline-variant/20">
-                    Potongan Nominal (Rp)
-                </div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="type">Tipe Promo <span class="text-error">*</span></label>
+                <select id="type" name="type" required
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('type') border-error @enderror">
+                    <option value="fixed" {{ old('type', $promo->type) === 'fixed' ? 'selected' : '' }}>Potongan Nominal (Rp)</option>
+                    <option value="percent" {{ old('type', $promo->type) === 'percent' ? 'selected' : '' }}>Potongan Persen (%)</option>
+                </select>
+                @error('type')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="discount_value">Nilai Diskon <span class="text-error">*</span></label>
-                <input type="number" step="0.01" id="discount_value" name="discount_value" value="{{ old('discount_value', $promo->discount_value) }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('discount_value') border-error @enderror"/>
+                  <input type="number" step="0.01" id="discount_value" name="discount_value" value="{{ old('discount_value', $promo->discount_value) }}" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('discount_value') border-error @enderror"/>
+                <p class="text-xs text-on-surface-variant mt-1">Untuk tipe persen, masukkan nilai 0 sampai 100.</p>
                 @error('discount_value')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="min_purchase">Minimum Belanja</label>
-                <input type="number" step="0.01" id="min_purchase" name="min_purchase" value="{{ old('min_purchase', $promo->min_purchase) }}"
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('min_purchase') border-error @enderror"/>
+                  <input type="number" step="0.01" id="min_purchase" name="min_purchase" value="{{ old('min_purchase', $promo->min_purchase) }}"
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('min_purchase') border-error @enderror"/>
                 @error('min_purchase')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="voucher_quota">Kuota Voucher</label>
-                <input type="number" id="voucher_quota" name="voucher_quota" value="{{ old('voucher_quota', $promo->voucher_quota ?? 10) }}" min="1"
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('voucher_quota') border-error @enderror"/>
+                  <input type="number" id="voucher_quota" name="voucher_quota" value="{{ old('voucher_quota', $promo->voucher_quota ?? 10) }}" min="1"
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('voucher_quota') border-error @enderror"/>
                 <p class="text-xs text-on-surface-variant mt-1">Kode voucher otomatis jika promo memakai minimum belanja</p>
                 @error('voucher_quota')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Kode Voucher</label>
-                <div class="px-4 py-2.5 rounded-xl bg-surface-container text-sm font-mono text-on-surface-variant border border-outline-variant/20">
+                <div class="h-11 px-4 py-2.5 leading-normal rounded-xl bg-surface-container text-sm font-mono text-on-surface-variant border border-outline-variant/20">
                     {{ $promo->voucher_code ?? '-' }}
                 </div>
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Sudah Diklaim</label>
-                <div class="px-4 py-2.5 rounded-xl bg-surface-container text-sm font-bold text-on-surface border border-outline-variant/20">
+                <div class="h-11 px-4 py-2.5 leading-normal rounded-xl bg-surface-container text-sm font-bold text-on-surface border border-outline-variant/20">
                     {{ $promo->voucher_claimed }}
                 </div>
             </div>
@@ -76,7 +78,7 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="category_id">Kategori (Opsional)</label>
                 <select id="category_id" name="category_id"
-                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ old('category_id', $promo->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -88,7 +90,7 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="product_id">Produk Promo <span class="text-error">*</span></label>
                 <select id="product_id" name="product_id" required
-                        class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('product_id') border-error @enderror">
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('product_id') border-error @enderror">
                     <option value="">Pilih Produk Promo</option>
                     @foreach($products as $product)
                         <option value="{{ $product->id }}" {{ old('product_id', $promo->product_id) == $product->id ? 'selected' : '' }}>
@@ -120,22 +122,22 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="start_date">Tanggal Mulai <span class="text-error">*</span></label>
-                <input type="date" id="start_date" name="start_date" value="{{ old('start_date', $promo->start_date->format('Y-m-d')) }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('start_date') border-error @enderror"/>
+                  <input type="date" id="start_date" name="start_date" value="{{ old('start_date', $promo->start_date->format('Y-m-d')) }}" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('start_date') border-error @enderror"/>
                 @error('start_date')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="end_date">Tanggal Berakhir <span class="text-error">*</span></label>
-                <input type="date" id="end_date" name="end_date" value="{{ old('end_date', $promo->end_date->format('Y-m-d')) }}" required
-                       class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('end_date') border-error @enderror"/>
+                  <input type="date" id="end_date" name="end_date" value="{{ old('end_date', $promo->end_date->format('Y-m-d')) }}" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('end_date') border-error @enderror"/>
                 @error('end_date')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="description">Deskripsi Promo</label>
                 <textarea id="description" name="description" rows="3"
-                          class="w-full rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('description') border-error @enderror">{{ old('description', $promo->description) }}</textarea>
+                          class="w-full min-h-[100px] px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('description') border-error @enderror">{{ old('description', $promo->description) }}</textarea>
                 @error('description')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -165,6 +167,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const productSelect = document.getElementById('product_id');
+    const typeSelect = document.getElementById('type');
+    const discountInput = document.getElementById('discount_value');
     const purchasePriceEl = document.getElementById('promo-product-purchase-price');
     const sellingPriceEl = document.getElementById('promo-product-selling-price');
     const maxDiscountEl = document.getElementById('promo-product-max-discount');
@@ -185,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const renderProductPriceInfo = () => {
         const selectedId = productSelect.value;
+        const promoType = typeSelect?.value || 'fixed';
         const selectedProduct = productMap[selectedId];
 
         if (!selectedProduct) {
@@ -197,13 +202,28 @@ document.addEventListener('DOMContentLoaded', function () {
         const purchasePrice = Number(selectedProduct.purchase_price || 0);
         const sellingPrice = Number(selectedProduct.selling_price || 0);
         const maxDiscount = Math.max(sellingPrice - purchasePrice, 0);
+        const maxPercent = sellingPrice > 0 ? Math.max((maxDiscount / sellingPrice) * 100, 0) : 0;
 
         purchasePriceEl.textContent = formatRupiah(purchasePrice);
         sellingPriceEl.textContent = formatRupiah(sellingPrice);
-        maxDiscountEl.textContent = formatRupiah(maxDiscount);
+
+        if (promoType === 'percent') {
+            if (discountInput) {
+                discountInput.max = '100';
+                discountInput.placeholder = 'Contoh: 15';
+            }
+            maxDiscountEl.textContent = `${Number(maxPercent.toFixed(2))}%`;
+        } else {
+            if (discountInput) {
+                discountInput.removeAttribute('max');
+                discountInput.placeholder = 'Contoh: 15000';
+            }
+            maxDiscountEl.textContent = formatRupiah(maxDiscount);
+        }
     };
 
     productSelect.addEventListener('change', renderProductPriceInfo);
+    typeSelect?.addEventListener('change', renderProductPriceInfo);
     renderProductPriceInfo();
 });
 </script>
