@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Distributor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +33,11 @@ class TeamController extends Controller
 
         $members = $query->latest()->paginate(12)->withQueryString();
 
-        return view('admin.team.index', compact('members'));
+        $distributors = Distributor::query()
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.team.index', compact('members', 'distributors'));
     }
 
     public function store(Request $request)
@@ -41,13 +46,23 @@ class TeamController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'role' => ['required', Rule::in(['admin', 'supervisor', 'cashier', 'staff'])],
+            'role' => ['required', Rule::in(['admin', 'distributor'])],
+            'distributor_id' => [
+                Rule::requiredIf(fn () => $request->role === 'distributor'),
+                'nullable',
+                'integer',
+                'exists:distributors,id',
+            ],
             'phone' => 'nullable|string|max:30',
             'is_active' => 'boolean',
         ]);
 
         $data['password'] = Hash::make($data['password']);
         $data['is_active'] = $request->boolean('is_active');
+
+        if ($data['role'] !== 'distributor') {
+            $data['distributor_id'] = null;
+        }
 
         User::create($data);
 
@@ -60,7 +75,13 @@ class TeamController extends Controller
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($team->id)],
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => ['required', Rule::in(['admin', 'supervisor', 'cashier', 'staff'])],
+            'role' => ['required', Rule::in(['admin', 'distributor'])],
+            'distributor_id' => [
+                Rule::requiredIf(fn () => $request->role === 'distributor'),
+                'nullable',
+                'integer',
+                'exists:distributors,id',
+            ],
             'phone' => 'nullable|string|max:30',
             'is_active' => 'boolean',
         ]);
@@ -71,6 +92,10 @@ class TeamController extends Controller
 
         unset($data['password']);
         $data['is_active'] = $request->boolean('is_active');
+
+        if ($data['role'] !== 'distributor') {
+            $data['distributor_id'] = null;
+        }
 
         $team->update($data);
 

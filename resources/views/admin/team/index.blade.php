@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-    $showCreateForm = request()->boolean('show_create') || $errors->has('name') || $errors->has('email') || $errors->has('role') || $errors->has('phone') || $errors->has('password');
+    $showCreateForm = request()->boolean('show_create') || $errors->has('name') || $errors->has('email') || $errors->has('role') || $errors->has('distributor_id') || $errors->has('phone') || $errors->has('password');
     $editMemberId = (int) request('edit_member');
 @endphp
 <div class="space-y-6">
@@ -24,7 +24,7 @@
                 class="md:col-span-2 w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
             <select name="role" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                 <option value="">Semua Role</option>
-                @foreach(['admin' => 'Admin', 'supervisor' => 'Supervisor', 'cashier' => 'Kasir', 'staff' => 'Staff'] as $value => $label)
+                @foreach(['admin' => 'Admin', 'distributor' => 'Distributor'] as $value => $label)
                     <option value="{{ $value }}" {{ request('role') === $value ? 'selected' : '' }}>{{ $label }}</option>
                 @endforeach
             </select>
@@ -61,11 +61,23 @@
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Role</label>
                 <select name="role" required class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="supervisor" {{ old('role') === 'supervisor' ? 'selected' : '' }}>Supervisor</option>
-                    <option value="cashier" {{ old('role') === 'cashier' ? 'selected' : '' }}>Kasir</option>
-                    <option value="staff" {{ old('role') === 'staff' ? 'selected' : '' }}>Staff</option>
+                    <option value="distributor" {{ old('role') === 'distributor' ? 'selected' : '' }}>Distributor</option>
                 </select>
                 @error('role')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Distributor (untuk role distributor)</label>
+                <select name="distributor_id" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
+                    <option value="">Pilih distributor</option>
+                    @forelse($distributors as $distributor)
+                        <option value="{{ $distributor->id }}" {{ (string) old('distributor_id') === (string) $distributor->id ? 'selected' : '' }}>
+                            {{ $distributor->name }} ({{ $distributor->code }})
+                        </option>
+                    @empty
+                        <option value="" disabled>Belum ada distributor</option>
+                    @endforelse
+                </select>
+                @error('distributor_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">No. Telepon</label>
@@ -113,9 +125,19 @@
                     <input type="text" name="name" value="{{ old('name', $member->name) }}" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required/>
                     <input type="email" name="email" value="{{ old('email', $member->email) }}" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required/>
                     <select name="role" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required>
-                        @foreach(['admin' => 'Admin', 'supervisor' => 'Supervisor', 'cashier' => 'Kasir', 'staff' => 'Staff'] as $value => $label)
+                        @foreach(['admin' => 'Admin', 'distributor' => 'Distributor'] as $value => $label)
                             <option value="{{ $value }}" {{ $member->role === $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
+                    </select>
+                    <select name="distributor_id" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
+                        <option value="">Pilih distributor</option>
+                        @forelse($distributors as $distributor)
+                            <option value="{{ $distributor->id }}" {{ (string) old('distributor_id', $member->distributor_id) === (string) $distributor->id ? 'selected' : '' }}>
+                                {{ $distributor->name }} ({{ $distributor->code }})
+                            </option>
+                        @empty
+                            <option value="" disabled>Belum ada distributor</option>
+                        @endforelse
                     </select>
                     <input type="text" name="phone" value="{{ old('phone', $member->phone) }}" placeholder="No. telepon" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                     <input type="password" name="password" placeholder="Password baru (opsional)" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>

@@ -75,7 +75,7 @@ class InventoryWorkflowService
 
     public function completeReturn(InventoryReturn $inventoryReturn, int $replacementQty, string $replacementExpiredDate): InventoryReturn
     {
-        if ($inventoryReturn->status !== 'pending') {
+        if (!in_array($inventoryReturn->status, ['pending', 'confirmed'], true)) {
             throw ValidationException::withMessages([
                 'status' => 'Retur ini sudah diselesaikan.',
             ]);

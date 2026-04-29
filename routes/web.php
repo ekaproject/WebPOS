@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ReturnController;
 use App\Http\Controllers\Admin\InboundItemController;
 use App\Http\Controllers\Api\DashboardStockAlertController;
+use App\Http\Controllers\DistributorReturnController;
 
 // Public landing page
 Route::get('/', function () {
@@ -80,7 +81,7 @@ Route::middleware('auth')->get('/api/dashboard/stock-alert', DashboardStockAlert
     ->name('api.dashboard.stock-alert');
 
 // Admin routes (auth protected)
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('categories/{category}/next-sku', [ProductController::class, 'nextSku'])->name('categories.next-sku');
     Route::resource('products', ProductController::class);
@@ -108,4 +109,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('returns', [ReturnController::class, 'index'])->name('returns.index');
     Route::get('returns/{inventoryReturn}', [ReturnController::class, 'show'])->name('returns.show');
     Route::post('returns/{inventoryReturn}/complete', [ReturnController::class, 'complete'])->name('returns.complete');
+});
+
+Route::middleware(['auth', 'role:distributor'])->prefix('distributor')->name('distributor.')->group(function () {
+    Route::get('returns', [DistributorReturnController::class, 'index'])->name('returns.index');
+    Route::post('returns/{id}/confirm', [DistributorReturnController::class, 'confirm'])->name('returns.confirm');
+    Route::post('returns/{id}/complete', [DistributorReturnController::class, 'complete'])->name('returns.complete');
 });

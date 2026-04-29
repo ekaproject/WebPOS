@@ -31,14 +31,19 @@ class ReturnController extends Controller
 
     public function index(Request $request)
     {
-        $status = in_array($request->status, ['pending', 'completed'], true)
+        $status = in_array($request->status, ['pending', 'confirmed', 'completed'], true)
             ? $request->status
             : 'pending';
 
         $query = InventoryReturn::query()
             ->with(['distributor', 'inboundItem'])
-            ->where('status', $status)
             ->latest();
+
+        if ($status === 'pending') {
+            $query->whereIn('status', ['pending', 'confirmed']);
+        } else {
+            $query->where('status', $status);
+        }
 
         if ($request->filled('search')) {
             $keyword = $request->search;
