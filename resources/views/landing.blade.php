@@ -60,13 +60,13 @@
             <div class="relative z-10 grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10 items-center p-6 md:p-10 lg:p-14">
                 <div class="max-w-2xl fade-rise">
                     <span class="inline-flex px-4 py-1.5 rounded-full bg-white/18 text-white font-headline text-xs font-bold mb-6 tracking-[0.2em] uppercase border border-white/30 backdrop-blur-sm shadow-sm">
-                        {{ \App\Models\AppSetting::getValue('landing_solusi_text', 'Solusi Belanja Terlengkap') }}
+                        {{ $publicSettings['landing_solusi_text'] ?? 'Solusi Belanja Terlengkap' }}
                     </span>
                     <h1 class="text-4xl md:text-6xl lg:text-[70px] font-headline font-extrabold text-white leading-[1.08] tracking-tight mb-5">
-                        {{ \App\Models\AppSetting::getValue('landing_hero_title', 'Satu Tempat untuk Semua Kebutuhan.') }}
+                        {{ $publicSettings['landing_hero_title'] ?? 'Satu Tempat untuk Semua Kebutuhan.' }}
                     </h1>
                     <p class="text-base md:text-lg text-white/90 mb-8 max-w-xl font-medium leading-relaxed">
-                        {{ \App\Models\AppSetting::getValue('landing_hero_description', 'Mulai dari bahan makanan segar, perlengkapan rumah tangga, hingga bayar tagihan. Belanja cerdas, hidup lebih berkualitas.') }}
+                        {{ $publicSettings['landing_hero_description'] ?? 'Mulai dari bahan makanan segar, perlengkapan rumah tangga, hingga bayar tagihan. Belanja cerdas, hidup lebih berkualitas.' }}
                     </p>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
                         <a href="{{ route('categories.index') }}" class="landing-btn">
@@ -295,9 +295,9 @@
     <section id="location-info" class="px-5 md:px-10 py-16">
         @php
             $locationPhotos = [
-                \App\Models\AppSetting::getValue('landing_location_photo_1'),
-                \App\Models\AppSetting::getValue('landing_location_photo_2'),
-                \App\Models\AppSetting::getValue('landing_location_photo_3'),
+                $publicSettings['landing_location_photo_1'] ?? null,
+                $publicSettings['landing_location_photo_2'] ?? null,
+                $publicSettings['landing_location_photo_3'] ?? null,
             ];
             $filledLocationPhotos = array_values(array_filter($locationPhotos));
         @endphp
@@ -382,7 +382,7 @@
         <div class="h-full flex flex-col">
             <span class="text-3xl font-black text-primary font-headline tracking-tighter mb-6 block">{{ $publicSettings['store_name'] }}</span>
             <p class="text-on-surface-variant text-sm font-medium leading-relaxed">
-                Solusi belanja retail terlengkap dan modern. Kualitas terbaik dari berbagai kategori kebutuhan hidup Anda dalam satu atap digital.
+                {{ $publicSettings['landing_about_desc'] ?? 'Solusi belanja retail terlengkap dan modern. Kualitas terbaik dari berbagai kategori kebutuhan hidup Anda dalam satu atap digital.' }}
             </p>
         </div>
         <div class="h-full flex flex-col">

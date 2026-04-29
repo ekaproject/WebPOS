@@ -14,6 +14,8 @@
         </div>
         @if($inventoryReturn->status === 'completed')
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">Completed</span>
+        @elseif($inventoryReturn->status === 'confirmed')
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary-fixed text-primary">Confirmed</span>
         @else
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-tertiary-fixed text-tertiary">Pending</span>
         @endif
@@ -31,7 +33,15 @@
             </div>
             <div>
                 <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Status</p>
-                <p class="font-semibold uppercase">{{ $inventoryReturn->status }}</p>
+                <p class="font-semibold uppercase">
+                    @if($inventoryReturn->status === 'completed')
+                        Completed
+                    @elseif($inventoryReturn->status === 'confirmed')
+                        Confirmed
+                    @else
+                        Pending
+                    @endif
+                </p>
             </div>
             <div>
                 <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Inbound Asal</p>
@@ -48,7 +58,7 @@
         @endif
     </div>
 
-    @if($inventoryReturn->status === 'pending')
+    @if(in_array($inventoryReturn->status, ['pending', 'confirmed'], true))
     <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6">
         <h2 class="text-lg font-headline font-extrabold text-on-surface mb-1">Selesaikan Return</h2>
         <p class="text-xs text-on-surface-variant mb-4">Input barang pengganti yang diterima dari distributor. Data akan dibuat sebagai batch produk baru.</p>

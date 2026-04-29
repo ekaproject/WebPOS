@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'distributor_id',
         'phone',
         'is_active',
     ];
@@ -37,6 +38,16 @@ class User extends Authenticatable
     ];
 
     /**
+     * Default values for new users.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'role' => 'admin',
+        'is_active' => true,
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -48,5 +59,10 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function distributor()
+    {
+        return $this->belongsTo(Distributor::class);
     }
 }
