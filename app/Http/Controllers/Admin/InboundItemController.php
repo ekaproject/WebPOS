@@ -8,6 +8,7 @@ use App\Models\Distributor;
 use App\Models\InboundItem;
 use App\Services\Inventory\InventoryWorkflowService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class InboundItemController extends Controller
 {
@@ -70,7 +71,12 @@ class InboundItemController extends Controller
         ]);
 
         if ($request->hasFile('product_photo')) {
-            $data['product_photo'] = $request->file('product_photo')->store('inbound-products', 'public');
+            $file = $request->file('product_photo');
+            $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_.-]/', '_', $file->getClientOriginalName());
+            $destination = public_path('storage/inbound-products');
+            File::ensureDirectoryExists($destination, 0755, true);
+            $file->move($destination, $filename);
+            $data['product_photo'] = 'inbound-products/' . $filename;
         }
 
         $inboundItem = InboundItem::create($data);

@@ -86,10 +86,10 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
                 @foreach($products as $product)
                 <div class="promo-glass-card bg-white/90 border-white/80 overflow-hidden group">
-                    <div class="h-40 bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden flex items-center justify-center">
+                    <div class="h-48 bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden flex items-center justify-center">
                         @if($product->image)
                             <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}"
-                                 class="w-full h-full object-cover"/>
+                                 class="w-full h-full object-contain object-center"/>
                         @else
                             <span class="material-symbols-outlined text-6xl text-primary/20"
                                   style="font-variation-settings: 'FILL' 1;">
@@ -102,15 +102,15 @@
                             </div>
                         @endif
                     </div>
-                    <div class="p-4">
-                        <p class="text-xs text-secondary font-bold uppercase tracking-wider mb-1">{{ $product->category->name }}</p>
-                        <h3 class="font-headline font-bold text-sm leading-tight mb-3 line-clamp-2">{{ $product->name }}</h3>
+                    <div class="p-3">
+                        <p class="text-[11px] text-secondary font-bold uppercase tracking-wider mb-1">{{ $product->category->name }}</p>
+                        <h3 class="font-headline font-bold text-sm leading-tight mb-2 line-clamp-2">{{ $product->name }}</h3>
                         <div class="flex items-center justify-between gap-2">
                             <div>
-                                <span class="text-lg font-extrabold text-primary">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                <span class="text-base font-bold text-primary">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
                                 <p class="text-xs text-on-surface-variant">/ {{ $product->unit }}</p>
                             </div>
-                            <a href="{{ route('categories.show', $category->slug) }}" class="landing-btn-neutral p-2.5 rounded-xl flex-none inline-flex">
+                            <a href="{{ route('categories.show', $category->slug) }}" class="landing-btn-neutral p-2 rounded-xl flex-none inline-flex">
                                 <span class="material-symbols-outlined text-base">arrow_outward</span>
                             </a>
                         </div>

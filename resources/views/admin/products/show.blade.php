@@ -41,7 +41,7 @@
         <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6">
             <div class="w-full aspect-square rounded-xl bg-primary-fixed overflow-hidden flex items-center justify-center mb-4">
                 @if($product->image)
-                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover"/>
+                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
                 @else
                     <span class="material-symbols-outlined text-primary text-6xl">inventory_2</span>
                 @endif

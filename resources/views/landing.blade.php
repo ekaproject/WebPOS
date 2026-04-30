@@ -183,23 +183,22 @@
                             data-product-category="{{ $product->category->slug }}"
                             class="promo-glass-card bg-white/88 border-white/80 overflow-hidden"
                         >
-                            <div class="h-40 bg-gradient-to-br from-primary/18 to-secondary/12 relative overflow-hidden flex items-center justify-center">
+                            <div class="h-48 bg-gradient-to-br from-primary/18 to-secondary/12 relative overflow-hidden flex items-center justify-center">
                                 @if($product->image)
-                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover"/>
+                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
                                 @else
                                     <span class="material-symbols-outlined text-7xl text-primary/25" style="font-variation-settings: 'FILL' 1;">{{ $product->category->icon ?: 'inventory_2' }}</span>
                                 @endif
                             </div>
-                            <div class="p-5">
-                                <p class="text-xs text-primary font-bold uppercase tracking-wider mb-2">{{ $product->category->name }}</p>
-                                <h3 class="text-base font-headline font-bold mb-2 line-clamp-2">{{ $product->name }}</h3>
-                                <p class="text-sm text-on-surface-variant line-clamp-2">{{ $product->description ?: 'Produk aktif yang tersedia untuk pembelian.' }}</p>
-                                <div class="mt-4 flex items-center justify-between">
+                            <div class="p-4">
+                                <p class="text-[11px] text-primary font-bold uppercase tracking-wider mb-1">{{ $product->category->name }}</p>
+                                <h3 class="text-base font-headline font-bold mb-1 line-clamp-2">{{ $product->name }}</h3>
+                                <div class="mt-3 flex items-center justify-between">
                                     <div class="flex flex-col">
-                                        <span class="text-lg font-extrabold text-primary">Rp {{ number_format((float) $product->price, 0, ',', '.') }}</span>
+                                        <span class="text-base font-bold text-primary">Rp {{ number_format((float) $product->price, 0, ',', '.') }}</span>
                                         <span class="text-xs text-on-surface-variant">Stok: {{ $product->stock }} {{ $product->unit }}</span>
                                     </div>
-                                    <a href="{{ route('categories.show', $product->category->slug) }}" class="landing-btn-neutral p-2.5 rounded-xl inline-flex">
+                                    <a href="{{ route('categories.show', $product->category->slug) }}" class="landing-btn-neutral p-2 rounded-xl inline-flex">
                                         <span class="material-symbols-outlined">arrow_outward</span>
                                     </a>
                                 </div>
@@ -242,7 +241,7 @@
                         @endphp
                         @continue(!$product)
                         <article class="promo-glass-card bg-white/88 border-white/80 overflow-hidden">
-                            <div class="h-44 bg-gradient-to-br from-primary/20 to-secondary/10 relative overflow-hidden flex items-center justify-center">
+                            <div class="h-48 bg-gradient-to-br from-primary/20 to-secondary/10 relative overflow-hidden flex items-center justify-center">
                                 <div class="absolute top-3 left-3 z-10">
                                     @if($promoProduct->start_date->isFuture())
                                         <span class="bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase">Mulai {{ $promoProduct->start_date->format('d M') }}</span>
@@ -251,25 +250,24 @@
                                     @endif
                                 </div>
                                 @if($product->image)
-                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover"/>
+                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
                                 @else
                                     <span class="material-symbols-outlined text-8xl text-primary/20" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
                                 @endif
                             </div>
-                            <div class="p-5">
-                                <p class="text-xs text-primary font-bold uppercase tracking-wider mb-2">{{ $product->category?->name ?? 'Produk' }}</p>
-                                <h3 class="text-lg font-headline font-bold mb-2 line-clamp-2">{{ $product->name }}</h3>
-                                <p class="text-sm text-on-surface-variant line-clamp-2">{{ $product->description ?: 'Produk terbaru yang sudah ditambahkan di admin.' }}</p>
-
-                                @php
-                                    $hargaNormal = $product->price;
-                                    $nilaiPotongan = $promoProduct->type === 'percent'
-                                        ? ($hargaNormal * ((float) $promoProduct->discount_value / 100))
-                                        : (float) $promoProduct->discount_value;
-                                    $hargaDiskon = max($product->purchase_price, $hargaNormal - $nilaiPotongan);
-                                @endphp
-
-                                <div class="mt-4 flex items-center justify-between">
+                            <div class="p-4">
+                                <p class="text-[11px] text-primary font-bold uppercase tracking-wider mb-1">{{ $product->category?->name ?? 'Produk' }}</p>
+                                <h3 class="text-base font-headline font-bold mb-2 line-clamp-2">{{ $product->name }}</h3>
+                                <div class="mt-3 flex items-center justify-between">
+                                    <div class="flex flex-col">
+                                        <span class="text-base font-bold text-primary">Rp {{ number_format((float) $product->price, 0, ',', '.') }}</span>
+                                        <span class="text-xs text-on-surface-variant">Stok: {{ $product->stock }} {{ $product->unit }}</span>
+                                    </div>
+                                    <a href="{{ route('categories.show', $product->category->slug) }}" class="landing-btn-neutral p-2 rounded-xl inline-flex">
+                                        <span class="material-symbols-outlined">arrow_outward</span>
+                                    </a>
+                                </div>
+                            </div>
                                     <div class="flex flex-col">
                                         <span class="text-[11px] font-medium text-on-surface-variant/60 line-through">Rp {{ number_format($hargaNormal, 0, ',', '.') }}</span>
                                         <span class="text-xl font-extrabold text-error">Rp {{ number_format($hargaDiskon, 0, ',', '.') }}</span>

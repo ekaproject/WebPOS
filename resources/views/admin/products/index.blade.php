@@ -78,7 +78,7 @@
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-primary-fixed overflow-hidden flex items-center justify-center">
                                     @if($product->image)
-                                        <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover"/>
+                                        <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
                                     @else
                                         <span class="material-symbols-outlined text-primary text-lg">inventory_2</span>
                                     @endif
