@@ -4,14 +4,14 @@
     $searchAction = $searchAction ?? route('categories.index');
     $searchPlaceholder = $searchPlaceholder ?? 'Cari produk atau kategori...';
     $authVariant = $authVariant ?? 'logout'; // logout | dashboard
-    $storeName = $publicSettings['store_name'] ?? 'Nexus Retail';
+    $storeName = $publicSettings['store_name'] ?? 'Ils mart';
 @endphp
 
 <nav class="sticky top-0 z-50 sticky-blur-nav border-b border-outline-variant/20">
     <div class="px-5 md:px-10 py-3.5">
         <div class="flex items-center justify-between gap-3">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0">
-                <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+            <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0">
+                <img src="{{ asset('images/logo_ils.png') }}" alt="{{ $storeName }}" class="h-10 w-10 object-contain rounded-md" />
                 <span class="text-xl md:text-2xl font-black text-primary font-headline tracking-tight">{{ $storeName }}</span>
             </a>
 

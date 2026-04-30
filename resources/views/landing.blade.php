@@ -311,7 +311,7 @@
                     <div class="rounded-[20px] overflow-hidden bg-surface-container-low border border-white/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
                          style="box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);">
                         <iframe
-                            title="Lokasi Nexus Retail"
+                            title="Lokasi Ils mart"
                             src="https://www.openstreetmap.org/export/embed.html?bbox=106.8025%2C-6.2200%2C106.8235%2C-6.2020&layer=mapnik&marker=-6.2113%2C106.8130"
                             class="w-full h-[320px] md:h-[380px]"
                             loading="lazy"
@@ -429,6 +429,58 @@
         </div>
     </div>
 </footer>
+
+<script>
+    (function () {
+        const filterButtons = document.querySelectorAll('[data-category-filter]');
+        const productGrid = document.getElementById('landing-products-grid');
+        const productCards = productGrid ? Array.from(productGrid.querySelectorAll('[data-product-card]')) : [];
+        const productsCountEl = document.getElementById('landing-products-count');
+        const emptyEl = document.getElementById('landing-products-empty');
+
+        function updateCount(visibleCount) {
+            if (!productsCountEl) return;
+            productsCountEl.textContent = `Menampilkan ${visibleCount} produk`;
+        }
+
+        function showEmptyIfNeeded() {
+            if (!emptyEl) return;
+            const anyVisible = productCards.some(c => !c.classList.contains('hidden'));
+            emptyEl.classList.toggle('hidden', anyVisible);
+        }
+
+        function applyFilter(slug) {
+            let visible = 0;
+            productCards.forEach(card => {
+                const cat = card.getAttribute('data-product-category') || 'all';
+                if (slug === 'all' || cat === slug) {
+                    card.classList.remove('hidden');
+                    visible++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            updateCount(visible);
+            showEmptyIfNeeded();
+        }
+
+        if (filterButtons.length && productCards.length) {
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const slug = this.getAttribute('data-category-filter');
+                    // toggle active pill
+                    filterButtons.forEach(b => b.classList.remove('nav-link-pill-active'));
+                    this.classList.add('nav-link-pill-active');
+                    applyFilter(slug);
+                });
+            });
+
+            // initial state: show all
+            applyFilter('all');
+        }
+    })();
+</script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

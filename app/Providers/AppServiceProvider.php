@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $defaults = [
-            'store_name' => 'Nexus Retail',
+            'store_name' => 'ILS MART',
             'store_email' => 'help@nexusretail.com',
             'store_phone' => '(021) 555-0123',
             'store_address' => 'Jl. Sudirman No. 123, Jakarta Pusat',
