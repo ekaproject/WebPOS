@@ -14,6 +14,7 @@
 @include('partials.navbar', [
     'active' => 'categories',
     'authVariant' => 'dashboard',
+    'hideAuthLink' => true,
 ])
 
 <main class="pt-6 md:pt-8">
@@ -31,15 +32,29 @@
             <p class="text-white/85 mt-2 max-w-2xl">Temukan produk yang Anda butuhkan berdasarkan kategori, dari kebutuhan harian sampai produk favorit keluarga.</p>
 
             <form action="{{ route('categories.index') }}" method="GET" class="mt-6 w-full max-w-2xl">
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <div class="relative flex-1">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kategori, produk, atau SKU..."
-                               class="w-full rounded-2xl border border-white/45 bg-white/90 pl-10 pr-4 py-3 text-sm text-on-surface focus:ring-2 focus:ring-primary focus:border-primary"/>
-                    </div>
-                    <button type="submit" class="landing-btn btn-inline sm:min-w-[120px]">Cari</button>
-                </div>
-            </form>
+    <div class="flex flex-col sm:flex-row gap-3">
+        
+        <div class="flex items-center flex-1 rounded-2xl border border-white/45 bg-white/90 px-4">
+            
+            <span class="material-symbols-outlined text-on-surface-variant text-lg mr-2">
+                search
+            </span>
+
+            <input 
+                type="text" 
+                name="search" 
+                value="{{ request('search') }}"
+                placeholder="Cari kategori, produk, atau SKU..."
+                class="flex-1 py-3 text-sm text-on-surface bg-transparent focus:outline-none"
+            />
+            
+        </div>
+
+        <button type="submit" class="landing-btn btn-inline sm:min-w-[120px]">
+            Cari
+        </button>
+    </div>
+</form>
 
             @if(request('search'))
                 <p class="mt-3 text-sm text-white/80">

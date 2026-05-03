@@ -47,36 +47,46 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}" id="loginForm" class="space-y-5">
+        <form method="POST" action="{{ route('admin.login') }}" id="loginForm" class="space-y-5">
             @csrf
 
-            <div>
-                <label class="mb-2 ml-1 block text-xs font-semibold uppercase tracking-wider text-slate-500" for="email">
-                    Email
-                </label>
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">mail</span>
-                    <input class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 pl-12 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-[#2563eb] focus:ring-4 focus:ring-blue-100"
-                           id="email" name="email" type="email" value="{{ old('email') }}"
-                           placeholder="contoh@domain.com" autocomplete="email" required autofocus/>
-                </div>
-            </div>
+           <div class="flex items-center w-full rounded-lg border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-[#2563eb]">
 
-            <div>
-                <label class="mb-2 ml-1 block text-xs font-semibold uppercase tracking-wider text-slate-500" for="password">
-                    Password
-                </label>
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">key</span>
-                    <input class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 pl-12 pr-12 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-[#2563eb] focus:ring-4 focus:ring-blue-100"
-                           id="password" name="password" type="password"
-                           placeholder="Masukkan password" autocomplete="current-password" required/>
-                    <button class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-700"
-                            type="button" onclick="togglePassword()" aria-label="Tampilkan password">
-                        <span class="material-symbols-outlined" id="eyeIcon">visibility</span>
-                    </button>
-                </div>
-            </div>
+    <span class="material-symbols-outlined text-slate-400 mr-2">
+        mail
+    </span>
+
+    <input 
+        id="email" 
+        name="email" 
+        type="email"
+        value="{{ old('email') }}"
+        placeholder="contoh@domain.com"
+        class="flex-1 py-3 text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
+        required
+    />
+</div>
+
+           <div class="flex items-center w-full rounded-lg border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-[#2563eb]">
+
+    <span class="material-symbols-outlined text-slate-400 mr-2">
+        key
+    </span>
+
+    <input 
+        id="password" 
+        name="password" 
+        type="password"
+        placeholder="Masukkan password"
+        class="flex-1 py-3 text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
+        required
+    />
+
+    <button type="button" onclick="togglePassword()" class="ml-2 text-slate-400 hover:text-slate-700">
+        <span class="material-symbols-outlined" id="eyeIcon">visibility</span>
+    </button>
+
+</div>
 
             <div class="flex items-center gap-2 px-1">
                 <input class="h-4 w-4 rounded border-slate-300 text-[#2563eb] focus:ring-[#2563eb]"

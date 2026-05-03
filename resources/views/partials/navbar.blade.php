@@ -4,8 +4,9 @@
     $searchAction = $searchAction ?? route('categories.index');
     $searchPlaceholder = $searchPlaceholder ?? 'Cari produk atau kategori...';
     $authVariant = $authVariant ?? 'logout'; // logout | dashboard
+    $hideAuthLink = $hideAuthLink ?? false;
     $storeName = $publicSettings['store_name'] ?? 'Ils mart';
-@endphp
+endphp
 
 <nav class="sticky top-0 z-50 sticky-blur-nav border-b border-outline-variant/20">
     <div class="px-5 md:px-10 py-3.5">
@@ -24,16 +25,24 @@
             <div class="flex items-center gap-2">
                 @if($showSearch)
                     <form action="{{ $searchAction }}" method="GET" class="hidden xl:block">
-                        <div class="relative">
-                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-                            <input type="text" name="search" placeholder="{{ $searchPlaceholder }}"
-                                   class="w-64 rounded-full border border-outline-variant/30 bg-white/80 pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary"/>
-                        </div>
-                    </form>
+    <div class="flex items-center w-64 rounded-full border border-gray-300 bg-white px-3">
+        <span class="material-symbols-outlined text-gray-400 text-lg mr-2">
+            search
+        </span>
+        <input 
+            type="text" 
+            name="search" 
+            placeholder="{{ $searchPlaceholder }}"
+            class="flex-1 bg-transparent py-2 text-sm focus:outline-none"
+        />
+    </div>
+</form>
                 @endif
 
                 @guest
-                    <a href="{{ route('login') }}" class="landing-btn btn-inline text-sm py-2.5 px-5">Masuk</a>
+                    @unless($hideAuthLink)
+                        <a href="{{ route('login') }}" class="landing-btn btn-inline text-sm py-2.5 px-5">Masuk</a>
+                    @endunless
                 @else
                     @if($authVariant === 'dashboard')
                         <a href="{{ route('admin.dashboard') }}" class="landing-btn btn-inline text-sm py-2.5 px-5">Dashboard</a>
@@ -55,9 +64,9 @@
             @if($showSearch)
                 <form action="{{ $searchAction }}" method="GET" class="ml-auto min-w-[200px] flex-1 max-w-[280px]">
                     <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-                        <input type="text" name="search" placeholder="Cari..."
-                               class="w-full rounded-full border border-outline-variant/30 bg-white/80 pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary"/>
+                           <span class="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg pointer-events-none">search</span>
+                           <input type="text" name="search" placeholder="Cari..."
+                               class="w-full rounded-full border border-outline-variant/30 bg-white/80 pl-20 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary"/>
                     </div>
                 </form>
             @endif

@@ -71,8 +71,14 @@ Route::get('/promos', [PromoController::class, 'index'])->name('promos.index');
 
 // Auth routes
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    // Keep legacy route name but redirect to /admin so login is only accessed via /admin
+    Route::get('/login', function () {
+        return redirect('/admin');
+    })->name('login');
+
+    // Admin login entry point
+    Route::get('/admin', [AuthController::class, 'showLogin'])->name('admin.login.show');
+    Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');

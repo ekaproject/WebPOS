@@ -19,6 +19,7 @@
     'searchAction' => route('categories.index'),
     'searchPlaceholder' => 'Cari produk atau kategori...',
     'authVariant' => 'logout',
+    'hideAuthLink' => true,
 ])
 
 <main class="pt-6 md:pt-8">
@@ -238,6 +239,15 @@
                     @foreach($featuredProducts as $promoProduct)
                         @php
                             $product = $promoProduct->product;
+                            // calculate promo price if promo info is available on the promoProduct
+                            $hargaNormal = $product->price ?? 0;
+                            $hargaDiskon = $hargaNormal;
+                            if (!empty($promoProduct->discount_value)) {
+                                $nilaiPotongan = $promoProduct->type === 'percent'
+                                    ? ($hargaNormal * ((float) $promoProduct->discount_value / 100))
+                                    : (float) $promoProduct->discount_value;
+                                $hargaDiskon = max($product->purchase_price ?? 0, $hargaNormal - $nilaiPotongan);
+                            }
                         @endphp
                         @continue(!$product)
                         <article class="promo-glass-card bg-white/88 border-white/80 overflow-hidden">
@@ -260,7 +270,11 @@
                                 <h3 class="text-base font-headline font-bold mb-2 line-clamp-2">{{ $product->name }}</h3>
                                 <div class="mt-3 flex items-center justify-between">
                                     <div class="flex flex-col">
-                                        <span class="text-base font-bold text-primary">Rp {{ number_format((float) $product->price, 0, ',', '.') }}</span>
+                                        @if($hargaDiskon < $hargaNormal)
+                                            <span class="text-[11px] line-through text-on-surface-variant">Rp {{ number_format($hargaNormal, 0, ',', '.') }}</span>
+                                        @endif
+
+                                        <span class="text-base font-bold text-error">Rp {{ number_format($hargaDiskon, 0, ',', '.') }}</span>
                                         <span class="text-xs text-on-surface-variant">Stok: {{ $product->stock }} {{ $product->unit }}</span>
                                     </div>
                                     <a href="{{ route('categories.show', $product->category->slug) }}" class="landing-btn-neutral p-2 rounded-xl inline-flex">
@@ -268,16 +282,7 @@
                                     </a>
                                 </div>
                             </div>
-                                    <div class="flex flex-col">
-                                        <span class="text-[11px] font-medium text-on-surface-variant/60 line-through">Rp {{ number_format($hargaNormal, 0, ',', '.') }}</span>
-                                        <span class="text-xl font-extrabold text-error">Rp {{ number_format($hargaDiskon, 0, ',', '.') }}</span>
-                                    </div>
-                                    <a href="{{ $product->category ? route('categories.show', $product->category->slug) : route('categories.index') }}" class="landing-btn-neutral p-2.5 rounded-xl">
-                                        <span class="material-symbols-outlined">arrow_outward</span>
-                                    </a>
-                                </div>
-                                <p class="mt-2 text-xs text-on-surface-variant">Stok: {{ $product->stock }} {{ $product->unit }}</p>
-                            </div>
+                            
                         </article>
                     @endforeach
                 </div>

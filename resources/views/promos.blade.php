@@ -15,6 +15,7 @@
 @include('partials.navbar', [
     'active' => 'promos',
     'authVariant' => 'logout',
+    'hideAuthLink' => true,
 ])
 
 <main class="pt-6 md:pt-8">

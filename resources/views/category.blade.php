@@ -14,6 +14,7 @@
 @include('partials.navbar', [
     'active' => 'categories',
     'authVariant' => 'dashboard',
+    'hideAuthLink' => true,
 ])
 
 <main class="pt-6 md:pt-8">
