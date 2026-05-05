@@ -6,7 +6,7 @@
     $authVariant = $authVariant ?? 'logout'; // logout | dashboard
     $hideAuthLink = $hideAuthLink ?? false;
     $storeName = $publicSettings['store_name'] ?? 'Ils mart';
-endphp
+@endphp
 
 <nav class="sticky top-0 z-50 sticky-blur-nav border-b border-outline-variant/20">
     <div class="px-5 md:px-10 py-3.5">
