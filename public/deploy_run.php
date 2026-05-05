@@ -18,6 +18,7 @@ $commands = [
     PHP_BINARY . ' artisan cache:clear',
     PHP_BINARY . ' artisan view:clear',
     PHP_BINARY . ' artisan migrate --force',
+    PHP_BINARY . ' artisan storage:link',
 ];
 
 echo '<pre style="background:#111;color:#0f0;padding:20px;font-size:14px;">';
