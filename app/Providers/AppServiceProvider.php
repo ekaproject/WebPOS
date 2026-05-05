@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
         ];
 
         $settings = $defaults;
-        if (Schema::hasTable('app_settings')) {
+        if (! $this->app->runningInConsole() && Schema::hasTable('app_settings')) {
             $stored = AppSetting::whereIn('key', array_keys($defaults))->pluck('value', 'key')->toArray();
             $settings = array_merge($defaults, array_filter($stored, static fn ($value) => $value !== null && $value !== ''));
         }
