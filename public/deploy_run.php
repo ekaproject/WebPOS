@@ -18,9 +18,10 @@ $commands = [
     PHP_BINARY . ' artisan cache:clear',
     PHP_BINARY . ' artisan view:clear',
     PHP_BINARY . ' artisan migrate --force',
-    PHP_BINARY . ' artisan storage:link',
+    PHP_BINARY . ' artisan storage:link --force 2>&1 || true',
 ];
 
+// Jalankan commands standar dulu
 echo '<pre style="background:#111;color:#0f0;padding:20px;font-size:14px;">';
 echo "=== DEPLOY RUNNER ===\n\n";
 
@@ -31,5 +32,38 @@ foreach ($commands as $cmd) {
     echo str_repeat('-', 60) . "\n";
 }
 
+// Migrasi file lama dari storage/app/public → public/storage
+echo "\n<b>=== MIGRASI FILE STORAGE ===</b>\n";
+$oldBase = BASE . '/storage/app/public';
+$newBase = BASE . '/public/storage';
+
+$dirs = ['landing-location', 'inbound-products', 'products'];
+foreach ($dirs as $dir) {
+    $oldDir = $oldBase . '/' . $dir;
+    $newDir = $newBase . '/' . $dir;
+
+    if (!is_dir($oldDir)) {
+        echo "Skip $dir (folder lama tidak ada)\n";
+        continue;
+    }
+
+    $files = glob($oldDir . '/*');
+    $moved = 0;
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            $dest = $newDir . '/' . basename($file);
+            if (!file_exists($dest)) {
+                if (!is_dir($newDir)) mkdir($newDir, 0755, true);
+                if (copy($file, $dest)) {
+                    unlink($file);
+                    $moved++;
+                }
+            }
+        }
+    }
+    echo "Folder $dir: $moved file dipindah ke public/storage/$dir\n";
+}
+
 echo "\n✅ SELESAI. Hapus file ini sekarang!\n";
 echo '</pre>';
+$fakeEof = true; // stop duplicate pre
