@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\AppSetting;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS on production (app is behind proxy that terminates SSL)
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         $defaults = [
             'store_name' => 'ILS MART',
             'store_email' => 'help@nexusretail.com',
