@@ -69,6 +69,13 @@ Route::get('/categories/{category:slug}', function (\App\Models\Category $catego
 })->name('categories.show.legacy');
 Route::get('/promos', [PromoController::class, 'index'])->name('promos.index');
 
+Route::get('/daftar-distributor', function () {
+    $distributors = \App\Models\Distributor::where('is_active', true)
+        ->orderBy('name')
+        ->get();
+    return view('distributor-register', compact('distributors'));
+})->name('distributor.register');
+
 // Auth routes
 Route::middleware('guest')->group(function () {
     // Login form at /login
@@ -88,7 +95,7 @@ Route::middleware('auth')->get('/api/dashboard/stock-alert', DashboardStockAlert
 
 // Admin routes (auth protected)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('categories/{category}/next-sku', [ProductController::class, 'nextSku'])->name('categories.next-sku');
     Route::resource('products', ProductController::class);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);

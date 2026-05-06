@@ -17,7 +17,7 @@
     'active' => 'home',
     'showSearch' => true,
     'searchAction' => route('categories.index'),
-    'searchPlaceholder' => 'Cari produk atau kategori...',
+    'searchPlaceholder' => 'Cari nama produk...',
     'authVariant' => 'logout',
     'hideAuthLink' => true,
 ])
@@ -381,12 +381,21 @@
 
 <!-- Footer -->
 <footer class="bg-surface-container-low pt-16 pb-10 px-6 md:px-10 mt-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mb-12 items-stretch">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 mb-12 items-stretch">
         <div class="h-full flex flex-col">
             <span class="text-3xl font-black text-primary font-headline tracking-tighter mb-6 block">{{ $publicSettings['store_name'] }}</span>
             <p class="text-on-surface-variant text-sm font-medium leading-relaxed">
                 {{ $publicSettings['landing_about_desc'] ?? 'Solusi belanja retail terlengkap dan modern. Kualitas terbaik dari berbagai kategori kebutuhan hidup Anda dalam satu atap digital.' }}
             </p>
+        </div>
+        <div class="h-full flex flex-col">
+            <h4 class="font-headline font-extrabold text-on-surface mb-6 uppercase tracking-widest text-xs">NAVIGASI</h4>
+            <ul class="space-y-3 text-sm font-medium text-on-surface-variant flex-1">
+                <li><a class="hover:text-primary transition-colors" href="{{ route('home') }}">Beranda</a></li>
+                <li><a class="hover:text-primary transition-colors" href="{{ route('categories.index') }}">Kategori</a></li>
+                <li><a class="hover:text-primary transition-colors" href="{{ route('promos.index') }}">Promo</a></li>
+                <li><a class="hover:text-primary transition-colors" href="{{ route('distributor.register') }}">Daftar Distributor</a></li>
+            </ul>
         </div>
         <div class="h-full flex flex-col">
             <h4 class="font-headline font-extrabold text-on-surface mb-6 uppercase tracking-widest text-xs">KATEGORI UTAMA</h4>

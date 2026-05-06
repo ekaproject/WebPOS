@@ -44,7 +44,7 @@
                 type="text" 
                 name="search" 
                 value="{{ request('search') }}"
-                placeholder="Cari kategori, produk, atau SKU..."
+                placeholder="Cari nama produk..."
                 class="flex-1 py-3 text-sm text-on-surface bg-transparent focus:outline-none"
             />
             
@@ -64,10 +64,62 @@
         </div>
     </section>
 
+    <!-- Product Search Results -->
+    @if(request('search') && isset($searchProducts) && $searchProducts->count())
+        <section class="px-6 md:px-10 pb-8">
+            <div class="rounded-[1.8rem] border border-white/70 bg-white/72 backdrop-blur-sm p-6 md:p-8 shadow-[0_14px_32px_rgba(2,54,97,0.08)]">
+                <p class="text-sm text-on-surface-variant mb-5">
+                    Ditemukan <strong>{{ $searchProducts->count() }}</strong> produk untuk "<strong>{{ request('search') }}</strong>"
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+                    @foreach($searchProducts as $product)
+                    <div class="promo-glass-card bg-white/90 border-white/80 overflow-hidden group">
+                        <div class="h-48 bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden flex items-center justify-center">
+                            @if($product->image)
+                                <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}"
+                                     class="w-full h-full object-contain object-center"/>
+                            @else
+                                <span class="material-symbols-outlined text-6xl text-primary/20"
+                                      style="font-variation-settings: 'FILL' 1;">
+                                    {{ $product->category->icon ?? 'inventory_2' }}
+                                </span>
+                            @endif
+                            @if($product->isLowStock())
+                                <div class="absolute top-2 left-2">
+                                    <span class="bg-error text-on-error text-[10px] font-bold px-2 py-0.5 rounded-full">Stok Terbatas</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="p-3">
+                            <p class="text-[11px] text-secondary font-bold uppercase tracking-wider mb-1">{{ $product->category->name }}</p>
+                            <h3 class="font-headline font-bold text-sm leading-tight mb-2 line-clamp-2">{{ $product->name }}</h3>
+                            <div class="flex items-center justify-between gap-2">
+                                <div>
+                                    <span class="text-base font-bold text-primary">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                    <p class="text-xs text-on-surface-variant">/ {{ $product->unit }}</p>
+                                </div>
+                                <a href="{{ route('categories.show', $product->category->slug) }}" class="landing-btn-neutral p-2 rounded-xl flex-none inline-flex">
+                                    <span class="material-symbols-outlined text-base">arrow_outward</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     <!-- Category Grid -->
+    @if(!request('search') || (isset($searchProducts) && $searchProducts->isEmpty()))
     <section class="px-6 md:px-10 pb-14">
         <div class="rounded-[1.8rem] border border-white/70 bg-white/72 backdrop-blur-sm p-6 md:p-8 shadow-[0_14px_32px_rgba(2,54,97,0.08)]">
             @if($categories->count())
+                @if(request('search'))
+                    <p class="text-sm text-on-surface-variant mb-5">
+                        Tidak ditemukan produk untuk "<strong>{{ request('search') }}</strong>". Menampilkan kategori terkait:
+                    </p>
+                @endif
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5">
                     @foreach($categories as $category)
                         <a href="{{ route('categories.show', $category->slug) }}" class="promo-glass-card bg-white/88 border-white/80 p-5 text-center group">
@@ -84,12 +136,15 @@
                 </div>
             @else
                 <div class="text-center py-24 text-on-surface-variant">
-                    <span class="material-symbols-outlined text-6xl block mb-3">category</span>
-                    <p class="font-bold text-lg">Belum ada kategori tersedia.</p>
+                    <span class="material-symbols-outlined text-6xl block mb-3">search_off</span>
+                    <p class="font-bold text-lg">Tidak ditemukan hasil untuk "{{ request('search') }}"</p>
+                    <p class="text-sm mt-1">Coba kata kunci lain.</p>
+                    <a href="{{ route('categories.index') }}" class="inline-block mt-4 text-primary font-bold hover:underline">Lihat semua kategori</a>
                 </div>
             @endif
         </div>
     </section>
+    @endif
 
 </main>
 

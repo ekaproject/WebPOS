@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
             'store_name' => 'ILS MART',
             'store_email' => 'help@nexusretail.com',
             'store_phone' => '(021) 555-0123',
+            'store_whatsapp' => '6281234567890',
             'store_address' => 'Jl. Sudirman No. 123, Jakarta Pusat',
             'tax_percent' => '11',
             'footer_text' => 'Hak Cipta Dilindungi.',

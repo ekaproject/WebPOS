@@ -5,6 +5,9 @@
     $searchPlaceholder = $searchPlaceholder ?? 'Cari produk atau kategori...';
     $authVariant = $authVariant ?? 'logout'; // logout | dashboard
     $hideAuthLink = $hideAuthLink ?? false;
+
+    // Ensure $publicSettings exists to avoid undefined variable errors
+    $publicSettings = $publicSettings ?? [];
     $storeName = $publicSettings['store_name'] ?? 'Ils mart';
 @endphp
 
@@ -12,14 +15,15 @@
     <div class="px-5 md:px-10 py-3.5">
         <div class="flex items-center justify-between gap-3">
             <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0">
-                <img src="{{ asset('images/logo_ils.png') }}" alt="{{ $storeName }}" class="h-10 w-10 object-contain rounded-md" />
-                <span class="text-xl md:text-2xl font-black text-primary font-headline tracking-tight">{{ $storeName }}</span>
+                <img src="{{ asset('images/logo_ils.png') }}" alt="{{ $publicSettings['store_name'] ?? 'Ils mart' }}" class="h-10 w-10 object-contain rounded-md" />
+                <span class="text-xl md:text-2xl font-black text-primary font-headline tracking-tight">{{ $publicSettings['store_name'] ?? 'Ils mart' }}</span>
             </a>
 
             <div class="hidden lg:flex items-center gap-1 font-headline tracking-tight bg-white/75 px-2 py-1 rounded-full border border-white/70 shadow-sm">
                 <a class="{{ $active === 'home' ? 'nav-link-pill nav-link-pill-active' : 'nav-link-pill bg-white/70 border border-white/70' }}" href="{{ route('home') }}">Beranda</a>
                 <a class="{{ $active === 'categories' ? 'nav-link-pill nav-link-pill-active' : 'nav-link-pill bg-white/70 border border-white/70' }}" href="{{ route('categories.index') }}">Kategori</a>
                 <a class="{{ $active === 'promos' ? 'nav-link-pill nav-link-pill-active' : 'nav-link-pill bg-white/70 border border-white/70' }}" href="{{ route('promos.index') }}">Promo</a>
+
             </div>
 
             <div class="flex items-center gap-2">
@@ -60,6 +64,7 @@
             <a class="{{ $active === 'home' ? 'nav-link-pill nav-link-pill-active' : 'nav-link-pill bg-white/75 border border-white/70' }}" href="{{ route('home') }}">Beranda</a>
             <a class="{{ $active === 'categories' ? 'nav-link-pill nav-link-pill-active' : 'nav-link-pill bg-white/75 border border-white/70' }}" href="{{ route('categories.index') }}">Kategori</a>
             <a class="{{ $active === 'promos' ? 'nav-link-pill nav-link-pill-active' : 'nav-link-pill bg-white/75 border border-white/70' }}" href="{{ route('promos.index') }}">Promo</a>
+
 
             @if($showSearch)
                 <form action="{{ $searchAction }}" method="GET" class="ml-auto min-w-[200px] flex-1 max-w-[280px]">

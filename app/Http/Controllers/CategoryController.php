@@ -10,14 +10,14 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
+        $keyword = $request->filled('search') ? trim((string) $request->search) : null;
+
         $query = Category::query()
             ->visibleForMenu()
             ->where('is_active', true)
             ->withCount('products');
 
-        if ($request->filled('search')) {
-            $keyword = trim((string) $request->search);
-
+        if ($keyword) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'like', '%'.$keyword.'%')
                     ->orWhere('description', 'like', '%'.$keyword.'%')
@@ -33,7 +33,24 @@ class CategoryController extends Controller
 
         $categories = $query->orderBy('name')->get();
 
-        return view('categories', compact('categories'));
+        // When searching, also fetch matching products directly
+        $searchProducts = collect();
+        if ($keyword) {
+            $searchProducts = Product::with('category')
+                ->where('is_active', true)
+                ->whereHas('category', function ($q) {
+                    $q->visibleForMenu()->where('is_active', true);
+                })
+                ->where(function ($q) use ($keyword) {
+                    $q->where('name', 'like', '%'.$keyword.'%')
+                      ->orWhere('sku', 'like', '%'.$keyword.'%');
+                })
+                ->orderBy('name')
+                ->take(40)
+                ->get();
+        }
+
+        return view('categories', compact('categories', 'searchProducts'));
     }
 
     public function show(Request $request, Category $category)

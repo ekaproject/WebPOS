@@ -113,12 +113,17 @@
     <!-- Top Header -->
     <header class="h-16 bg-surface-container-lowest flex items-center justify-between px-8 sticky top-0 z-40 border-b border-outline-variant/20 admin-card">
         <div class="flex items-center flex-1 max-w-xl">
-            <div class="relative w-full">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-                <input class="w-full bg-white border border-outline-variant/30 rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary"
-                       placeholder="Cari produk, transaksi..." type="text"/>
-            </div>
-        </div>
+    <div class="flex items-center w-full bg-white border border-outline-variant/30 rounded-xl px-4">
+        <span class="material-symbols-outlined text-on-surface-variant text-lg mr-2">
+            search
+        </span>
+        <input 
+            type="text"
+            placeholder="Cari produk, transaksi..."
+            class="flex-1 py-2 text-sm focus:outline-none bg-transparent"
+        />
+    </div>
+</div>
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-3">
                 <div class="text-right">
