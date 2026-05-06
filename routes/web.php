@@ -88,7 +88,7 @@ Route::middleware('auth')->get('/api/dashboard/stock-alert', DashboardStockAlert
 
 // Admin routes (auth protected)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('categories/{category}/next-sku', [ProductController::class, 'nextSku'])->name('categories.next-sku');
     Route::resource('products', ProductController::class);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
