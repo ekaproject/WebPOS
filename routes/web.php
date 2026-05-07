@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\InboundItemController;
 use App\Http\Controllers\Admin\MasterProductController;
 use App\Http\Controllers\Api\DashboardStockAlertController;
 use App\Http\Controllers\DistributorReturnController;
+use App\Http\Controllers\Admin\SatuanController;
 
 // Public landing page
 Route::get('/', function () {
@@ -115,6 +116,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('inbound-items/{inboundItem}', [InboundItemController::class, 'show'])->name('inbound-items.show');
     Route::post('inbound-items/{inboundItem}/qc', [InboundItemController::class, 'processQc'])->name('inbound-items.qc.process');
     Route::resource('master-products', MasterProductController::class)->except(['show']);
+    Route::get('master-products/search', [MasterProductController::class, 'search'])->name('master-products.search');
+    Route::resource('satuan', SatuanController::class)->except(['show']);
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
     Route::get('reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');

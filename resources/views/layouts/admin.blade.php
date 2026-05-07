@@ -30,35 +30,69 @@
                 <span class="material-symbols-outlined">dashboard</span>
                 <span class="font-medium text-sm">Beranda</span>
             </a>
+
+            {{-- ─── MASTER TABLE sub-menu ─────────────────────────────────── --}}
+            @php
+                $isMasterActive = request()->routeIs(
+                    'admin.master-products*','admin.satuan*',
+                    'admin.categories*','admin.distributors*','admin.team*'
+                );
+            @endphp
+            <details class="group" {{ $isMasterActive ? 'open' : '' }}>
+                <summary class="list-none cursor-pointer {{ $isMasterActive ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container-highest' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all select-none">
+                    <span class="material-symbols-outlined">table_chart</span>
+                    <span class="font-medium text-sm flex-1">Master Table</span>
+                    <span class="material-symbols-outlined text-base transition-transform duration-200 group-open:rotate-180">expand_more</span>
+                </summary>
+                <div class="ml-4 mt-0.5 space-y-0.5 border-l-2 border-primary/20 pl-2">
+
+                    <a href="{{ route('admin.master-products.index') }}"
+                       class="{{ request()->routeIs('admin.master-products*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-2.5 px-4 flex items-center gap-3 transition-all text-sm">
+                        <span class="material-symbols-outlined text-base">inventory_2</span>
+                        <span>Produk</span>
+                    </a>
+
+                    <a href="{{ route('admin.satuan.index') }}"
+                       class="{{ request()->routeIs('admin.satuan*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-2.5 px-4 flex items-center gap-3 transition-all text-sm">
+                        <span class="material-symbols-outlined text-base">straighten</span>
+                        <span>Satuan</span>
+                    </a>
+
+                    <a href="{{ route('admin.categories.index') }}"
+                       class="{{ request()->routeIs('admin.categories*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-2.5 px-4 flex items-center gap-3 transition-all text-sm">
+                        <span class="material-symbols-outlined text-base">category</span>
+                        <span>Kategori</span>
+                    </a>
+
+                    <a href="{{ route('admin.distributors.index') }}"
+                       class="{{ request()->routeIs('admin.distributors*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-2.5 px-4 flex items-center gap-3 transition-all text-sm">
+                        <span class="material-symbols-outlined text-base">local_shipping</span>
+                        <span>Distributor</span>
+                    </a>
+
+                    <a href="{{ route('admin.team.index') }}"
+                       class="{{ request()->routeIs('admin.team*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-2.5 px-4 flex items-center gap-3 transition-all text-sm">
+                        <span class="material-symbols-outlined text-base">manage_accounts</span>
+                        <span>User & Akses</span>
+                    </a>
+                </div>
+            </details>
+            {{-- ─── END MASTER TABLE ───────────────────────────────────────── --}}
+
             <a href="{{ route('admin.products.index') }}"
                   class="{{ request()->routeIs('admin.products*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
                 <span class="material-symbols-outlined">shopping_bag</span>
-                <span class="font-medium text-sm">Produk</span>
+                <span class="font-medium text-sm">Stok Produk</span>
             </a>
             <a href="{{ route('admin.transactions.index') }}"
                   class="{{ request()->routeIs('admin.transactions*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
                 <span class="material-symbols-outlined">receipt_long</span>
                 <span class="font-medium text-sm">Transaksi</span>
             </a>
-            <a href="{{ route('admin.categories.index') }}"
-                  class="{{ request()->routeIs('admin.categories*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
-                <span class="material-symbols-outlined">category</span>
-                <span class="font-medium text-sm">Kategori</span>
-            </a>
-            <a href="{{ route('admin.distributors.index') }}"
-                        class="{{ request()->routeIs('admin.distributors*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
-                    <span class="material-symbols-outlined">local_shipping</span>
-                    <span class="font-medium text-sm">Distributor</span>
-            </a>
             <a href="{{ route('admin.inbound-items.index') }}"
                         class="{{ request()->routeIs('admin.inbound-items*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
                     <span class="material-symbols-outlined">box_add</span>
                     <span class="font-medium text-sm">Barang Masuk &amp; QC</span>
-            </a>
-            <a href="{{ route('admin.master-products.index') }}"
-                        class="{{ request()->routeIs('admin.master-products*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
-                    <span class="material-symbols-outlined">inventory_2</span>
-                    <span class="font-medium text-sm">Master Produk</span>
             </a>
             <a href="{{ route('admin.promos.index') }}"
                         class="{{ request()->routeIs('admin.promos*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
@@ -74,11 +108,6 @@
                 class="{{ request()->routeIs('admin.reports*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
                 <span class="material-symbols-outlined">analytics</span>
                 <span class="font-medium text-sm">Laporan</span>
-            </a>
-            <a href="{{ route('admin.team.index') }}"
-                class="{{ request()->routeIs('admin.team*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
-                <span class="material-symbols-outlined">group</span>
-                <span class="font-medium text-sm">User Management</span>
             </a>
             <a href="{{ route('admin.settings.index') }}"
                 class="{{ request()->routeIs('admin.settings*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">

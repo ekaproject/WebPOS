@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\MasterProduct;
+use App\Models\Satuan;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class MasterProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = MasterProduct::with('category')->orderBy('name');
+        $query = MasterProduct::with(['category', 'satuan'])->orderBy('name');
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -30,20 +32,33 @@ class MasterProductController extends Controller
     public function create()
     {
         $categories = Category::query()->visibleForMenu()->where('is_active', true)->orderBy('name')->get();
+        $satuanList  = Satuan::orderBy('nama')->get();
 
-        return view('admin.master-products.create', compact('categories'));
+        return view('admin.master-products.create', compact('categories', 'satuanList'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name'        => 'required|string|max:255',
+            'ukuran'      => 'nullable|string|max:100',
+            'satuan_id'   => 'required|exists:satuan,id',
             'category_id' => 'required|exists:categories,id',
-            'unit'        => 'required|string|max:50',
             'description' => 'nullable|string|max:1000',
             'image'       => 'nullable|image|max:2048',
             'is_active'   => 'boolean',
         ]);
+
+        // Cek duplikat: nama + ukuran + satuan harus unik
+        $duplicate = MasterProduct::where('name', $data['name'])
+            ->where('ukuran', $data['ukuran'] ?? null)
+            ->where('satuan_id', $data['satuan_id'])
+            ->exists();
+
+        if ($duplicate) {
+            return back()->withInput()
+                ->withErrors(['name' => 'Produk dengan nama, ukuran, dan satuan yang sama sudah terdaftar di master produk.']);
+        }
 
         $data['is_active'] = $request->boolean('is_active', true);
 
@@ -63,20 +78,34 @@ class MasterProductController extends Controller
     public function edit(MasterProduct $masterProduct)
     {
         $categories = Category::query()->visibleForMenu()->where('is_active', true)->orderBy('name')->get();
+        $satuanList  = Satuan::orderBy('nama')->get();
 
-        return view('admin.master-products.edit', compact('masterProduct', 'categories'));
+        return view('admin.master-products.edit', compact('masterProduct', 'categories', 'satuanList'));
     }
 
     public function update(Request $request, MasterProduct $masterProduct)
     {
         $data = $request->validate([
             'name'        => 'required|string|max:255',
+            'ukuran'      => 'nullable|string|max:100',
+            'satuan_id'   => 'required|exists:satuan,id',
             'category_id' => 'required|exists:categories,id',
-            'unit'        => 'required|string|max:50',
             'description' => 'nullable|string|max:1000',
             'image'       => 'nullable|image|max:2048',
             'is_active'   => 'boolean',
         ]);
+
+        // Cek duplikat (kecuali record ini sendiri)
+        $duplicate = MasterProduct::where('name', $data['name'])
+            ->where('ukuran', $data['ukuran'] ?? null)
+            ->where('satuan_id', $data['satuan_id'])
+            ->where('id', '!=', $masterProduct->id)
+            ->exists();
+
+        if ($duplicate) {
+            return back()->withInput()
+                ->withErrors(['name' => 'Produk dengan nama, ukuran, dan satuan yang sama sudah terdaftar di master produk.']);
+        }
 
         $data['is_active'] = $request->boolean('is_active', true);
 
@@ -108,12 +137,12 @@ class MasterProductController extends Controller
     {
         $keyword = $request->get('q', '');
 
-        $results = MasterProduct::with('category')
+        $results = MasterProduct::with(['category', 'satuan'])
             ->where('is_active', true)
             ->where('name', 'like', '%' . $keyword . '%')
             ->orderBy('name')
             ->limit(20)
-            ->get(['id', 'name', 'category_id', 'unit']);
+            ->get(['id', 'name', 'ukuran', 'category_id', 'satuan_id', 'unit']);
 
         return response()->json($results);
     }

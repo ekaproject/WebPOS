@@ -46,13 +46,33 @@
             </div>
 
             <div>
-                <label for="unit" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                    Satuan / Ukuran Default <span class="text-error">*</span>
+                <label for="ukuran" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                    Ukuran Produk
                 </label>
-                <input type="text" id="unit" name="unit" value="{{ old('unit', 'pcs') }}" required
-                       class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('unit') border-error @enderror"
-                       placeholder="Contoh: pcs, 1L, 500gr"/>
-                @error('unit')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+                <input type="text" id="ukuran" name="ukuran" value="{{ old('ukuran') }}"
+                       class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('ukuran') border-error @enderror"
+                       placeholder="Contoh: 250ml, 1kg, 500gr"/>
+                <p class="text-[11px] text-on-surface-variant mt-1">Opsional. Isi jika produk memiliki varian ukuran.</p>
+                @error('ukuran')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+
+            <div>
+                <label for="satuan_id" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                    Satuan <span class="text-error">*</span>
+                </label>
+                <select id="satuan_id" name="satuan_id" required
+                        class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('satuan_id') border-error @enderror">
+                    <option value="">-- Pilih Satuan --</option>
+                    @foreach($satuanList as $sat)
+                        <option value="{{ $sat->id }}" {{ old('satuan_id') == $sat->id ? 'selected' : '' }}>
+                            {{ $sat->nama }} ({{ $sat->singkatan }})
+                        </option>
+                    @endforeach
+                </select>
+                <p class="text-[11px] text-on-surface-variant mt-1">
+                    Belum ada? <a href="{{ route('admin.satuan.create') }}" target="_blank" class="text-primary font-bold">Tambah satuan baru</a>
+                </p>
+                @error('satuan_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div class="md:col-span-2">

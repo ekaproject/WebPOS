@@ -11,6 +11,8 @@ class MasterProduct extends Model
 
     protected $fillable = [
         'name',
+        'ukuran',
+        'satuan_id',
         'category_id',
         'unit',
         'description',
@@ -25,6 +27,26 @@ class MasterProduct extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function satuan()
+    {
+        return $this->belongsTo(Satuan::class);
+    }
+
+    /**
+     * Label lengkap produk: "Susu UHT 250ml (pcs)"
+     */
+    public function getFullNameAttribute(): string
+    {
+        $parts = [$this->name];
+        if ($this->ukuran) {
+            $parts[] = $this->ukuran;
+        }
+        if ($this->satuan) {
+            $parts[] = "({$this->satuan->singkatan})";
+        }
+        return implode(' ', $parts);
     }
 
     public function inboundItems()

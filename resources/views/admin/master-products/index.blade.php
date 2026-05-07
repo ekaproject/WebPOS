@@ -55,6 +55,7 @@
                     <tr class="bg-surface-container-low text-left text-xs font-bold uppercase tracking-wider text-on-surface-variant">
                         <th class="px-6 py-3">Produk</th>
                         <th class="px-6 py-3">Kategori</th>
+                        <th class="px-6 py-3">Ukuran</th>
                         <th class="px-6 py-3">Satuan</th>
                         <th class="px-6 py-3">Total Inbound</th>
                         <th class="px-6 py-3">Status</th>
@@ -83,7 +84,16 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 text-on-surface-variant">{{ $mp->category->name ?? '-' }}</td>
-                        <td class="px-6 py-4 text-on-surface-variant">{{ $mp->unit }}</td>
+                        <td class="px-6 py-4 text-on-surface-variant">{{ $mp->ukuran ?? '-' }}</td>
+                        <td class="px-6 py-4">
+                            @if($mp->satuan)
+                                <span class="inline-block px-3 py-1 rounded-full bg-primary-fixed text-primary text-xs font-bold">
+                                    {{ $mp->satuan->singkatan }}
+                                </span>
+                            @else
+                                <span class="text-on-surface-variant text-xs">{{ $mp->unit ?? '-' }}</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 font-bold text-primary">{{ $mp->inbound_items_count ?? $mp->inboundItems()->count() }}</td>
                         <td class="px-6 py-4">
                             @if($mp->is_active)
