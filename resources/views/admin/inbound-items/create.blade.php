@@ -36,13 +36,109 @@
             </div>
 
             <div class="md:col-span-2">
-                <label for="product_name" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                <label for="master_product_search" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
                     Nama Produk <span class="text-error">*</span>
                 </label>
-                <input type="text" id="product_name" name="product_name" value="{{ old('product_name') }}" required
-                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('product_name') border-error @enderror"
-                       placeholder="Contoh: Susu UHT 1L"/>
-                @error('product_name')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+                {{-- Hidden input untuk nilai aktual --}}
+                <input type="hidden" id="master_product_id" name="master_product_id" value="{{ old('master_product_id') }}"/>
+
+                {{-- Searchable combobox --}}
+                <div class="relative">
+                    <input type="text" id="master_product_search" autocomplete="off"
+                           placeholder="Ketik untuk mencari produk..."
+                           class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('master_product_id') border-error @enderror"/>
+                    <div id="master_product_dropdown"
+                         class="absolute z-50 w-full mt-1 bg-white border border-outline-variant/30 rounded-xl shadow-lg max-h-56 overflow-y-auto hidden">
+                    </div>
+                </div>
+
+                {{-- Data master produk untuk JS --}}
+                @php
+                    $mpData = $masterProducts->map(fn($mp) => [
+                        'id'          => $mp->id,
+                        'name'        => $mp->name,
+                        'category_id' => $mp->category_id,
+                        'unit'        => $mp->unit,
+                    ]);
+                @endphp
+                <script>
+                    (function () {
+                        const masterProducts = @json($mpData);
+                        const searchInput   = document.getElementById('master_product_search');
+                        const hiddenInput   = document.getElementById('master_product_id');
+                        const dropdown      = document.getElementById('master_product_dropdown');
+                        const categorySelect = document.getElementById('category_id');
+                        const unitInput      = document.getElementById('ukuran_produk');
+
+                        // Restore nilai lama saat ada validation error
+                        const oldId = hiddenInput.value;
+                        if (oldId) {
+                            const existing = masterProducts.find(p => String(p.id) === String(oldId));
+                            if (existing) searchInput.value = existing.name;
+                        }
+
+                        function renderDropdown(items) {
+                            dropdown.innerHTML = '';
+                            if (!items.length) {
+                                dropdown.innerHTML = '<div class="px-4 py-3 text-sm text-on-surface-variant">Produk tidak ditemukan</div>';
+                            } else {
+                                items.forEach(p => {
+                                    const el = document.createElement('div');
+                                    el.className = 'px-4 py-3 text-sm cursor-pointer hover:bg-surface-container-low transition-colors';
+                                    el.textContent = p.name;
+                                    el.addEventListener('mousedown', (e) => {
+                                        e.preventDefault();
+                                        selectProduct(p);
+                                    });
+                                    dropdown.appendChild(el);
+                                });
+                            }
+                            dropdown.classList.remove('hidden');
+                        }
+
+                        function selectProduct(p) {
+                            searchInput.value  = p.name;
+                            hiddenInput.value  = p.id;
+                            dropdown.classList.add('hidden');
+
+                            // Auto-fill kategori
+                            if (categorySelect && p.category_id) {
+                                categorySelect.value = p.category_id;
+                            }
+                            // Auto-fill satuan jika kosong
+                            if (unitInput && !unitInput.value && p.unit) {
+                                unitInput.value = p.unit;
+                            }
+                        }
+
+                        searchInput.addEventListener('input', function () {
+                            hiddenInput.value = '';
+                            const q = this.value.trim().toLowerCase();
+                            if (!q) { dropdown.classList.add('hidden'); return; }
+                            const filtered = masterProducts.filter(p => p.name.toLowerCase().includes(q));
+                            renderDropdown(filtered.slice(0, 20));
+                        });
+
+                        searchInput.addEventListener('focus', function () {
+                            if (this.value.trim()) {
+                                const q = this.value.trim().toLowerCase();
+                                const filtered = masterProducts.filter(p => p.name.toLowerCase().includes(q));
+                                renderDropdown(filtered.slice(0, 20));
+                            }
+                        });
+
+                        document.addEventListener('click', function (e) {
+                            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                                dropdown.classList.add('hidden');
+                            }
+                        });
+                    })();
+                </script>
+
+                @error('master_product_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+                <p class="text-[11px] text-on-surface-variant mt-1">
+                    Produk tidak ada? <a href="{{ route('admin.master-products.create') }}" target="_blank" class="text-primary underline">Tambah master produk</a> terlebih dahulu.
+                </p>
             </div>
 
             <div class="md:col-span-2">

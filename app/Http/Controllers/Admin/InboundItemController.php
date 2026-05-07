@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Distributor;
 use App\Models\InboundItem;
+use App\Models\MasterProduct;
 use App\Services\Inventory\InventoryWorkflowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -49,26 +50,38 @@ class InboundItemController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('admin.inbound-items.create', compact('distributors', 'categories'));
+        $masterProducts = MasterProduct::query()
+            ->with('category')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.inbound-items.create', compact('distributors', 'categories', 'masterProducts'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'distributor_id' => 'required|exists:distributors,id',
-            'product_name' => 'required|string|max:255',
-            'ukuran_produk' => 'required|string|max:100',
-            'category_id' => 'required|exists:categories,id',
-            'product_photo' => 'nullable|image|max:2048',
-            'purchase_price' => 'required|numeric|min:0',
-            'selling_price' => 'required|numeric|min:0|gte:purchase_price',
-            'quantity_inbound' => 'required|integer|min:1',
-            'inbound_date' => 'required|date',
-            'expired_date' => 'required|date|after_or_equal:inbound_date',
-            'note' => 'nullable|string|max:1000',
+            'distributor_id'    => 'required|exists:distributors,id',
+            'master_product_id' => 'required|exists:master_products,id',
+            'ukuran_produk'     => 'required|string|max:100',
+            'category_id'       => 'required|exists:categories,id',
+            'product_photo'     => 'nullable|image|max:2048',
+            'purchase_price'    => 'required|numeric|min:0',
+            'selling_price'     => 'required|numeric|min:0|gte:purchase_price',
+            'quantity_inbound'  => 'required|integer|min:1',
+            'inbound_date'      => 'required|date',
+            'expired_date'      => 'required|date|after_or_equal:inbound_date',
+            'note'              => 'nullable|string|max:1000',
         ], [
-            'selling_price.gte' => 'Harga jual tidak boleh lebih rendah dari harga beli.',
+            'master_product_id.required' => 'Produk harus dipilih dari daftar master produk.',
+            'master_product_id.exists'   => 'Produk yang dipilih tidak valid.',
+            'selling_price.gte'          => 'Harga jual tidak boleh lebih rendah dari harga beli.',
         ]);
+
+        // Auto-fill product_name dari master product (mencegah duplikasi nama bebas)
+        $masterProduct = MasterProduct::findOrFail($data['master_product_id']);
+        $data['product_name'] = $masterProduct->name;
 
         if ($request->hasFile('product_photo')) {
             $file = $request->file('product_photo');

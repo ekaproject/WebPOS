@@ -11,6 +11,7 @@ class InboundItem extends Model
 
     protected $fillable = [
         'distributor_id',
+        'master_product_id',
         'product_name',
         'ukuran_produk',
         'category_id',
@@ -34,6 +35,11 @@ class InboundItem extends Model
     public function distributor()
     {
         return $this->belongsTo(Distributor::class);
+    }
+
+    public function masterProduct()
+    {
+        return $this->belongsTo(MasterProduct::class);
     }
 
     public function category()

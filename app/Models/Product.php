@@ -14,7 +14,7 @@ class Product extends Model
     ];
 
     protected $fillable = [
-        'name', 'sku', 'category_id', 'distributor_id', 'purchase_price', 'price', 'stock',
+        'name', 'sku', 'category_id', 'master_product_id', 'distributor_id', 'purchase_price', 'price', 'stock',
         'min_stock', 'unit', 'description', 'image', 'is_active', 'source_type', 'source_reference_id',
         'inbound_item_id', 'return_id', 'expires_at',
     ];
@@ -55,6 +55,11 @@ class Product extends Model
     public function inboundItem()
     {
         return $this->belongsTo(InboundItem::class);
+    }
+
+    public function masterProduct()
+    {
+        return $this->belongsTo(MasterProduct::class);
     }
 
     public function inventoryReturn()

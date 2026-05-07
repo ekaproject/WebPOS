@@ -63,7 +63,8 @@ class InventoryWorkflowService
                     productImage: $inboundItem->product_photo,
                     purchasePrice: (float) $inboundItem->purchase_price,
                     sellingPrice: (float) $inboundItem->selling_price,
-                    unit: $inboundItem->ukuran_produk
+                    unit: $inboundItem->ukuran_produk,
+                    masterProductId: $inboundItem->master_product_id,
                 );
             }
 
@@ -128,12 +129,14 @@ class InventoryWorkflowService
         ?string $productImage = null,
         ?float $purchasePrice = 0,
         ?float $sellingPrice = 0,
-        ?string $unit = null
+        ?string $unit = null,
+        ?int $masterProductId = null,
     ): Product {
         return Product::create([
             'name' => $name,
             'sku' => $this->generateBatchSku($name),
             'category_id' => $categoryId ?? $this->resolveFallbackCategoryId(),
+            'master_product_id' => $masterProductId,
             'distributor_id' => $distributorId,
             'purchase_price' => $purchasePrice ?? 0,
             'price' => $sellingPrice ?? 0,

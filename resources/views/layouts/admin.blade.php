@@ -55,6 +55,11 @@
                     <span class="material-symbols-outlined">box_add</span>
                     <span class="font-medium text-sm">Barang Masuk &amp; QC</span>
             </a>
+            <a href="{{ route('admin.master-products.index') }}"
+                        class="{{ request()->routeIs('admin.master-products*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <span class="font-medium text-sm">Master Produk</span>
+            </a>
             <a href="{{ route('admin.promos.index') }}"
                         class="{{ request()->routeIs('admin.promos*') ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest hover:translate-x-1' }} rounded-r-full py-3 px-6 flex items-center gap-3 transition-all">
                     <span class="material-symbols-outlined">local_offer</span>

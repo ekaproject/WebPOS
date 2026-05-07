@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ReturnController;
 use App\Http\Controllers\Admin\InboundItemController;
+use App\Http\Controllers\Admin\MasterProductController;
 use App\Http\Controllers\Api\DashboardStockAlertController;
 use App\Http\Controllers\DistributorReturnController;
 
@@ -113,6 +114,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('inbound-items', [InboundItemController::class, 'store'])->name('inbound-items.store');
     Route::get('inbound-items/{inboundItem}', [InboundItemController::class, 'show'])->name('inbound-items.show');
     Route::post('inbound-items/{inboundItem}/qc', [InboundItemController::class, 'processQc'])->name('inbound-items.qc.process');
+    Route::resource('master-products', MasterProductController::class)->except(['show']);
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
     Route::get('reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
