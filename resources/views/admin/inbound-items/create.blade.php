@@ -57,24 +57,47 @@
                     $mpData = $masterProducts->map(fn($mp) => [
                         'id'          => $mp->id,
                         'name'        => $mp->name,
+                        'ukuran'      => $mp->ukuran ?? '',
+                        'satuan'      => $mp->satuan ? $mp->satuan->singkatan : ($mp->unit ?? ''),
                         'category_id' => $mp->category_id,
-                        'unit'        => $mp->unit,
                     ]);
                 @endphp
                 <script>
                     (function () {
                         const masterProducts = @json($mpData);
-                        const searchInput   = document.getElementById('master_product_search');
-                        const hiddenInput   = document.getElementById('master_product_id');
-                        const dropdown      = document.getElementById('master_product_dropdown');
+                        const searchInput    = document.getElementById('master_product_search');
+                        const hiddenInput    = document.getElementById('master_product_id');
+                        const dropdown       = document.getElementById('master_product_dropdown');
                         const categorySelect = document.getElementById('category_id');
-                        const unitInput      = document.getElementById('ukuran_produk');
+                        const ukuranInput    = document.getElementById('ukuran_produk');
 
                         // Restore nilai lama saat ada validation error
                         const oldId = hiddenInput.value;
                         if (oldId) {
                             const existing = masterProducts.find(p => String(p.id) === String(oldId));
-                            if (existing) searchInput.value = existing.name;
+                            if (existing) {
+                                searchInput.value = existing.name;
+                                setUkuranLocked(existing.ukuran);
+                            }
+                        }
+
+                        function labelOf(p) {
+                            let label = p.name;
+                            if (p.ukuran)  label += ' — ' + p.ukuran;
+                            if (p.satuan)  label += ' (' + p.satuan + ')';
+                            return label;
+                        }
+
+                        function setUkuranLocked(val) {
+                            if (!ukuranInput) return;
+                            ukuranInput.value    = val || '';
+                            ukuranInput.readOnly = !!val;
+                            ukuranInput.classList.toggle('bg-surface-container', !!val);
+                            ukuranInput.classList.toggle('text-on-surface-variant', !!val);
+                            const hint = document.getElementById('ukuran_hint');
+                            if (hint) hint.textContent = val
+                                ? 'Terisi otomatis dari master produk.'
+                                : 'Contoh: 250ml, 1kg, 500gr';
                         }
 
                         function renderDropdown(items) {
@@ -85,7 +108,18 @@
                                 items.forEach(p => {
                                     const el = document.createElement('div');
                                     el.className = 'px-4 py-3 text-sm cursor-pointer hover:bg-surface-container-low transition-colors';
-                                    el.textContent = p.name;
+                                    // Baris atas: nama produk (bold)
+                                    const nameSpan = document.createElement('span');
+                                    nameSpan.className = 'font-semibold block';
+                                    nameSpan.textContent = p.name;
+                                    el.appendChild(nameSpan);
+                                    // Baris bawah: ukuran + satuan (kecil)
+                                    if (p.ukuran || p.satuan) {
+                                        const subSpan = document.createElement('span');
+                                        subSpan.className = 'text-xs text-on-surface-variant';
+                                        subSpan.textContent = [p.ukuran, p.satuan ? '(' + p.satuan + ')' : ''].filter(Boolean).join(' ');
+                                        el.appendChild(subSpan);
+                                    }
                                     el.addEventListener('mousedown', (e) => {
                                         e.preventDefault();
                                         selectProduct(p);
@@ -97,22 +131,22 @@
                         }
 
                         function selectProduct(p) {
-                            searchInput.value  = p.name;
-                            hiddenInput.value  = p.id;
+                            searchInput.value = p.name;
+                            hiddenInput.value = p.id;
                             dropdown.classList.add('hidden');
 
                             // Auto-fill kategori
                             if (categorySelect && p.category_id) {
                                 categorySelect.value = p.category_id;
                             }
-                            // Auto-fill satuan jika kosong
-                            if (unitInput && !unitInput.value && p.unit) {
-                                unitInput.value = p.unit;
-                            }
+                            // Auto-fill ukuran dari master produk, kunci field jika terisi
+                            setUkuranLocked(p.ukuran);
                         }
 
                         searchInput.addEventListener('input', function () {
                             hiddenInput.value = '';
+                            // Reset ukuran jika user hapus pilihan
+                            setUkuranLocked('');
                             const q = this.value.trim().toLowerCase();
                             if (!q) { dropdown.classList.add('hidden'); return; }
                             const filtered = masterProducts.filter(p => p.name.toLowerCase().includes(q));
@@ -148,6 +182,7 @@
                 <input type="text" id="ukuran_produk" name="ukuran_produk" value="{{ old('ukuran_produk') }}" required
                       class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('ukuran_produk') border-error @enderror"
                        placeholder="Contoh: 250ml, 1kg, 500gr"/>
+                <p id="ukuran_hint" class="text-[11px] text-on-surface-variant mt-1">Terisi otomatis jika produk dipilih dari master.</p>
                 @error('ukuran_produk')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 

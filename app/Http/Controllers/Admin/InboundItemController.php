@@ -51,7 +51,7 @@ class InboundItemController extends Controller
             ->get();
 
         $masterProducts = MasterProduct::query()
-            ->with('category')
+            ->with(['category', 'satuan'])
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
