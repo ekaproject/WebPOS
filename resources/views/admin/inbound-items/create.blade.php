@@ -69,17 +69,19 @@
                         const hiddenInput    = document.getElementById('master_product_id');
                         const dropdown       = document.getElementById('master_product_dropdown');
                         const categorySelect = document.getElementById('category_id');
-                        const ukuranInput    = document.getElementById('ukuran_produk');
 
                         // Restore nilai lama saat ada validation error
-                        const oldId = hiddenInput.value;
-                        if (oldId) {
-                            const existing = masterProducts.find(p => String(p.id) === String(oldId));
-                            if (existing) {
-                                searchInput.value = existing.name;
-                                setUkuranLocked(existing.ukuran);
+                        // (dijalankan setelah DOMContentLoaded supaya ukuran_produk sudah ada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const oldId = hiddenInput.value;
+                            if (oldId) {
+                                const existing = masterProducts.find(p => String(p.id) === String(oldId));
+                                if (existing) {
+                                    searchInput.value = existing.name;
+                                    setUkuranLocked(existing.ukuran);
+                                }
                             }
-                        }
+                        });
 
                         function labelOf(p) {
                             let label = p.name;
@@ -89,6 +91,7 @@
                         }
 
                         function setUkuranLocked(val) {
+                            const ukuranInput = document.getElementById('ukuran_produk');
                             if (!ukuranInput) return;
                             ukuranInput.value    = val || '';
                             ukuranInput.readOnly = !!val;
