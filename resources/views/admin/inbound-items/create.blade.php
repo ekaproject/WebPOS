@@ -14,7 +14,7 @@
         </div>
     </div>
 
-        <form action="{{ route('admin.inbound-items.store') }}" method="POST" enctype="multipart/form-data"
+        <form action="{{ route('admin.inbound-items.store') }}" method="POST"
           class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-8 space-y-6">
         @csrf
 
@@ -55,11 +55,12 @@
                 {{-- Data master produk untuk JS --}}
                 @php
                     $mpData = $masterProducts->map(fn($mp) => [
-                        'id'          => $mp->id,
-                        'name'        => $mp->name,
-                        'ukuran'      => $mp->ukuran ?? '',
-                        'satuan'      => $mp->satuan ? $mp->satuan->singkatan : ($mp->unit ?? ''),
-                        'category_id' => $mp->category_id,
+                        'id'            => $mp->id,
+                        'name'          => $mp->name,
+                        'ukuran'        => $mp->ukuran ?? '',
+                        'satuan'        => $mp->satuan ? $mp->satuan->singkatan : ($mp->unit ?? ''),
+                        'category_id'   => $mp->category_id,
+                        'category_name' => $mp->category ? $mp->category->name : '',
                     ]);
                 @endphp
                 <script>
@@ -68,20 +69,15 @@
                         const searchInput    = document.getElementById('master_product_search');
                         const hiddenInput    = document.getElementById('master_product_id');
                         const dropdown       = document.getElementById('master_product_dropdown');
-                        const categorySelect = document.getElementById('category_id');
-
                         // Restore nilai lama saat ada validation error
-                        // (dijalankan setelah DOMContentLoaded supaya ukuran_produk sudah ada)
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const oldId = hiddenInput.value;
-                            if (oldId) {
-                                const existing = masterProducts.find(p => String(p.id) === String(oldId));
-                                if (existing) {
-                                    searchInput.value = existing.name;
-                                    setUkuranLocked(existing.ukuran);
-                                }
+                        const oldId = hiddenInput.value;
+                        if (oldId) {
+                            const existing = masterProducts.find(p => String(p.id) === String(oldId));
+                            if (existing) {
+                                searchInput.value = existing.name;
+                                showProductInfo(existing);
                             }
-                        });
+                        }
 
                         function labelOf(p) {
                             let label = p.name;
@@ -90,17 +86,14 @@
                             return label;
                         }
 
-                        function setUkuranLocked(val) {
-                            const ukuranInput = document.getElementById('ukuran_produk');
-                            if (!ukuranInput) return;
-                            ukuranInput.value    = val || '';
-                            ukuranInput.readOnly = !!val;
-                            ukuranInput.classList.toggle('bg-surface-container', !!val);
-                            ukuranInput.classList.toggle('text-on-surface-variant', !!val);
-                            const hint = document.getElementById('ukuran_hint');
-                            if (hint) hint.textContent = val
-                                ? 'Terisi otomatis dari master produk.'
-                                : 'Contoh: 250ml, 1kg, 500gr';
+                        function showProductInfo(p) {
+                            const infoDiv = document.getElementById('selected_product_info');
+                            if (!infoDiv) return;
+                            if (!p) { infoDiv.classList.add('hidden'); return; }
+                            document.getElementById('info_ukuran').textContent   = p.ukuran || '-';
+                            document.getElementById('info_satuan').textContent   = p.satuan || '-';
+                            document.getElementById('info_kategori').textContent = p.category_name || '-';
+                            infoDiv.classList.remove('hidden');
                         }
 
                         function renderDropdown(items) {
@@ -137,19 +130,12 @@
                             searchInput.value = p.name;
                             hiddenInput.value = p.id;
                             dropdown.classList.add('hidden');
-
-                            // Auto-fill kategori
-                            if (categorySelect && p.category_id) {
-                                categorySelect.value = p.category_id;
-                            }
-                            // Auto-fill ukuran dari master produk, kunci field jika terisi
-                            setUkuranLocked(p.ukuran);
+                            showProductInfo(p);
                         }
 
                         searchInput.addEventListener('input', function () {
                             hiddenInput.value = '';
-                            // Reset ukuran jika user hapus pilihan
-                            setUkuranLocked('');
+                            showProductInfo(null);
                             const q = this.value.trim().toLowerCase();
                             if (!q) { dropdown.classList.add('hidden'); return; }
                             const filtered = masterProducts.filter(p => p.name.toLowerCase().includes(q));
@@ -178,41 +164,22 @@
                 </p>
             </div>
 
-            <div class="md:col-span-2">
-                <label for="ukuran_produk" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                    Ukuran Produk <span class="text-error">*</span>
-                </label>
-                <input type="text" id="ukuran_produk" name="ukuran_produk" value="{{ old('ukuran_produk') }}" required
-                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('ukuran_produk') border-error @enderror"
-                       placeholder="Contoh: 250ml, 1kg, 500gr"/>
-                <p id="ukuran_hint" class="text-[11px] text-on-surface-variant mt-1">Terisi otomatis jika produk dipilih dari master.</p>
-                @error('ukuran_produk')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="category_id" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                    Kategori <span class="text-error">*</span>
-                </label>
-                <select id="category_id" name="category_id" required
-                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
-                    <option value="">-- Pilih Kategori --</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('category_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="product_photo" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                    Foto Produk
-                </label>
-                <input type="file" id="product_photo" name="product_photo" accept="image/*"
-                       class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary-fixed file:px-3 file:py-2 file:text-xs file:font-bold file:text-primary hover:file:bg-primary hover:file:text-on-primary @error('product_photo') border-error @enderror"/>
-                <p class="text-[11px] text-on-surface-variant mt-1">Opsional. Format gambar umum, maksimal 2MB.</p>
-                @error('product_photo')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+            {{-- Info produk terpilih: otomatis dari Master Produk, tidak perlu diinput ulang --}}
+            <div id="selected_product_info" class="md:col-span-2 hidden">
+                <div class="rounded-xl bg-surface-container border border-outline-variant/20 px-5 py-3 flex flex-wrap gap-x-8 gap-y-2 text-sm">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Ukuran</span>
+                        <p id="info_ukuran" class="font-semibold text-on-surface mt-0.5">-</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Satuan</span>
+                        <p id="info_satuan" class="font-semibold text-on-surface mt-0.5">-</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Kategori</span>
+                        <p id="info_kategori" class="font-semibold text-on-surface mt-0.5">-</p>
+                    </div>
+                </div>
             </div>
 
             <div>
