@@ -89,7 +89,7 @@
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Password</label>
                 <div class="relative">
                     <input id="create_password" type="password" name="password" required class="w-full h-11 px-4 pr-11 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
-                    <button type="button" onclick="togglePassword('create_password', this)" class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-primary">
+                    <button type="button" onclick="togglePassword('create_password', this)" class="absolute top-1/2 -translate-y-1/2 right-3 text-on-surface-variant hover:text-primary">
                         <svg class="eye-icon w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
                 </div>
@@ -99,7 +99,7 @@
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Konfirmasi Password</label>
                 <div class="relative">
                     <input id="create_password_confirmation" type="password" name="password_confirmation" required class="w-full h-11 px-4 pr-11 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
-                    <button type="button" onclick="togglePassword('create_password_confirmation', this)" class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-primary">
+                    <button type="button" onclick="togglePassword('create_password_confirmation', this)" class="absolute top-1/2 -translate-y-1/2 right-3 text-on-surface-variant hover:text-primary">
                         <svg class="eye-icon w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
                 </div>
@@ -153,13 +153,13 @@
                     <input type="text" name="phone" value="{{ old('phone', $member->phone) }}" placeholder="No. telepon" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
                     <div class="relative">
                         <input id="edit_password_{{ $member->id }}" type="password" name="password" placeholder="Password baru (opsional)" class="w-full h-11 px-4 pr-11 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
-                        <button type="button" onclick="togglePassword('edit_password_{{ $member->id }}', this)" class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-primary">
+                        <button type="button" onclick="togglePassword('edit_password_{{ $member->id }}', this)" class="absolute top-1/2 -translate-y-1/2 right-3 text-on-surface-variant hover:text-primary">
                             <svg class="eye-icon w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
                     </div>
                     <div class="relative">
                         <input id="edit_passconf_{{ $member->id }}" type="password" name="password_confirmation" placeholder="Konfirmasi password baru" class="w-full h-11 px-4 pr-11 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary"/>
-                        <button type="button" onclick="togglePassword('edit_passconf_{{ $member->id }}', this)" class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-primary">
+                        <button type="button" onclick="togglePassword('edit_passconf_{{ $member->id }}', this)" class="absolute top-1/2 -translate-y-1/2 right-3 text-on-surface-variant hover:text-primary">
                             <svg class="eye-icon w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
                     </div>
