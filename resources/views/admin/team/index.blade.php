@@ -61,6 +61,7 @@
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Role</label>
                 <select name="role" required class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary">
                     <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="kasir" {{ old('role') === 'kasir' ? 'selected' : '' }}>Kasir (Mobile)</option>
                     <option value="distributor" {{ old('role') === 'distributor' ? 'selected' : '' }}>Distributor</option>
                 </select>
                 @error('role')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
@@ -125,7 +126,7 @@
                     <input type="text" name="name" value="{{ old('name', $member->name) }}" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required/>
                     <input type="email" name="email" value="{{ old('email', $member->email) }}" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required/>
                     <select name="role" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary" required>
-                        @foreach(['admin' => 'Admin', 'distributor' => 'Distributor'] as $value => $label)
+                        @foreach(['admin' => 'Admin', 'kasir' => 'Kasir (Mobile)', 'distributor' => 'Distributor'] as $value => $label)
                             <option value="{{ $value }}" {{ $member->role === $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>

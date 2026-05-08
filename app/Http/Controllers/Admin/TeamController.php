@@ -46,7 +46,7 @@ class TeamController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'role' => ['required', Rule::in(['admin', 'distributor'])],
+            'role' => ['required', Rule::in(['admin', 'kasir', 'distributor'])],
             'distributor_id' => [
                 Rule::requiredIf(fn () => $request->role === 'distributor'),
                 'nullable',
@@ -75,7 +75,7 @@ class TeamController extends Controller
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($team->id)],
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => ['required', Rule::in(['admin', 'distributor'])],
+            'role' => ['required', Rule::in(['admin', 'kasir', 'distributor'])],
             'distributor_id' => [
                 Rule::requiredIf(fn () => $request->role === 'distributor'),
                 'nullable',
