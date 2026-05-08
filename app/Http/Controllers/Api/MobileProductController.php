@@ -11,7 +11,7 @@ class MobileProductController extends Controller
 {
     public function index(): JsonResponse
     {
-        $products = Product::with('category')
+        $products = Product::with(['category', 'masterProduct'])
             ->where('is_active', true)
             ->where('stock', '>', 0)
             ->get()
@@ -22,7 +22,7 @@ class MobileProductController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $product = Product::with('category')->findOrFail($id);
+        $product = Product::with(['category', 'masterProduct'])->findOrFail($id);
 
         return response()->json(['data' => $this->formatProduct($product)]);
     }
@@ -36,6 +36,9 @@ class MobileProductController extends Controller
 
     private function formatProduct(Product $product): array
     {
+        // Prioritas gambar: 1) product.image, 2) masterProduct.image
+        $imagePath = $product->image ?? $product->masterProduct?->image;
+
         return [
             'id'         => $product->id,
             'name'       => $product->name,
@@ -44,8 +47,8 @@ class MobileProductController extends Controller
             'stock'      => (int) $product->stock,
             'min_stock'  => (int) $product->min_stock,
             'category'   => $product->category?->name,
-            'image_url'  => $product->image
-                ? asset('storage/' . $product->image)
+            'image_url'  => $imagePath
+                ? asset('storage/' . $imagePath)
                 : null,
             'expires_at' => $product->expires_at?->format('d/m/Y'),
         ];
