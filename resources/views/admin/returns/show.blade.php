@@ -29,7 +29,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Qty Rusak</p>
-                <p class="font-bold text-error">{{ $inventoryReturn->qty }}</p>
+                <p class="font-bold text-error">{{ $inventoryReturn->qty }} satuan dasar</p>
             </div>
             <div>
                 <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Status</p>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="text-right">
                             <p class="text-xs text-on-surface-variant">Stock</p>
-                            <p class="font-bold text-secondary">{{ $product->stock }}</p>
+                            <p class="font-bold text-secondary">{{ $product->stock_display }}</p>
                         </div>
                     </div>
                 @endforeach

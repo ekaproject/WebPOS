@@ -41,18 +41,20 @@ class MasterProductController extends Controller
     {
         $data = $request->validate([
             'name'        => 'required|string|max:255',
+            'barcode'     => 'nullable|string|max:100',
             'ukuran'      => 'nullable|string|max:100',
-            'satuan_id'   => 'required|exists:satuan,id',
+            'unit'        => 'required|string|max:50',
+            'price'       => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string|max:1000',
             'image'       => 'nullable|image|max:2048',
             'is_active'   => 'boolean',
         ]);
 
-        // Cek duplikat: nama + ukuran + satuan harus unik
+        // Cek duplikat: nama + ukuran + unit harus unik
         $duplicate = MasterProduct::where('name', $data['name'])
             ->where('ukuran', $data['ukuran'] ?? null)
-            ->where('satuan_id', $data['satuan_id'])
+            ->where('unit', $data['unit'])
             ->exists();
 
         if ($duplicate) {
@@ -61,6 +63,7 @@ class MasterProductController extends Controller
         }
 
         $data['is_active'] = $request->boolean('is_active', true);
+        $data['price'] = $request->input('price');
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -87,8 +90,10 @@ class MasterProductController extends Controller
     {
         $data = $request->validate([
             'name'        => 'required|string|max:255',
+            'barcode'     => 'nullable|string|max:100',
             'ukuran'      => 'nullable|string|max:100',
-            'satuan_id'   => 'required|exists:satuan,id',
+            'unit'        => 'required|string|max:50',
+            'price'       => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string|max:1000',
             'image'       => 'nullable|image|max:2048',
@@ -98,7 +103,7 @@ class MasterProductController extends Controller
         // Cek duplikat (kecuali record ini sendiri)
         $duplicate = MasterProduct::where('name', $data['name'])
             ->where('ukuran', $data['ukuran'] ?? null)
-            ->where('satuan_id', $data['satuan_id'])
+            ->where('unit', $data['unit'])
             ->where('id', '!=', $masterProduct->id)
             ->exists();
 
@@ -108,6 +113,7 @@ class MasterProductController extends Controller
         }
 
         $data['is_active'] = $request->boolean('is_active', true);
+        $data['price'] = $request->input('price');
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -142,7 +148,7 @@ class MasterProductController extends Controller
             ->where('name', 'like', '%' . $keyword . '%')
             ->orderBy('name')
             ->limit(20)
-            ->get(['id', 'name', 'ukuran', 'category_id', 'satuan_id', 'unit']);
+            ->get(['id', 'name', 'barcode', 'ukuran', 'category_id', 'satuan_id', 'unit', 'price', 'image']);
 
         return response()->json($results);
     }

@@ -90,7 +90,7 @@
                     <div class="bg-surface-container-low rounded-xl p-4">
                         <p class="text-xs text-on-surface-variant font-bold uppercase tracking-wider mb-1">Stok Saat Ini</p>
                         <p class="font-medium text-on-surface flex items-center gap-2">
-                            {{ $product->stock }}
+                            {{ $product->stock_display }}
                             @if($product->isLowStock())
                                 <span class="material-symbols-outlined text-error text-lg" title="Stok Kritis">warning</span>
                             @endif

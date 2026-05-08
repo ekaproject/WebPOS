@@ -56,21 +56,29 @@
                 @error('ukuran')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
-            <div>
-                <label for="satuan_id" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                    Satuan <span class="text-error">*</span>
-                </label>
-                <select id="satuan_id" name="satuan_id" required
-                        class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('satuan_id') border-error @enderror">
-                    <option value="">-- Pilih Satuan --</option>
-                    @foreach($satuanList as $sat)
-                        <option value="{{ $sat->id }}" {{ old('satuan_id', $masterProduct->satuan_id) == $sat->id ? 'selected' : '' }}>
-                            {{ $sat->nama }} ({{ $sat->singkatan }})
-                        </option>
-                    @endforeach
-                </select>
-                @error('satuan_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
+                <div>
+                    <label for="barcode" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                        Barcode
+                    </label>
+                    <input type="text" id="barcode" name="barcode" value="{{ old('barcode', $masterProduct->barcode) }}"
+                           class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('barcode') border-error @enderror"
+                           placeholder="Opsional, isi jika ada barcode"/>
+                    @error('barcode')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+
+                    <label for="unit" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5 mt-4">
+                        Satuan Dasar Jual <span class="text-error">*</span>
+                    </label>
+                    <input type="text" id="unit" name="unit" value="{{ old('unit', $masterProduct->unit ?? 'pcs') }}" required
+                           class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('unit') border-error @enderror"
+                           placeholder="Contoh: pcs, botol, sachet, kg"/>
+                    <p class="text-[11px] text-on-surface-variant mt-1">Satuan dasar jual yang tidak berubah sepanjang sistem berjalan.</p>
+                    @error('unit')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+
+                    <label for="price" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5 mt-4">Harga Jual</label>
+                    <input type="number" step="0.01" id="price" name="price" value="{{ old('price', $masterProduct->price) }}" min="0"
+                           class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('price') border-error @enderror"/>
+                    @error('price')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+                </div>
 
             <div class="md:col-span-2">
                 <label for="description" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">

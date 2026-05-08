@@ -67,13 +67,9 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="unit">Satuan<span class="text-error">*</span></label>
-                <select id="unit" name="unit" required
-                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('unit') border-error @enderror">
-                    <option value="">-- Pilih Satuan --</option>
-                    <option value="pcs" {{ old('unit') === 'pcs' ? 'selected' : '' }}>pcs</option>
-                    <option value="kg" {{ old('unit') === 'kg' ? 'selected' : '' }}>kg</option>
-                    <option value="liter" {{ old('unit') === 'liter' ? 'selected' : '' }}>liter</option>
-                </select>
+                <input type="text" id="unit" name="unit" value="{{ old('unit') }}" required
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('unit') border-error @enderror"
+                    placeholder="Contoh: pcs, botol, sachet, kg"/>
                 @error('unit')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 

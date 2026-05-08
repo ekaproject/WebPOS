@@ -11,10 +11,12 @@ class MasterProduct extends Model
 
     protected $fillable = [
         'name',
+        'barcode',
         'ukuran',
         'satuan_id',
         'category_id',
         'unit',
+        'price',
         'description',
         'image',
         'is_active',
@@ -22,6 +24,7 @@ class MasterProduct extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'price' => 'decimal:2',
     ];
 
     public function category()

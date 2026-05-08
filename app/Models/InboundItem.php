@@ -12,6 +12,9 @@ class InboundItem extends Model
     protected $fillable = [
         'distributor_id',
         'master_product_id',
+        'kemasan_beli',
+        'isi_per_kemasan',
+        'jumlah_kemasan',
         'product_name',
         'ukuran_produk',
         'kemasan_beli',
@@ -31,6 +34,9 @@ class InboundItem extends Model
     protected $casts = [
         'inbound_date' => 'date',
         'expired_date' => 'date',
+        'quantity_inbound' => 'integer',
+        'isi_per_kemasan' => 'integer',
+        'jumlah_kemasan' => 'integer',
         'purchase_price' => 'decimal:2',
         'selling_price' => 'decimal:2',
     ];

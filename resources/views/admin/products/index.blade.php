@@ -110,10 +110,10 @@
                             @if($product->isLowStock())
                                 <span class="flex items-center gap-1 text-error font-bold">
                                     <span class="material-symbols-outlined text-base">warning</span>
-                                    {{ $product->stock }}
+                                    {{ $product->stock_display }}
                                 </span>
                             @else
-                                <span class="text-on-surface font-semibold">{{ $product->stock }}</span>
+                                <span class="text-on-surface font-semibold">{{ $product->stock_display }}</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-xs text-on-surface-variant">{{ optional($product->expires_at)->format('d M Y') ?? '-' }}</td>

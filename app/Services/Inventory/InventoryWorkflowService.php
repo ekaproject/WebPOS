@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\InboundItem;
 use App\Models\InventoryReturn;
 use App\Models\Product;
+use App\Models\MasterProduct;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -63,7 +64,7 @@ class InventoryWorkflowService
                     productImage: $inboundItem->product_photo,
                     purchasePrice: (float) $inboundItem->purchase_price,
                     sellingPrice: (float) $inboundItem->selling_price,
-                    unit: $inboundItem->ukuran_produk,
+                    unit: $inboundItem->masterProduct?->unit,
                     masterProductId: $inboundItem->master_product_id,
                 );
             }
@@ -109,7 +110,7 @@ class InventoryWorkflowService
                 productImage: $inventoryReturn->inboundItem?->product_photo,
                 purchasePrice: (float) ($inventoryReturn->inboundItem?->purchase_price ?? 0),
                 sellingPrice: (float) ($inventoryReturn->inboundItem?->selling_price ?? 0),
-                unit: $inventoryReturn->inboundItem?->ukuran_produk
+                unit: $inventoryReturn->inboundItem?->masterProduct?->unit
             );
         });
 
@@ -132,7 +133,7 @@ class InventoryWorkflowService
         ?string $unit = null,
         ?int $masterProductId = null,
     ): Product {
-        return Product::create([
+        $payload = [
             'name' => $name,
             'sku' => $this->generateBatchSku($name),
             'category_id' => $categoryId ?? $this->resolveFallbackCategoryId(),
@@ -151,7 +152,16 @@ class InventoryWorkflowService
             'inbound_item_id' => $inboundItemId,
             'return_id' => $returnId,
             'expires_at' => $expiredDate,
-        ]);
+        ];
+
+        if ($masterProductId) {
+            $mp = MasterProduct::find($masterProductId);
+            if ($mp && filled($mp->unit)) {
+                $payload['unit'] = $mp->unit;
+            }
+        }
+
+        return Product::create($payload);
     }
 
     private function resolveFallbackCategoryId(): int

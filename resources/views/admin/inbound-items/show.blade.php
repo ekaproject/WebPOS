@@ -48,6 +48,11 @@
             <div>
                 <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Jumlah Inbound</p>
                 <p class="font-bold text-on-surface">{{ $inboundItem->quantity_inbound }}</p>
+                @if($inboundItem->kemasan_beli && $inboundItem->jumlah_kemasan && $inboundItem->isi_per_kemasan)
+                    <p class="text-[11px] text-on-surface-variant mt-1">
+                        {{ $inboundItem->jumlah_kemasan }} {{ $inboundItem->kemasan_beli }} x {{ $inboundItem->isi_per_kemasan }} satuan dasar
+                    </p>
+                @endif
             </div>
             <div>
                 <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Tanggal Masuk</p>
@@ -73,7 +78,7 @@
     @if($inboundItem->qc_status === 'pending')
     <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6">
         <h2 class="text-lg font-headline font-extrabold text-on-surface mb-1">Proses Quality Control</h2>
-        <p class="text-xs text-on-surface-variant mb-4">Pastikan jumlah barang baik + rusak sama dengan {{ $inboundItem->quantity_inbound }}.</p>
+        <p class="text-xs text-on-surface-variant mb-4">Pastikan jumlah barang baik + rusak sama dengan {{ $inboundItem->quantity_inbound }} satuan dasar.</p>
 
         <form action="{{ route('admin.inbound-items.qc.process', $inboundItem) }}" method="POST" class="space-y-4">
             @csrf

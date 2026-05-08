@@ -56,8 +56,11 @@ class InboundItemController extends Controller
         $data = $request->validate([
             'distributor_id'    => 'required|exists:distributors,id',
             'master_product_id' => 'required|exists:master_products,id',
+            'ukuran_produk'     => 'required|string|max:100',
+            'category_id'       => 'required|exists:categories,id',
+            'product_photo'     => 'nullable|image|max:2048',
             'purchase_price'    => 'required|numeric|min:0',
-            'selling_price'     => 'required|numeric|min:0|gte:purchase_price',
+            'selling_price'     => 'required|numeric|min:0',
             'quantity_inbound'  => 'required|integer|min:1',
             'inbound_date'      => 'required|date',
             'expired_date'      => 'required|date|after_or_equal:inbound_date',
@@ -71,8 +74,15 @@ class InboundItemController extends Controller
         // Auto-fill dari master product — tidak perlu diinput ulang di form
         $masterProduct = MasterProduct::findOrFail($data['master_product_id']);
         $data['product_name'] = $masterProduct->name;
-        $data['ukuran_produk'] = $masterProduct->ukuran;
-        $data['category_id']   = $masterProduct->category_id;
+
+        if ($request->hasFile('product_photo')) {
+            $file = $request->file('product_photo');
+            $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_.-]/', '_', $file->getClientOriginalName());
+            $destination = public_path('storage/inbound-products');
+            File::ensureDirectoryExists($destination, 0755, true);
+            $file->move($destination, $filename);
+            $data['product_photo'] = 'inbound-products/' . $filename;
+        }
 
         $inboundItem = InboundItem::create($data);
 

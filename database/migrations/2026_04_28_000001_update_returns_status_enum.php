@@ -19,7 +19,12 @@ return new class extends Migration
         $driver = DB::getDriverName();
 
         if (in_array($driver, ['mysql', 'mariadb'], true)) {
-            DB::statement("ALTER TABLE returns MODIFY COLUMN status ENUM('pending', 'confirmed', 'completed') DEFAULT 'pending'");
+            DB::statement("
+                ALTER TABLE returns 
+                MODIFY COLUMN status 
+                ENUM('pending', 'confirmed', 'completed') 
+                DEFAULT 'pending'
+            ");
             return;
         }
 
@@ -44,7 +49,12 @@ return new class extends Migration
             ->update(['status' => 'pending']);
 
         if (in_array($driver, ['mysql', 'mariadb'], true)) {
-            DB::statement("ALTER TABLE returns MODIFY COLUMN status ENUM('pending', 'completed') DEFAULT 'pending'");
+            DB::statement("
+                ALTER TABLE returns 
+                MODIFY COLUMN status 
+                ENUM('pending', 'completed') 
+                DEFAULT 'pending'
+            ");
             return;
         }
 
@@ -54,16 +64,16 @@ return new class extends Migration
     }
 
     /**
-     * Rebuild the returns table for SQLite enum changes.
-     *
-     * @param  array<int, string>  $statuses
+     * Rebuild table for SQLite.
      */
     private function rebuildReturnsTable(array $statuses): void
     {
         Schema::disableForeignKeyConstraints();
 
+        // Rename tabel lama
         Schema::rename('returns', 'returns_backup');
 
+        // Buat tabel baru
         Schema::create('returns', function (Blueprint $table) use ($statuses) {
             $table->id();
             $table->foreignId('inbound_item_id')->constrained()->cascadeOnDelete();
@@ -75,11 +85,23 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->timestamps();
 
-            $table->index(['status', 'created_at']);
+            // ❌ index duplicate dihapus
         });
 
+        // Copy data lama ke tabel baru
         DB::table('returns')->insertUsing(
-            ['id', 'inbound_item_id', 'distributor_id', 'product_name', 'qty', 'status', 'resolved_at', 'note', 'created_at', 'updated_at'],
+            [
+                'id',
+                'inbound_item_id',
+                'distributor_id',
+                'product_name',
+                'qty',
+                'status',
+                'resolved_at',
+                'note',
+                'created_at',
+                'updated_at'
+            ],
             DB::table('returns_backup')->select([
                 'id',
                 'inbound_item_id',
@@ -90,11 +112,13 @@ return new class extends Migration
                 'resolved_at',
                 'note',
                 'created_at',
-                'updated_at',
+                'updated_at'
             ])
         );
 
+        // Hapus backup
         Schema::drop('returns_backup');
+
         Schema::enableForeignKeyConstraints();
     }
 };

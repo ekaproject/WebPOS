@@ -28,6 +28,7 @@ class Product extends Model
 
     protected $appends = [
         'status_stock',
+        'stock_display',
     ];
 
     public function category()
@@ -72,6 +73,11 @@ class Product extends Model
         $minimumStock = $this->min_stock ?? 20;
 
         return $this->stock < $minimumStock ? 'low_stock' : 'safe';
+    }
+
+    public function getStockDisplayAttribute(): string
+    {
+        return trim(((string) ($this->stock ?? 0)) . ' ' . ($this->unit ?: 'pcs'));
     }
 
     public function isLowStock(): bool
