@@ -27,14 +27,15 @@ class DistributorController extends Controller
 
     public function create()
     {
-        return view('admin.distributors.create');
+        $generatedCode = Distributor::generateCode();
+
+        return view('admin.distributors.create', compact('generatedCode'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name'           => 'required|string|max:255|unique:distributors,name',
-            'code'           => 'required|string|max:50|unique:distributors,code',
             'contact_person' => 'nullable|string|max:255',
             'phone'          => 'nullable|string|max:30',
             'email'          => 'nullable|email|max:255',

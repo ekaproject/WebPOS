@@ -38,12 +38,12 @@
 
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="code">
-                        Kode Distributor <span class="text-error">*</span>
+                        Kode Distributor
                     </label>
-                          <input type="text" id="code" name="code" value="{{ old('code') }}" required
-                              class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('code') border-error @enderror"
-                           placeholder="Cth: DIST-001"/>
-                    @error('code')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+                          <input type="text" id="code" name="code" value="{{ old('code', $generatedCode ?? '') }}" readonly
+                              class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-surface-container text-sm text-on-surface-variant cursor-not-allowed"
+                           placeholder="Otomatis digenerate"/>
+                    <p class="text-[11px] text-on-surface-variant mt-1">Kode akan dibuat otomatis saat data disimpan.</p>
                 </div>
 
                 <div>

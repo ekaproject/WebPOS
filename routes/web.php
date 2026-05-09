@@ -111,6 +111,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('distributors/{distributor}', [DistributorController::class, 'update'])->name('distributors.update');
     Route::delete('distributors/{distributor}', [DistributorController::class, 'destroy'])->name('distributors.destroy');
     Route::get('inbound-items', [InboundItemController::class, 'index'])->name('inbound-items.index');
+    Route::get('inbound-items/master-products/search', [InboundItemController::class, 'searchMasterProducts'])->name('inbound-items.master-products.search');
+    Route::get('inbound-items/master-products/{masterProduct}', [InboundItemController::class, 'productDetail'])->name('inbound-items.master-products.detail');
     Route::get('inbound-items/create', [InboundItemController::class, 'create'])->name('inbound-items.create');
     Route::post('inbound-items', [InboundItemController::class, 'store'])->name('inbound-items.store');
     Route::get('inbound-items/{inboundItem}', [InboundItemController::class, 'show'])->name('inbound-items.show');

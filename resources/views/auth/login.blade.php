@@ -26,12 +26,12 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center p-5 md:p-6" style="font-family: 'Inter', 'Poppins', sans-serif;">
+<body class="min-h-screen text-slate-900 flex items-center justify-center p-5 md:p-6" style="font-family: 'Inter', 'Poppins', sans-serif; background: radial-gradient(circle at top, #fee2e2 0, #ffffff 42%, #fff 100%);">
 
 <main class="w-full max-w-[400px]">
-    <section class="rounded-xl border border-slate-100 bg-white p-8 md:p-10 shadow-lg login-fade-in">
+    <section class="rounded-xl border border-red-200 bg-white p-8 md:p-10 shadow-lg login-fade-in" style="box-shadow: 0 24px 60px rgba(220, 38, 38, 0.12);">
         <div class="mb-7 text-center">
-            <p class="text-sm font-semibold tracking-wide text-[#2563eb]" style="font-family: 'Poppins', 'Inter', sans-serif;">ILS Mart</p>
+            <p class="text-sm font-semibold tracking-wide text-[#dc2626]" style="font-family: 'Poppins', 'Inter', sans-serif;">ILS Mart</p>
         </div>
 
         <header class="mb-7">
@@ -50,7 +50,7 @@
         <form method="POST" action="{{ route('admin.login') }}" id="loginForm" class="space-y-5">
             @csrf
 
-           <div class="flex items-center w-full rounded-lg border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-[#2563eb]">
+           <div class="flex items-center w-full rounded-lg border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-4 focus-within:ring-red-100 focus-within:border-[#dc2626]">
 
     <span class="material-symbols-outlined text-slate-400 mr-2">
         mail
@@ -67,7 +67,7 @@
     />
 </div>
 
-           <div class="flex items-center w-full rounded-lg border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-[#2563eb]">
+           <div class="flex items-center w-full rounded-lg border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-4 focus-within:ring-red-100 focus-within:border-[#dc2626]">
 
     <span class="material-symbols-outlined text-slate-400 mr-2">
         key
@@ -89,15 +89,16 @@
 </div>
 
             <div class="flex items-center gap-2 px-1">
-                <input class="h-4 w-4 rounded border-slate-300 text-[#2563eb] focus:ring-[#2563eb]"
+                  <input class="h-4 w-4 rounded border-slate-300 text-[#dc2626] focus:ring-[#dc2626]"
                        id="remember" name="remember" type="checkbox"/>
                 <label class="select-none text-sm text-slate-600" for="remember">
                     Ingat saya
                 </label>
             </div>
 
-            <button class="w-full rounded-lg bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] py-3.5 font-semibold text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:shadow-lg active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-80"
-                    id="submitButton" type="submit">
+            <button class="w-full rounded-lg py-3.5 font-semibold text-white shadow-md transition-all duration-200 hover:scale-[1.01] hover:shadow-lg active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-80"
+                    id="submitButton" type="submit"
+                    style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: #fff;">
                 <span class="inline-flex items-center justify-center gap-2">
                     <svg aria-hidden="true" class="hidden h-5 w-5 animate-spin" id="submitSpinner" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

@@ -14,7 +14,7 @@
         </div>
     </div>
 
-        <form action="{{ route('admin.inbound-items.store') }}" method="POST"
+                <form action="{{ route('admin.inbound-items.store') }}" method="POST" enctype="multipart/form-data"
           class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-8 space-y-6">
         @csrf
 
@@ -39,185 +39,78 @@
                 <label for="master_product_search" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
                     Nama Produk <span class="text-error">*</span>
                 </label>
-                {{-- Hidden input untuk nilai aktual --}}
                 <input type="hidden" id="master_product_id" name="master_product_id" value="{{ old('master_product_id') }}"/>
+                <input type="hidden" id="category_id" name="category_id" value="{{ old('category_id') }}"/>
 
-                {{-- Searchable combobox --}}
                 <div class="relative">
                     <input type="text" id="master_product_search" autocomplete="off"
                            placeholder="Ketik untuk mencari produk..."
-                           class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('master_product_id') border-error @enderror"/>
+                           class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('master_product_id') border-error @enderror"
+                           value="{{ old('product_name') }}"/>
                     <div id="master_product_dropdown"
                          class="absolute z-50 w-full mt-1 bg-white border border-outline-variant/30 rounded-xl shadow-lg max-h-56 overflow-y-auto hidden">
                     </div>
                 </div>
-
-                {{-- Data master produk untuk JS --}}
-                @php
-                    $mpData = $masterProducts->map(fn($mp) => [
-                        'id'          => $mp->id,
-                        'name'        => $mp->name,
-                        'ukuran'      => $mp->ukuran ?? '',
-                        'satuan'      => $mp->satuan ? $mp->satuan->singkatan : ($mp->unit ?? ''),
-                        'category_id' => $mp->category_id,
-                    ]);
-                @endphp
-                <script>
-                    (function () {
-                        const masterProducts = @json($mpData);
-                        const searchInput    = document.getElementById('master_product_search');
-                        const hiddenInput    = document.getElementById('master_product_id');
-                        const dropdown       = document.getElementById('master_product_dropdown');
-                        const categorySelect = document.getElementById('category_id');
-
-                        // Restore nilai lama saat ada validation error
-                        // (dijalankan setelah DOMContentLoaded supaya ukuran_produk sudah ada)
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const oldId = hiddenInput.value;
-                            if (oldId) {
-                                const existing = masterProducts.find(p => String(p.id) === String(oldId));
-                                if (existing) {
-                                    searchInput.value = existing.name;
-                                    setUkuranLocked(existing.ukuran);
-                                }
-                            }
-                        }
-
-                        function labelOf(p) {
-                            let label = p.name;
-                            if (p.ukuran)  label += ' — ' + p.ukuran;
-                            if (p.satuan)  label += ' (' + p.satuan + ')';
-                            return label;
-                        }
-
-                        function showProductInfo(p) {
-                            const infoDiv = document.getElementById('selected_product_info');
-                            if (!infoDiv) return;
-                            if (!p) { infoDiv.classList.add('hidden'); return; }
-                            document.getElementById('info_ukuran').textContent   = p.ukuran || '-';
-                            document.getElementById('info_satuan').textContent   = p.satuan || '-';
-                            document.getElementById('info_kategori').textContent = p.category_name || '-';
-                            infoDiv.classList.remove('hidden');
-                        }
-
-                        function renderDropdown(items) {
-                            dropdown.innerHTML = '';
-                            if (!items.length) {
-                                dropdown.innerHTML = '<div class="px-4 py-3 text-sm text-on-surface-variant">Produk tidak ditemukan</div>';
-                            } else {
-                                items.forEach(p => {
-                                    const el = document.createElement('div');
-                                    el.className = 'px-4 py-3 text-sm cursor-pointer hover:bg-surface-container-low transition-colors';
-                                    // Baris atas: nama produk (bold)
-                                    const nameSpan = document.createElement('span');
-                                    nameSpan.className = 'font-semibold block';
-                                    nameSpan.textContent = p.name;
-                                    el.appendChild(nameSpan);
-                                    // Baris bawah: ukuran + satuan + kategori (kecil)
-                                    const details = [];
-                                    if (p.barcode) details.push('Barcode: ' + p.barcode);
-                                    if (p.ukuran) details.push(p.ukuran);
-                                    if (p.satuan) details.push('(' + p.satuan + ')');
-                                    if (p.category_name) details.push('• ' + p.category_name);
-                                    if (details.length) {
-                                        const subSpan = document.createElement('span');
-                                        subSpan.className = 'text-xs text-on-surface-variant';
-                                        subSpan.textContent = details.join(' ');
-                                        el.appendChild(subSpan);
-                                    }
-                                    el.addEventListener('mousedown', (e) => {
-                                        e.preventDefault();
-                                        selectProduct(p);
-                                    });
-                                    dropdown.appendChild(el);
-                                });
-                            }
-                            dropdown.classList.remove('hidden');
-                        }
-
-                        function selectProduct(p) {
-                            searchInput.value = p.name;
-                            hiddenInput.value = p.id;
-                            dropdown.classList.add('hidden');
-
-                            // Auto-fill kategori
-                            if (categorySelect && p.category_id) {
-                                categorySelect.value = p.category_id;
-                            }
-                            // Auto-fill ukuran dari master produk, kunci field jika terisi
-                            setUkuranLocked(p.ukuran);
-                        }
-
-                        searchInput.addEventListener('input', function () {
-                            hiddenInput.value = '';
-                            // Reset ukuran jika user hapus pilihan
-                            setUkuranLocked('');
-                            const q = this.value.trim().toLowerCase();
-                            if (!q) { dropdown.classList.add('hidden'); return; }
-                            const filtered = masterProducts.filter(p => p.name.toLowerCase().includes(q));
-                            renderDropdown(filtered.slice(0, 20));
-                        });
-
-                        searchInput.addEventListener('focus', function () {
-                            if (this.value.trim()) {
-                                const q = this.value.trim().toLowerCase();
-                                const filtered = masterProducts.filter(p => p.name.toLowerCase().includes(q));
-                                renderDropdown(filtered.slice(0, 20));
-                            }
-                        });
-
-                        document.addEventListener('click', function (e) {
-                            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-                                dropdown.classList.add('hidden');
-                            }
-                        });
-
-                        if (isiPerKemasan) isiPerKemasan.addEventListener('input', syncQuantity);
-                        if (jumlahKemasan) jumlahKemasan.addEventListener('input', syncQuantity);
-                    })();
-                </script>
-
-
                 @error('master_product_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 <p class="text-[11px] text-on-surface-variant mt-1">
                     Produk tidak ada? <a href="{{ route('admin.master-products.create') }}" target="_blank" class="text-primary underline">Tambah master produk</a> terlebih dahulu.
                 </p>
             </div>
 
-            <div class="md:col-span-2">
+            <div>
                 <label for="ukuran_produk" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
                     Ukuran Produk <span class="text-error">*</span>
                 </label>
-                <input type="text" id="ukuran_produk" name="ukuran_produk" value="{{ old('ukuran_produk') }}" required
-                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('ukuran_produk') border-error @enderror"
-                       placeholder="Contoh: 250ml, 1kg, 500gr"/>
-                <p id="ukuran_hint" class="text-[11px] text-on-surface-variant mt-1">Terisi otomatis jika produk dipilih dari master.</p>
-                @error('ukuran_produk')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+                <input type="text" id="ukuran_produk" name="ukuran_produk" value="{{ old('ukuran_produk') }}" readonly
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-surface-container text-sm @error('ukuran_produk') border-error @enderror"
+                    placeholder="Terisi otomatis dari master produk"/>
             </div>
 
             <div>
-                <label for="category_id" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                    Kategori <span class="text-error">*</span>
+                <label for="satuan_produk" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                    Satuan
                 </label>
-                <select id="category_id" name="category_id" required
-                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('category_id') border-error @enderror">
-                    <option value="">-- Pilih Kategori --</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
+                <input type="text" id="satuan_produk" value="" readonly
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-surface-container text-sm"
+                    placeholder="Terisi otomatis"/>
+            </div>
+
+            <div>
+                <label for="kategori_produk_display" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                    Kategori
+                </label>
+                <input type="text" id="kategori_produk_display" value="" readonly
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-surface-container text-sm"
+                    placeholder="Terisi otomatis"/>
                 @error('category_id')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
+                <label for="harga_master_display" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                    Harga Master
+                </label>
+                <input type="text" id="harga_master_display" value="" readonly
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-surface-container text-sm"
+                    placeholder="Terisi otomatis"/>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                    Foto Produk (Master)
+                </label>
+                <div class="h-24 rounded-xl border border-outline-variant/30 bg-surface-container overflow-hidden flex items-center justify-center">
+                    <img id="master_product_photo_preview" src="" alt="Preview foto produk" class="hidden h-full w-full object-contain bg-white">
+                    <span id="master_product_photo_placeholder" class="text-xs text-on-surface-variant">Belum ada foto produk</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-2">
                 <label for="product_photo" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                    Foto Produk
+                    Foto Produk Barang Masuk (Opsional)
                 </label>
                 <input type="file" id="product_photo" name="product_photo" accept="image/*"
-                       class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary-fixed file:px-3 file:py-2 file:text-xs file:font-bold file:text-primary hover:file:bg-primary hover:file:text-on-primary @error('product_photo') border-error @enderror"/>
-                <p class="text-[11px] text-on-surface-variant mt-1">Opsional. Format gambar umum, maksimal 2MB.</p>
+                    class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary-fixed file:px-3 file:py-2 file:text-xs file:font-bold file:text-primary hover:file:bg-primary hover:file:text-on-primary @error('product_photo') border-error @enderror"/>
+                <p class="text-[11px] text-on-surface-variant mt-1">Opsional. Jika kosong, tetap menggunakan foto dari master produk sebagai referensi visual.</p>
                 @error('product_photo')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -225,9 +118,15 @@
                 <label for="kemasan_beli" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
                     Kemasan Beli <span class="text-error">*</span>
                 </label>
-                <input type="text" id="kemasan_beli" name="kemasan_beli" value="{{ old('kemasan_beli') }}" required
-                       class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('kemasan_beli') border-error @enderror"
-                       placeholder="Contoh: dus, karton, box, pack, sak"/>
+                <select id="kemasan_beli" name="kemasan_beli" required
+                        class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('kemasan_beli') border-error @enderror">
+                    <option value="">-- Pilih Kemasan Beli --</option>
+                    @foreach($satuans as $satuan)
+                        <option value="{{ $satuan->nama }}" {{ old('kemasan_beli') == $satuan->nama ? 'selected' : '' }}>
+                            {{ $satuan->label }}
+                        </option>
+                    @endforeach
+                </select>
                 @error('kemasan_beli')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -352,6 +251,247 @@ document.addEventListener('DOMContentLoaded', function () {
     sellingPriceInput.addEventListener('input', syncSellingMin);
 
     syncSellingMin();
+    const searchEndpoint = @json(route('admin.inbound-items.master-products.search'));
+    const detailTemplate = @json(route('admin.inbound-items.master-products.detail', ['masterProduct' => '__ID__']));
+
+    const searchInput = document.getElementById('master_product_search');
+    const hiddenProductId = document.getElementById('master_product_id');
+    const hiddenCategoryId = document.getElementById('category_id');
+    const dropdown = document.getElementById('master_product_dropdown');
+
+    const ukuranInput = document.getElementById('ukuran_produk');
+    const satuanInput = document.getElementById('satuan_produk');
+    const kategoriDisplay = document.getElementById('kategori_produk_display');
+    const hargaMasterDisplay = document.getElementById('harga_master_display');
+    const previewImage = document.getElementById('master_product_photo_preview');
+    const previewPlaceholder = document.getElementById('master_product_photo_placeholder');
+
+    const isiInput = document.getElementById('isi_per_kemasan');
+    const jumlahInput = document.getElementById('jumlah_kemasan');
+    const quantityInput = document.getElementById('quantity_inbound');
+
+    let searchTimer = null;
+
+    function formatRupiah(value) {
+        if (value === null || value === undefined || value === '') {
+            return '';
+        }
+
+        const n = Number(value);
+        if (!Number.isFinite(n)) {
+            return '';
+        }
+
+        return 'Rp ' + n.toLocaleString('id-ID');
+    }
+
+    function syncQuantity() {
+        if (!quantityInput) {
+            return;
+        }
+
+        const isi = parseInt(isiInput?.value || '', 10);
+        const jumlah = parseInt(jumlahInput?.value || '', 10);
+
+        if (Number.isFinite(isi) && Number.isFinite(jumlah)) {
+            quantityInput.value = String(isi * jumlah);
+            return;
+        }
+
+        quantityInput.value = '';
+    }
+
+    function clearProductDetails() {
+        if (hiddenProductId) hiddenProductId.value = '';
+        if (hiddenCategoryId) hiddenCategoryId.value = '';
+        if (ukuranInput) ukuranInput.value = '';
+        if (satuanInput) satuanInput.value = '';
+        if (kategoriDisplay) kategoriDisplay.value = '';
+        if (hargaMasterDisplay) hargaMasterDisplay.value = '';
+
+        if (previewImage) {
+            previewImage.src = '';
+            previewImage.classList.add('hidden');
+        }
+
+        if (previewPlaceholder) {
+            previewPlaceholder.textContent = 'Belum ada foto produk';
+            previewPlaceholder.classList.remove('hidden');
+        }
+    }
+
+    function applyProductDetail(product) {
+        if (!product) {
+            clearProductDetails();
+            return;
+        }
+
+        if (hiddenProductId) hiddenProductId.value = product.id || '';
+        if (hiddenCategoryId) hiddenCategoryId.value = product.category_id || '';
+        if (searchInput) searchInput.value = product.name || '';
+        if (ukuranInput) ukuranInput.value = product.ukuran || '';
+        if (satuanInput) satuanInput.value = product.satuan || '';
+        if (kategoriDisplay) kategoriDisplay.value = product.category_name || '';
+        if (hargaMasterDisplay) hargaMasterDisplay.value = formatRupiah(product.price) || '-';
+
+        if (sellingPriceInput && (sellingPriceInput.value === '' || sellingPriceInput.dataset.autofill !== 'manual')) {
+            if (product.price !== null && product.price !== undefined) {
+                sellingPriceInput.value = product.price;
+                sellingPriceInput.dataset.autofill = 'master';
+            }
+        }
+
+        if (previewImage && previewPlaceholder) {
+            if (product.image_url) {
+                previewImage.src = product.image_url;
+                previewImage.classList.remove('hidden');
+                previewPlaceholder.classList.add('hidden');
+            } else {
+                previewImage.src = '';
+                previewImage.classList.add('hidden');
+                previewPlaceholder.textContent = 'Produk ini tidak memiliki foto';
+                previewPlaceholder.classList.remove('hidden');
+            }
+        }
+    }
+
+    async function fetchProductDetail(productId) {
+        if (!productId) {
+            clearProductDetails();
+            return;
+        }
+
+        try {
+            const url = detailTemplate.replace('__ID__', encodeURIComponent(String(productId)));
+            const response = await fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Gagal mengambil detail produk.');
+            }
+
+            const product = await response.json();
+            applyProductDetail(product);
+        } catch (error) {
+            clearProductDetails();
+        }
+    }
+
+    function renderDropdown(items) {
+        if (!dropdown) {
+            return;
+        }
+
+        dropdown.innerHTML = '';
+
+        if (!items.length) {
+            dropdown.innerHTML = '<div class="px-4 py-3 text-sm text-on-surface-variant">Produk tidak ditemukan</div>';
+            dropdown.classList.remove('hidden');
+            return;
+        }
+
+        items.forEach((item) => {
+            const option = document.createElement('button');
+            option.type = 'button';
+            option.className = 'w-full text-left px-4 py-3 text-sm hover:bg-surface-container-low transition-colors';
+            option.textContent = item.name;
+            option.addEventListener('click', function () {
+                dropdown.classList.add('hidden');
+                fetchProductDetail(item.id);
+            });
+            dropdown.appendChild(option);
+        });
+
+        dropdown.classList.remove('hidden');
+    }
+
+    async function searchProducts(keyword) {
+        if (!dropdown) {
+            return;
+        }
+
+        if (!keyword) {
+            dropdown.classList.add('hidden');
+            dropdown.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(searchEndpoint + '?q=' + encodeURIComponent(keyword), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Gagal mencari produk.');
+            }
+
+            const items = await response.json();
+            renderDropdown(items);
+        } catch (error) {
+            dropdown.classList.add('hidden');
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            if (searchTimer) {
+                clearTimeout(searchTimer);
+            }
+
+            hiddenProductId.value = '';
+            hiddenCategoryId.value = '';
+            ukuranInput.value = '';
+            satuanInput.value = '';
+            kategoriDisplay.value = '';
+            hargaMasterDisplay.value = '';
+
+            if (previewImage) {
+                previewImage.src = '';
+                previewImage.classList.add('hidden');
+            }
+
+            if (previewPlaceholder) {
+                previewPlaceholder.textContent = 'Belum ada foto produk';
+                previewPlaceholder.classList.remove('hidden');
+            }
+
+            searchTimer = setTimeout(() => {
+                searchProducts(this.value.trim());
+            }, 250);
+        });
+    }
+
+    document.addEventListener('click', function (event) {
+        if (!dropdown || !searchInput) {
+            return;
+        }
+
+        if (!dropdown.contains(event.target) && !searchInput.contains(event.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    if (hiddenProductId && hiddenProductId.value) {
+        fetchProductDetail(hiddenProductId.value);
+    }
+
+    if (sellingPriceInput) {
+        sellingPriceInput.addEventListener('input', function () {
+            this.dataset.autofill = 'manual';
+        });
+    }
+
+    if (isiInput) isiInput.addEventListener('input', syncQuantity);
+    if (jumlahInput) jumlahInput.addEventListener('input', syncQuantity);
+
+    syncQuantity();
 });
 </script>
 @endpush
