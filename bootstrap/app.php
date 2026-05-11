@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // Trust all proxies (required for hosting behind load balancer/reverse proxy like Hostinger)
         $middleware->trustProxies(at: '*');
 
+        // CORS for mobile API
+        $middleware->api(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
+
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
