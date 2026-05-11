@@ -30,8 +30,15 @@ class DashboardController extends Controller
             ->latest()
             ->take(5)
             ->get();
-        $topProducts = Product::withCount('transactionItems')
-            ->orderByDesc('transaction_items_count')
+        $topProducts = Product::query()
+            ->withSum([
+                'transactionItems as total_sold' => function ($query) {
+                    $query->whereHas('transaction', function ($transaction) {
+                        $transaction->where('status', 'paid');
+                    });
+                },
+            ], 'quantity')
+            ->orderByDesc('total_sold')
             ->take(5)
             ->get();
 

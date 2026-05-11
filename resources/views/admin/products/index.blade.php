@@ -77,8 +77,8 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-primary-fixed overflow-hidden flex items-center justify-center">
-                                    @if($product->image)
-                                        <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
+                                    @if($product->image_url)
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
                                     @else
                                         <span class="material-symbols-outlined text-primary text-lg">inventory_2</span>
                                     @endif

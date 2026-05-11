@@ -13,8 +13,8 @@
     <div class="bg-white rounded-2xl border p-6">
         <div class="flex gap-6 flex-col md:flex-row">
             <div class="w-full md:w-1/3">
-                @if($product->image)
-                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-auto object-contain rounded-lg" />
+                @if($product->image_url)
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-auto object-contain rounded-lg" />
                 @else
                     <div class="w-full h-64 bg-gray-100 flex items-center justify-center rounded-lg">
                         <span class="material-symbols-outlined text-6xl text-gray-300">inventory_2</span>

@@ -30,7 +30,7 @@ class AjaxSearchController extends Controller
                     'id' => $p->id,
                     'name' => $p->name,
                     'price' => (float) $p->price,
-                    'image' => $p->image ? asset('storage/'.$p->image) : null,
+                    'image' => $p->image_url,
                     'detail_url' => route('products.show', $p),
                     'unit' => $p->unit,
                 ];

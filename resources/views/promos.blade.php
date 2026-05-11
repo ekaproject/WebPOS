@@ -99,8 +99,8 @@
                                             <span class="text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase" style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);">Aktif</span>
                                         @endif
                                     </div>
-                                    @if($promo->product->image)
-                                        <img src="{{ asset('storage/'.$promo->product->image) }}" alt="{{ $promo->product->name }}" class="w-full h-full object-cover"/>
+                                        @if($promo->product->image_url)
+                                            <img src="{{ $promo->product->image_url }}" alt="{{ $promo->product->name }}" class="w-full h-full object-cover"/>
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">
                                             <span class="material-symbols-outlined text-7xl text-primary/20">inventory_2</span>

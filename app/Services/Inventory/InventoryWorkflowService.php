@@ -110,7 +110,8 @@ class InventoryWorkflowService
                 productImage: $inventoryReturn->inboundItem?->product_photo,
                 purchasePrice: (float) ($inventoryReturn->inboundItem?->purchase_price ?? 0),
                 sellingPrice: (float) ($inventoryReturn->inboundItem?->selling_price ?? 0),
-                unit: $inventoryReturn->inboundItem?->masterProduct?->unit
+                unit: $inventoryReturn->inboundItem?->masterProduct?->unit,
+                masterProductId: $inventoryReturn->inboundItem?->master_product_id
             );
         });
 
@@ -145,7 +146,6 @@ class InventoryWorkflowService
             'min_stock' => 0,
             'unit' => filled($unit) ? $unit : 'pcs',
             'description' => 'Batch otomatis dari proses QC/retur distributor.',
-            'image' => $productImage,
             'is_active' => true,
             'source_type' => $sourceType,
             'source_reference_id' => $sourceReferenceId,
@@ -154,12 +154,20 @@ class InventoryWorkflowService
             'expires_at' => $expiredDate,
         ];
 
+        $fallbackImage = $productImage;
+
         if ($masterProductId) {
             $mp = MasterProduct::find($masterProductId);
             if ($mp && filled($mp->unit)) {
                 $payload['unit'] = $mp->unit;
             }
+
+            if (!filled($fallbackImage) && $mp && filled($mp->image)) {
+                $fallbackImage = $mp->image;
+            }
         }
+
+        $payload['image'] = filled($fallbackImage) ? $fallbackImage : null;
 
         return Product::create($payload);
     }

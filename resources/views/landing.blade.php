@@ -41,9 +41,9 @@
             if (count($heroPromoSlides) === 0) {
                 foreach (($featuredProducts ?? collect()) as $promoProduct) {
                     $product = $promoProduct->product;
-                    if ($product && !empty($product->image)) {
+                    if ($product && !empty($product->image_url)) {
                         $heroPromoSlides[] = [
-                            'image' => asset('storage/'.$product->image),
+                            'image' => $product->image_url,
                             'title' => $product->name,
                             'badge' => 'Promo Aktif',
                         ];
@@ -185,8 +185,8 @@
                             class="promo-glass-card bg-white/88 border-white/80 overflow-hidden"
                         >
                             <div class="h-48 bg-gradient-to-br from-primary/18 to-secondary/12 relative overflow-hidden flex items-center justify-center">
-                                @if($product->image)
-                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
+                                @if($product->image_url)
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
                                 @else
                                     <span class="material-symbols-outlined text-7xl text-primary/25" style="font-variation-settings: 'FILL' 1;">{{ $product->category->icon ?: 'inventory_2' }}</span>
                                 @endif
@@ -259,8 +259,8 @@
                                         <span class="bg-secondary text-on-secondary text-[10px] font-bold px-3 py-1 rounded-full uppercase">Aktif</span>
                                     @endif
                                 </div>
-                                @if($product->image)
-                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
+                                @if($product->image_url)
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center"/>
                                 @else
                                     <span class="material-symbols-outlined text-8xl text-primary/20" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
                                 @endif

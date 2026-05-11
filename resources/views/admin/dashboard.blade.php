@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const data = [
         @foreach($topProductsTop3 as $product)
-            {{ (int) $product->transaction_items_count }},
+            {{ (int) ($product->total_sold ?? 0) }},
         @endforeach
     ];
 

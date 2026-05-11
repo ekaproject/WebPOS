@@ -29,6 +29,7 @@ class Product extends Model
     protected $appends = [
         'status_stock',
         'stock_display',
+        'image_url',
     ];
 
     public function category()
@@ -78,6 +79,21 @@ class Product extends Model
     public function getStockDisplayAttribute(): string
     {
         return trim(((string) ($this->stock ?? 0)) . ' ' . ($this->unit ?: 'pcs'));
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (filled($this->image)) {
+            return asset('storage/' . $this->image);
+        }
+
+        $masterImage = $this->masterProduct?->image;
+
+        if (filled($masterImage)) {
+            return asset('storage/' . $masterImage);
+        }
+
+        return null;
     }
 
     public function isLowStock(): bool

@@ -99,7 +99,7 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="image">Ganti Foto Produk</label>
-                @if($product->image)
+                @if($product->image_url)
                     <div class="mb-2 flex items-center gap-2 text-xs text-on-surface-variant">
                         <span class="material-symbols-outlined text-sm">image</span>
                         Foto saat ini: <span class="font-mono">{{ $product->image }}</span>

@@ -75,8 +75,8 @@
                     @foreach($searchProducts as $product)
                     <div class="promo-glass-card bg-white/90 border-white/80 overflow-hidden group">
                         <div class="h-48 bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden flex items-center justify-center">
-                            @if($product->image)
-                                <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}"
+                            @if($product->image_url)
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
                                      class="w-full h-full object-contain object-center"/>
                             @else
                                 <span class="material-symbols-outlined text-6xl text-primary/20"
