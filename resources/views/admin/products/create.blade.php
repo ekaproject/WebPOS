@@ -81,11 +81,11 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Stok Minimum</label>
-                <div class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-surface-container text-sm text-on-surface">
-                    20 (default sistem)
-                </div>
-                <p class="text-xs text-on-surface-variant mt-1">Nilai stok minimum dikunci ke 20.</p>
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="min_stock">Stok Minimum<span class="text-error">*</span></label>
+                  <input type="number" id="min_stock" name="min_stock" value="{{ old('min_stock', 20) }}" min="0" required
+                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('min_stock') border-error @enderror"/>
+                @error('min_stock')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
+                <p class="text-xs text-on-surface-variant mt-1">Peringatan stok menipis akan muncul jika stok di bawah nilai ini.</p>
             </div>
 
             <div>

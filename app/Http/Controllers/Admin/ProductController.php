@@ -54,6 +54,7 @@ class ProductController extends Controller
             'purchase_price' => 'required|numeric|min:0',
             'price'          => 'required|numeric|min:0',
             'stock'          => 'required|integer|min:0',
+            'min_stock'      => 'required|integer|min:0',
             'unit'           => 'required|string|max:50',
             'description'    => 'nullable|string',
             'expires_at'     => 'nullable|date',
@@ -62,7 +63,6 @@ class ProductController extends Controller
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
-        $data['min_stock'] = 20;
         $data['sku'] = $this->generateNextSku((int) $data['category_id']);
 
         if ($request->hasFile('image')) {
@@ -95,6 +95,7 @@ class ProductController extends Controller
             'purchase_price' => 'required|numeric|min:0',
             'price'          => 'required|numeric|min:0',
             'stock'          => 'required|integer|min:0',
+            'min_stock'      => 'required|integer|min:0',
             'unit'           => 'required|string|max:50',
             'description'    => 'nullable|string',
             'expires_at'     => 'nullable|date',
@@ -103,7 +104,6 @@ class ProductController extends Controller
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
-        $data['min_stock'] = 20;
 
         if ($request->hasFile('image')) {
             if ($product->image) {
