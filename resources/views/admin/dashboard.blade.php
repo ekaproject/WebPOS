@@ -177,13 +177,22 @@
         </div>
 
         {{-- Top Products (1/3) --}}
+        @php($topProductsTop3 = $topProducts->take(3))
         <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
             <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/10">
                 <h2 class="text-lg font-headline font-extrabold text-on-surface">Produk Terlaris</h2>
                 <a href="{{ route('admin.products.index') }}" class="text-xs font-bold text-primary hover:underline">Semua Produk</a>
             </div>
+            <div class="px-6 pt-5">
+                <div class="rounded-2xl border border-outline-variant/10 bg-surface-container-low p-4">
+                    <div style="height: 260px;">
+                        <canvas id="topProductsChart" class="w-full h-full"></canvas>
+                    </div>
+                    <p id="topProductsChartFallback" class="hidden text-sm text-on-surface-variant text-center py-12">Chart produk terlaris tidak tersedia</p>
+                </div>
+            </div>
             <div class="divide-y divide-outline-variant/10">
-                @forelse($topProducts as $index => $product)
+                @forelse($topProductsTop3 as $index => $product)
                 <div class="flex items-center gap-4 px-6 py-4 hover:bg-surface-container-low/50 transition-colors">
                     <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold font-headline
                         {{ $index === 0 ? 'bg-primary text-on-primary' : ($index === 1 ? 'bg-secondary text-on-secondary' : 'bg-surface-container text-on-surface-variant') }}">
@@ -206,4 +215,102 @@
     </div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('topProductsChart');
+    const fallback = document.getElementById('topProductsChartFallback');
+
+    if (!canvas) {
+        return;
+    }
+
+    if (typeof Chart === 'undefined') {
+        canvas.classList.add('hidden');
+        if (fallback) {
+            fallback.classList.remove('hidden');
+        }
+        return;
+    }
+
+    const labels = [
+        @foreach($topProductsTop3 as $product)
+            @json($product->name),
+        @endforeach
+    ];
+
+    const data = [
+        @foreach($topProductsTop3 as $product)
+            {{ (int) $product->transaction_items_count }},
+        @endforeach
+    ];
+
+    if (!labels.length || !data.length) {
+        canvas.classList.add('hidden');
+        if (fallback) {
+            fallback.classList.remove('hidden');
+        }
+        return;
+    }
+
+    if (fallback) {
+        fallback.classList.add('hidden');
+    }
+
+    new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Jumlah Terjual',
+                data: data,
+                backgroundColor: '#0052cc',
+                borderColor: '#0052cc',
+                borderWidth: 1,
+                borderRadius: 8,
+                barThickness: 22,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return ' Jumlah Terjual: ' + context.parsed.y;
+                        },
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#667085',
+                        maxRotation: 0,
+                        autoSkip: false,
+                        precision: 0,
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.06)',
+                    },
+                },
+                y: {
+                    ticks: {
+                        color: '#667085',
+                    },
+                    grid: {
+                        display: false,
+                    },
+                },
+            },
+        },
+    });
+});
+</script>
 @endsection

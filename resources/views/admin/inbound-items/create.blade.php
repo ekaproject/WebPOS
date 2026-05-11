@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Input Barang Masuk')
 
@@ -113,6 +113,13 @@
                 <p class="text-[11px] text-on-surface-variant mt-1">Opsional. Jika kosong, tetap menggunakan foto dari master produk sebagai referensi visual.</p>
                 @error('product_photo')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
+
+                <div id="inbound_product_photo_preview_container" class="md:col-span-2 hidden">
+                    <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">Preview Foto Barang Masuk</p>
+                    <div class="h-32 rounded-xl border border-outline-variant/30 bg-surface-container overflow-hidden flex items-center justify-center">
+                        <img id="inbound_product_photo_preview" src="" alt="Preview foto barang masuk" class="h-full w-full object-contain bg-white">
+                    </div>
+                </div>
 
             <div>
                 <label for="kemasan_beli" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
@@ -492,6 +499,28 @@ document.addEventListener('DOMContentLoaded', function () {
     if (jumlahInput) jumlahInput.addEventListener('input', syncQuantity);
 
     syncQuantity();
+
+        // Handle product_photo preview
+        const productPhotoInput = document.getElementById('product_photo');
+        const previewContainer = document.getElementById('inbound_product_photo_preview_container');
+        const previewImageInbound = document.getElementById('inbound_product_photo_preview');
+
+        if (productPhotoInput && previewContainer && previewImageInbound) {
+            productPhotoInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        previewImageInbound.src = event.target.result;
+                        previewContainer.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewImageInbound.src = '';
+                    previewContainer.classList.add('hidden');
+                }
+            });
+        }
 });
 </script>
 @endpush

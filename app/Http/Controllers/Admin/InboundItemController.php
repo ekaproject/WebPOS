@@ -10,6 +10,7 @@ use App\Models\Satuan;
 use App\Services\Inventory\InventoryWorkflowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class InboundItemController extends Controller
 {
@@ -103,23 +104,60 @@ class InboundItemController extends Controller
             'selling_price.gte'          => 'Harga jual tidak boleh lebih rendah dari harga beli.',
         ]);
 
-        // Auto-fill dari master product — tidak perlu diinput ulang di form
+        // Auto-fill dari master product
         $masterProduct = MasterProduct::query()->with('category')->findOrFail($data['master_product_id']);
         $data['product_name'] = $masterProduct->name;
         $data['ukuran_produk'] = $masterProduct->ukuran;
         $data['category_id'] = $masterProduct->category_id;
         $data['quantity_inbound'] = (int) $data['jumlah_kemasan'] * (int) $data['isi_per_kemasan'];
 
-        if ($request->hasFile('product_photo')) {
-            $file = $request->file('product_photo');
-            $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_.-]/', '_', $file->getClientOriginalName());
-            $destination = public_path('storage/inbound-products');
-            File::ensureDirectoryExists($destination, 0755, true);
-            $file->move($destination, $filename);
-            $data['product_photo'] = 'inbound-products/' . $filename;
+        // Handle file upload with better error handling
+        $photoPath = null;
+        try {
+            if ($request->hasFile('product_photo')) {
+                $file = $request->file('product_photo');
+                $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_.-]/', '_', $file->getClientOriginalName());
+                $destination = public_path('storage/inbound-products');
+                
+                // Ensure directory exists with correct permissions
+                File::ensureDirectoryExists($destination, 0755, true);
+                
+                // Move file to destination
+                $file->move($destination, $filename);
+                $photoPath = 'inbound-products/' . $filename;
+                $data['product_photo'] = $photoPath;
+            }
+        } catch (\Exception $e) {
+            Log::error('Inbound product photo upload failed: ' . $e->getMessage(), [
+                'file_name' => $file->getClientOriginalName() ?? 'unknown',
+                'user_id' => auth()->id(),
+            ]);
+            return back()
+                ->withInput()
+                ->withErrors(['product_photo' => 'Gagal menyimpan foto produk: ' . $e->getMessage()]);
         }
 
-        $inboundItem = InboundItem::create($data);
+        // Save inbound item
+        try {
+            $inboundItem = InboundItem::create($data);
+        } catch (\Exception $e) {
+            // Clean up uploaded file if model creation fails
+            if ($photoPath && File::exists(public_path('storage/' . $photoPath))) {
+                try {
+                    File::delete(public_path('storage/' . $photoPath));
+                } catch (\Exception $deleteError) {
+                    Log::warning('Failed to delete uploaded photo during rollback: ' . $deleteError->getMessage());
+                }
+            }
+            
+            Log::error('Inbound item creation failed: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'data' => array_except($data, ['product_photo']),
+            ]);
+            return back()
+                ->withInput()
+                ->withErrors(['general' => 'Gagal menyimpan data barang masuk: ' . $e->getMessage()]);
+        }
 
         return redirect()
             ->route('admin.inbound-items.show', $inboundItem)
