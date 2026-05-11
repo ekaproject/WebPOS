@@ -62,7 +62,7 @@ class MobileTransactionController extends Controller
             $transaction = Transaction::create([
                 'total_amount'    => $total,
                 'paid_amount'     => $validated['paid_amount'],
-                'status'          => 'completed',
+                'status'          => 'paid',
                 'payment_method'  => $validated['payment_method'],
             ]);
 

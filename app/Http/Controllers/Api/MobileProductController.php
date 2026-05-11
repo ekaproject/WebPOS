@@ -46,6 +46,7 @@ class MobileProductController extends Controller
             'price'      => (int) $product->price,
             'stock'      => (int) $product->stock,
             'min_stock'  => (int) $product->min_stock,
+            'unit'       => $product->unit ?? 'pcs',
             'category'   => $product->category?->name,
             'image_url'  => $imagePath
                 ? asset('storage/' . $imagePath)
