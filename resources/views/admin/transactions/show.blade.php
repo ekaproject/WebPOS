@@ -82,6 +82,18 @@
                 @endif
             </dl>
         </div>
+
+        {{-- Bukti Pembayaran (Non Tunai) --}}
+        @if($transaction->payment_proof)
+        <div class="md:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-4">Bukti Pembayaran</h2>
+            <img
+                src="{{ Storage::disk('public')->url($transaction->payment_proof) }}"
+                alt="Bukti pembayaran"
+                class="max-h-72 rounded-xl border border-outline-variant/20 object-contain"
+            />
+        </div>
+        @endif
     </div>
 
     {{-- Items --}}
