@@ -118,6 +118,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('inbound-items/{inboundItem}', [InboundItemController::class, 'show'])->name('inbound-items.show');
     Route::post('inbound-items/{inboundItem}/qc', [InboundItemController::class, 'processQc'])->name('inbound-items.qc.process');
     Route::resource('master-products', MasterProductController::class)->except(['show']);
+    Route::delete('master-products/{masterProduct}/image', [MasterProductController::class, 'destroyImage'])->name('master-products.image.destroy');
     Route::get('master-products/search', [MasterProductController::class, 'search'])->name('master-products.search');
     Route::resource('satuan', SatuanController::class)->except(['show']);
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');

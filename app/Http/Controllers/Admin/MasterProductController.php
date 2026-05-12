@@ -8,6 +8,7 @@ use App\Models\MasterProduct;
 use App\Models\Satuan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class MasterProductController extends Controller
 {
@@ -126,6 +127,16 @@ class MasterProductController extends Controller
 
         return redirect()->route('admin.master-products.index')
             ->with('success', 'Master produk berhasil diperbarui.');
+    }
+
+    public function destroyImage(MasterProduct $masterProduct)
+    {
+        if ($masterProduct->image) {
+            Storage::disk('public')->delete($masterProduct->image);
+            $masterProduct->update(['image' => null]);
+        }
+
+        return back()->with('success', 'Gambar produk berhasil dihapus.');
     }
 
     public function destroy(MasterProduct $masterProduct)

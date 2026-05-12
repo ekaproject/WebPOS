@@ -13,7 +13,7 @@ use Illuminate\Validation\ValidationException;
 
 class InventoryWorkflowService
 {
-    public function processQc(InboundItem $inboundItem, int $goodQty, int $damagedQty, ?int $checkedBy = null): InboundItem
+    public function processQc(InboundItem $inboundItem, int $goodQty, int $damagedQty, ?string $note = null, ?int $checkedBy = null): InboundItem
     {
         if ($goodQty < 0 || $damagedQty < 0) {
             throw ValidationException::withMessages([
@@ -33,10 +33,11 @@ class InventoryWorkflowService
             ]);
         }
 
-        DB::transaction(function () use ($inboundItem, $goodQty, $damagedQty, $checkedBy) {
+        DB::transaction(function () use ($inboundItem, $goodQty, $damagedQty, $note, $checkedBy) {
             $inboundItem->qcItem()->create([
                 'good_qty' => $goodQty,
                 'damaged_qty' => $damagedQty,
+                'note' => $note,
                 'checked_at' => now(),
                 'checked_by' => $checkedBy,
             ]);

@@ -179,17 +179,6 @@
             </div>
 
             <div>
-                <label for="selling_price" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                    Harga Jual (Rp) <span class="text-error">*</span>
-                </label>
-                  <input type="number" step="0.01" id="selling_price" name="selling_price" value="{{ old('selling_price') }}" min="0" required
-                      class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('selling_price') border-error @enderror"
-                      placeholder="Terisi dari master produk"/>
-                  <p class="text-[11px] text-on-surface-variant mt-1">Diambil otomatis dari master produk, boleh disesuaikan bila perlu.</p>
-                @error('selling_price')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
                 <label for="inbound_date" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
                     Tanggal Masuk <span class="text-error">*</span>
                 </label>
@@ -205,14 +194,6 @@
                 <input type="date" id="expired_date" name="expired_date" value="{{ old('expired_date') }}" required
                       class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('expired_date') border-error @enderror"/>
                 @error('expired_date')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div class="md:col-span-2">
-                <label for="note" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Catatan</label>
-                <textarea id="note" name="note" rows="2"
-                          class="w-full min-h-[100px] px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('note') border-error @enderror"
-                          placeholder="Opsional">{{ old('note') }}</textarea>
-                @error('note')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
         </div>
 
@@ -233,31 +214,6 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const purchasePriceInput = document.getElementById('purchase_price');
-    const sellingPriceInput = document.getElementById('selling_price');
-
-    if (!purchasePriceInput || !sellingPriceInput) {
-        return;
-    }
-
-    const syncSellingMin = () => {
-        const purchaseValue = parseFloat(purchasePriceInput.value);
-        const minValue = Number.isFinite(purchaseValue) ? purchaseValue : 0;
-
-        sellingPriceInput.min = String(minValue);
-
-        const sellingValue = parseFloat(sellingPriceInput.value);
-        if (Number.isFinite(sellingValue) && sellingValue < minValue) {
-            sellingPriceInput.setCustomValidity('Harga jual tidak boleh lebih rendah dari harga beli.');
-        } else {
-            sellingPriceInput.setCustomValidity('');
-        }
-    };
-
-    purchasePriceInput.addEventListener('input', syncSellingMin);
-    sellingPriceInput.addEventListener('input', syncSellingMin);
-
-    syncSellingMin();
     const searchEndpoint = @json(route('admin.inbound-items.master-products.search'));
     const detailTemplate = @json(route('admin.inbound-items.master-products.detail', ['masterProduct' => '__ID__']));
 
@@ -273,6 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewImage = document.getElementById('master_product_photo_preview');
     const previewPlaceholder = document.getElementById('master_product_photo_placeholder');
 
+    const purchasePriceInput = document.getElementById('purchase_price');
     const isiInput = document.getElementById('isi_per_kemasan');
     const jumlahInput = document.getElementById('jumlah_kemasan');
     const quantityInput = document.getElementById('quantity_inbound');
@@ -340,13 +297,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (satuanInput) satuanInput.value = product.satuan || '';
         if (kategoriDisplay) kategoriDisplay.value = product.category_name || '';
         if (hargaMasterDisplay) hargaMasterDisplay.value = formatRupiah(product.price) || '-';
-
-        if (sellingPriceInput && (sellingPriceInput.value === '' || sellingPriceInput.dataset.autofill !== 'manual')) {
-            if (product.price !== null && product.price !== undefined) {
-                sellingPriceInput.value = product.price;
-                sellingPriceInput.dataset.autofill = 'master';
-            }
-        }
 
         if (previewImage && previewPlaceholder) {
             if (product.image_url) {
@@ -487,12 +437,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (hiddenProductId && hiddenProductId.value) {
         fetchProductDetail(hiddenProductId.value);
-    }
-
-    if (sellingPriceInput) {
-        sellingPriceInput.addEventListener('input', function () {
-            this.dataset.autofill = 'manual';
-        });
     }
 
     if (isiInput) isiInput.addEventListener('input', syncQuantity);

@@ -85,16 +85,23 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="good_qty" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Barang Baik</label>
-                    <input type="number" id="good_qty" name="good_qty" min="0" value="{{ old('good_qty', $inboundItem->quantity_inbound) }}" required
+                    <input type="number" id="good_qty" name="good_qty" min="0" max="{{ $inboundItem->quantity_inbound }}" value="{{ old('good_qty', $inboundItem->quantity_inbound) }}" required
                            class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('good_qty') border-error @enderror"/>
                     @error('good_qty')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label for="damaged_qty" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Barang Rusak</label>
-                    <input type="number" id="damaged_qty" name="damaged_qty" min="0" value="{{ old('damaged_qty', 0) }}" required
+                    <input type="number" id="damaged_qty" name="damaged_qty" min="0" max="{{ $inboundItem->quantity_inbound }}" value="{{ old('damaged_qty', 0) }}" required
                            class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('damaged_qty') border-error @enderror"/>
                     @error('damaged_qty')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
+            </div>
+            <div>
+                <label for="note" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Catatan</label>
+                <textarea id="note" name="note" rows="2"
+                          class="w-full min-h-[96px] px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('note') border-error @enderror"
+                          placeholder="Opsional">{{ old('note') }}</textarea>
+                @error('note')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             @error('qc_status')<p class="text-error text-xs">{{ $message }}</p>@enderror
 
@@ -121,6 +128,12 @@
                     <span class="text-on-surface-variant">Waktu Cek</span>
                     <span class="font-semibold">{{ optional($inboundItem->qcItem?->checked_at)->format('d M Y H:i') }}</span>
                 </div>
+                @if($inboundItem->qcItem?->note)
+                    <div class="pt-2 border-t border-outline-variant/10">
+                        <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Catatan QC</p>
+                        <p class="text-on-surface">{{ $inboundItem->qcItem->note }}</p>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -149,4 +162,65 @@
     </div>
     @endif
 </div>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const totalQty = {{ (int) $inboundItem->quantity_inbound }};
+    const goodInput = document.getElementById('good_qty');
+    const damagedInput = document.getElementById('damaged_qty');
+    const form = goodInput ? goodInput.form : null;
+
+    if (!goodInput || !damagedInput) {
+        return;
+    }
+
+    const parseQty = (value) => {
+        const parsed = Number.parseInt(String(value), 10);
+        return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+    };
+
+    const updateValidity = () => {
+        const good = parseQty(goodInput.value);
+        const damaged = parseQty(damagedInput.value);
+        const isValid = good + damaged === totalQty && good <= totalQty && damaged <= totalQty;
+        const message = isValid ? '' : 'Barang baik + barang rusak harus sama dengan jumlah barang masuk.';
+
+        goodInput.setCustomValidity(message);
+        damagedInput.setCustomValidity(message);
+        return isValid;
+    };
+
+    const syncFromGood = () => {
+        const good = Math.min(totalQty, parseQty(goodInput.value));
+        goodInput.value = String(good);
+        damagedInput.value = String(totalQty - good);
+        updateValidity();
+    };
+
+    const syncFromDamaged = () => {
+        const damaged = Math.min(totalQty, parseQty(damagedInput.value));
+        damagedInput.value = String(damaged);
+        goodInput.value = String(totalQty - damaged);
+        updateValidity();
+    };
+
+    goodInput.addEventListener('input', syncFromGood);
+    damagedInput.addEventListener('input', syncFromDamaged);
+
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            if (!updateValidity()) {
+                event.preventDefault();
+            }
+        });
+    }
+
+    if (goodInput.value !== '' && damagedInput.value !== '') {
+        updateValidity();
+    } else {
+        syncFromGood();
+    }
+});
+</script>
+@endpush
 @endsection

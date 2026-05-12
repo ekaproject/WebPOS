@@ -94,14 +94,11 @@ class InboundItemController extends Controller
             'jumlah_kemasan'    => 'required|integer|min:1',
             'product_photo'     => 'nullable|image|max:2048',
             'purchase_price'    => 'required|numeric|min:0',
-            'selling_price'     => 'required|numeric|gte:purchase_price',
             'inbound_date'      => 'required|date',
             'expired_date'      => 'required|date|after_or_equal:inbound_date',
-            'note'              => 'nullable|string|max:1000',
         ], [
             'master_product_id.required' => 'Produk harus dipilih dari daftar master produk.',
             'master_product_id.exists'   => 'Produk yang dipilih tidak valid.',
-            'selling_price.gte'          => 'Harga jual tidak boleh lebih rendah dari harga beli.',
         ]);
 
         // Auto-fill dari master product
@@ -110,6 +107,7 @@ class InboundItemController extends Controller
         $data['ukuran_produk'] = $masterProduct->ukuran;
         $data['category_id'] = $masterProduct->category_id;
         $data['quantity_inbound'] = (int) $data['jumlah_kemasan'] * (int) $data['isi_per_kemasan'];
+        $data['selling_price'] = (float) ($masterProduct->price ?? 0);
 
         // Handle file upload with better error handling
         $photoPath = null;
@@ -176,12 +174,14 @@ class InboundItemController extends Controller
         $data = $request->validate([
             'good_qty' => 'required|integer|min:0',
             'damaged_qty' => 'required|integer|min:0',
+            'note' => 'nullable|string|max:1000',
         ]);
 
         $workflowService->processQc(
             inboundItem: $inboundItem,
             goodQty: (int) $data['good_qty'],
             damagedQty: (int) $data['damaged_qty'],
+            note: $data['note'] ?? null,
             checkedBy: auth()->id()
         );
 

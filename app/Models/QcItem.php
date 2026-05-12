@@ -13,6 +13,7 @@ class QcItem extends Model
         'inbound_item_id',
         'good_qty',
         'damaged_qty',
+        'note',
         'checked_at',
         'checked_by',
     ];
