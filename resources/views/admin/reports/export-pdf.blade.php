@@ -27,6 +27,7 @@
         <tr>
             <td><strong>Total Data</strong><br>{{ number_format($summary['count']) }}</td>
             <td><strong>Pendapatan Lunas</strong><br>Rp {{ number_format($summary['revenue'], 0, ',', '.') }}</td>
+            <td><strong>Total Laba</strong><br>Rp {{ number_format($summary['profit'], 0, ',', '.') }}</td>
             <td><strong>Pending</strong><br>{{ number_format($summary['pending']) }}</td>
             <td><strong>Dibatalkan</strong><br>{{ number_format($summary['cancelled']) }}</td>
         </tr>
@@ -38,22 +39,28 @@
                 <th>Invoice</th>
                 <th>Kasir</th>
                 <th>Total</th>
+                <th>Laba</th>
                 <th>Status</th>
                 <th>Tanggal</th>
             </tr>
         </thead>
         <tbody>
             @forelse($transactions as $transaction)
+                @php
+                    $costOfGoods = $transaction->items->sum(fn ($item) => ($item->product->purchase_price ?? 0) * $item->quantity);
+                    $laba = $transaction->total_amount - $costOfGoods;
+                @endphp
                 <tr>
                     <td>{{ $transaction->invoice_number }}</td>
                     <td>{{ $transaction->user->name ?? '-' }}</td>
                     <td>Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
+                    <td>{{ $transaction->status === 'paid' ? 'Rp '.number_format($laba, 0, ',', '.') : '-' }}</td>
                     <td>{{ $transaction->status }}</td>
                     <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="text-align:center;">Tidak ada data.</td>
+                    <td colspan="6" style="text-align:center;">Tidak ada data.</td>
                 </tr>
             @endforelse
         </tbody>

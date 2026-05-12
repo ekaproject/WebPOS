@@ -56,7 +56,7 @@
         @error('status')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
     </form>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
         <div class="bg-primary text-on-primary rounded-2xl p-5">
             <p class="text-xs opacity-80 uppercase tracking-wider">Total Data</p>
             <p class="text-3xl font-extrabold mt-1">{{ number_format($summary['count']) }}</p>
@@ -64,6 +64,10 @@
         <div class="bg-secondary text-on-secondary rounded-2xl p-5">
             <p class="text-xs opacity-80 uppercase tracking-wider">Pendapatan Lunas</p>
             <p class="text-2xl font-extrabold mt-1">Rp {{ number_format($summary['revenue'], 0, ',', '.') }}</p>
+        </div>
+        <div class="rounded-2xl p-5" style="background: linear-gradient(135deg, #16a34a, #15803d); color:#fff;">
+            <p class="text-xs opacity-80 uppercase tracking-wider">Total Laba</p>
+            <p class="text-2xl font-extrabold mt-1">Rp {{ number_format($summary['profit'], 0, ',', '.') }}</p>
         </div>
         <div class="bg-tertiary-fixed rounded-2xl p-5">
             <p class="text-xs text-on-tertiary-fixed/80 uppercase tracking-wider">Pending</p>
@@ -87,16 +91,28 @@
                         <th class="px-6 py-3">Invoice</th>
                         <th class="px-6 py-3">Kasir</th>
                         <th class="px-6 py-3">Total</th>
+                        <th class="px-6 py-3">Laba</th>
                         <th class="px-6 py-3">Status</th>
                         <th class="px-6 py-3">Tanggal</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
                     @forelse($transactions as $transaction)
+                    @php
+                        $costOfGoods = $transaction->items->sum(fn ($item) => ($item->product->purchase_price ?? 0) * $item->quantity);
+                        $laba = $transaction->total_amount - $costOfGoods;
+                    @endphp
                     <tr>
                         <td class="px-6 py-4 font-mono text-xs text-primary font-bold">{{ $transaction->invoice_number }}</td>
                         <td class="px-6 py-4">{{ $transaction->user->name ?? '-' }}</td>
                         <td class="px-6 py-4 font-bold">Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 font-bold {{ $laba >= 0 ? 'text-green-600' : 'text-red-500' }}">
+                            @if($transaction->status === 'paid')
+                                Rp {{ number_format($laba, 0, ',', '.') }}
+                            @else
+                                <span class="text-on-surface-variant font-normal text-xs">-</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold {{ $transaction->status === 'paid' ? 'bg-secondary-container text-on-secondary-container' : ($transaction->status === 'pending' ? 'bg-tertiary-fixed text-tertiary' : 'bg-error-container text-error') }}">
                                 {{ $transaction->status }}
@@ -106,7 +122,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">Tidak ada data sesuai filter.</td>
+                        <td colspan="6" class="px-6 py-10 text-center text-on-surface-variant">Tidak ada data sesuai filter.</td>
                     </tr>
                     @endforelse
                 </tbody>

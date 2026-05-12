@@ -82,7 +82,7 @@ class ReportController extends Controller
 
     private function buildQuery(array $filters)
     {
-        $query = Transaction::query()->with('user');
+        $query = Transaction::query()->with(['user', 'items.product']);
 
         if (!empty($filters['from'])) {
             $query->whereDate('created_at', '>=', $filters['from']);
@@ -101,11 +101,19 @@ class ReportController extends Controller
 
     private function summary($query): array
     {
+        $paidTransactions = (clone $query)->where('status', 'paid')->with('items.product')->get();
+
+        $totalProfit = $paidTransactions->sum(function ($tx) {
+            $costOfGoods = $tx->items->sum(fn ($item) => ($item->product->purchase_price ?? 0) * $item->quantity);
+            return $tx->total_amount - $costOfGoods;
+        });
+
         return [
-            'count' => (clone $query)->count(),
-            'revenue' => (float) (clone $query)->where('status', 'paid')->sum('total_amount'),
-            'pending' => (clone $query)->where('status', 'pending')->count(),
+            'count'     => (clone $query)->count(),
+            'revenue'   => (float) (clone $query)->where('status', 'paid')->sum('total_amount'),
+            'pending'   => (clone $query)->where('status', 'pending')->count(),
             'cancelled' => (clone $query)->where('status', 'cancelled')->count(),
+            'profit'    => (float) $totalProfit,
         ];
     }
 }
