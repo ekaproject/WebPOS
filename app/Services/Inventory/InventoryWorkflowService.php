@@ -143,7 +143,6 @@ class InventoryWorkflowService
             'purchase_price' => $purchasePrice ?? 0,
             'price' => $sellingPrice ?? 0,
             'stock' => $stock,
-            'min_stock' => 0,
             'unit' => filled($unit) ? $unit : 'pcs',
             'description' => 'Batch otomatis dari proses QC/retur distributor.',
             'is_active' => true,
