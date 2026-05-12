@@ -43,6 +43,7 @@ class MobileProductController extends Controller
             'id'         => $product->id,
             'name'       => $product->name,
             'sku'        => $product->sku,
+            'barcode'    => $product->masterProduct?->barcode,
             'price'      => (int) $product->price,
             'stock'      => (int) $product->stock,
             'min_stock'  => (int) $product->min_stock,

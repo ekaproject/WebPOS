@@ -9,6 +9,7 @@ use App\Models\TransactionItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class MobileTransactionController extends Controller
@@ -32,6 +33,7 @@ class MobileTransactionController extends Controller
             'items.*.qty'    => 'required|integer|min:1',
             'paid_amount'    => 'required|numeric|min:0',
             'payment_method' => 'required|in:cash,transfer,qris',
+            'payment_proof'  => 'nullable|file|image|max:5120',
         ]);
 
         DB::beginTransaction();
@@ -59,11 +61,17 @@ class MobileTransactionController extends Controller
                 ];
             }
 
+            $proofPath = null;
+            if ($request->hasFile('payment_proof')) {
+                $proofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+            }
+
             $transaction = Transaction::create([
                 'total_amount'    => $total,
                 'paid_amount'     => $validated['paid_amount'],
                 'status'          => 'paid',
                 'payment_method'  => $validated['payment_method'],
+                'payment_proof'   => $proofPath,
             ]);
 
             foreach ($itemsData as $item) {
@@ -105,6 +113,9 @@ class MobileTransactionController extends Controller
             'paid_amount'    => (int) $t->paid_amount,
             'change'         => (int) ($t->paid_amount - $t->total_amount),
             'payment_method' => $t->payment_method,
+            'payment_proof_url' => $t->payment_proof
+                ? Storage::disk('public')->url($t->payment_proof)
+                : null,
             'status'         => $t->status,
             'created_at'     => $t->created_at?->format('d/m/Y H:i'),
             'items'          => $t->items->map(fn(TransactionItem $i) => [

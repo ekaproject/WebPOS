@@ -11,7 +11,7 @@ class Transaction extends Model
 
     protected $fillable = [
         'invoice_number', 'user_id', 'total_amount',
-        'paid_amount', 'status', 'payment_method', 'cashier_terminal',
+        'paid_amount', 'status', 'payment_method', 'cashier_terminal', 'payment_proof',
     ];
 
     protected static function boot()
