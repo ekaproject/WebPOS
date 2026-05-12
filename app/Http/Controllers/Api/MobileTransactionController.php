@@ -27,6 +27,14 @@ class MobileTransactionController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        // Multipart form mengirim 'items' sebagai JSON string — decode dulu
+        if ($request->isMethod('POST') && is_string($request->input('items'))) {
+            $decoded = json_decode($request->input('items'), true);
+            if (is_array($decoded)) {
+                $request->merge(['items' => $decoded]);
+            }
+        }
+
         $validated = $request->validate([
             'items'          => 'required|array|min:1',
             'items.*.id'     => 'required|integer|exists:products,id',
