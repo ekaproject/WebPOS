@@ -101,6 +101,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('categories/{category}/next-sku', [ProductController::class, 'nextSku'])->name('categories.next-sku');
     Route::resource('products', ProductController::class);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
+    Route::get('transactions/export/pdf', [TransactionController::class, 'exportPdf'])->name('transactions.export.pdf');
+    Route::get('transactions/export/excel', [TransactionController::class, 'exportExcel'])->name('transactions.export.excel');
     Route::resource('categories', AdminCategoryController::class)->except(['show']);
     Route::resource('promos', AdminPromoController::class)->except(['show']);
     Route::get('distributors', [DistributorController::class, 'index'])->name('distributors.index');
