@@ -51,8 +51,6 @@ class AuthController extends Controller
 
         // 6. Proses login (HANYA SEKALI - ini penting)
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
-
-            // regenerate session untuk keamanan
             $request->session()->regenerate();
 
             // ambil user login
@@ -77,6 +75,12 @@ class AuthController extends Controller
             // fallback untuk role lain: kirim ke halaman utama
             return redirect()->intended(route('home'));
         }
+
+        // DEBUG: Login failed
+        session()->put('debug_login_status', 'ATTEMPT_FAILED');
+        session()->put('debug_email_attempt', $request->email);
+        session()->put('debug_user_exists', $user ? true : false);
+        session()->save();
 
         // 7. Jika login gagal → tambah attempt
         $user->login_attempt += 1;

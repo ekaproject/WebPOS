@@ -98,6 +98,7 @@ Route::middleware('auth')->get('/api/dashboard/stock-alert', DashboardStockAlert
 // Admin routes (auth protected)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/chart-data', [DashboardController::class, 'chartData'])->name('dashboard.chart-data');
     Route::get('categories/{category}/next-sku', [ProductController::class, 'nextSku'])->name('categories.next-sku');
     Route::resource('products', ProductController::class);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
@@ -138,4 +139,31 @@ Route::middleware(['auth', 'role:distributor'])->prefix('distributor')->name('di
     Route::get('returns', [DistributorReturnController::class, 'index'])->name('returns.index');
     Route::post('returns/{id}/confirm', [DistributorReturnController::class, 'confirm'])->name('returns.confirm');
     Route::post('returns/{id}/complete', [DistributorReturnController::class, 'complete'])->name('returns.complete');
+});
+
+Route::get('/debug-session', function () {
+    return response()->json([
+        'environment' => app()->environment(),
+        'session_driver' => config('session.driver'),
+        'session_domain' => config('session.domain'),
+        'session_secure' => config('session.secure'),
+        'is_secure_request' => request()->isSecure(),
+        'app_url' => config('app.url'),
+        'sessions_dir_exists' => file_exists(storage_path('framework/sessions')),
+        'sessions_writable' => is_writable(storage_path('framework/sessions')),
+        'session_id' => session()->getId(),
+        'auth_check' => auth()->check(),
+        'cookies_received' => array_keys(request()->cookies->all()),
+    ]);
+});
+
+Route::get('/test-login', function () {
+    return response()->json([
+        'message' => 'Halaman ini untuk mengecek apakah sesi Anda benar-benar tersimpan setelah login.',
+        'is_logged_in' => auth()->check(),
+        'user' => auth()->user(),
+        'session_id' => session()->getId(),
+        'session_data' => session()->all(),
+        'cookies_received' => request()->cookies->all(),
+    ]);
 });
