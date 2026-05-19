@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Milon\Barcode\Facades\DNS1DFacade as DNS1D;
 
 class Product extends Model
 {
@@ -14,7 +15,7 @@ class Product extends Model
     ];
 
     protected $fillable = [
-        'name', 'sku', 'category_id', 'master_product_id', 'distributor_id', 'purchase_price', 'price', 'stock',
+        'name', 'sku', 'kode_produk', 'category_id', 'master_product_id', 'distributor_id', 'purchase_price', 'price', 'stock',
         'min_stock', 'unit', 'description', 'image', 'is_active', 'source_type', 'source_reference_id',
         'inbound_item_id', 'return_id', 'expires_at',
     ];
@@ -30,7 +31,36 @@ class Product extends Model
         'status_stock',
         'stock_display',
         'image_url',
+        'barcode_svg',
+        'barcode_value',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(function (Product $product) {
+            if (filled($product->kode_produk)) {
+                return;
+            }
+
+            if (filled($product->master_product_id)) {
+                $masterBarcode = $product->masterProduct()->value('barcode');
+
+                if (filled($masterBarcode)) {
+                    // Stok produk mengikuti barcode master agar konsisten di seluruh alur.
+                    $product->forceFill([
+                        'kode_produk' => $masterBarcode,
+                    ])->saveQuietly();
+
+                    return;
+                }
+            }
+
+            // Fallback untuk produk yang dibuat manual tanpa master product.
+            $product->forceFill([
+                'kode_produk' => sprintf('PRD-%06d', $product->id),
+            ])->saveQuietly();
+        });
+    }
 
     public function category()
     {
@@ -94,6 +124,56 @@ class Product extends Model
         }
 
         return null;
+    }
+
+    public function getBarcodeSvgAttribute(): string
+    {
+        $barcodeValue = $this->barcode_value;
+
+        if (! filled($barcodeValue)) {
+            return '';
+        }
+
+        return DNS1D::getBarcodeSVG($barcodeValue, 'C128', 2, 60);
+    }
+
+    public function getBarcodeValueAttribute(): string
+    {
+        return $this->masterProduct?->barcode ?: $this->getRawOriginal('kode_produk') ?: $this->getRawOriginal('sku') ?: '-';
+    }
+
+    public function getNameAttribute($value): string
+    {
+        if (filled($this->master_product_id)) {
+            if ($this->relationLoaded('masterProduct') && $this->masterProduct) {
+                return $this->masterProduct->name;
+            }
+
+            $masterName = $this->masterProduct()->value('name');
+
+            if (filled($masterName)) {
+                return $masterName;
+            }
+        }
+
+        return (string) $value;
+    }
+
+    public function getKodeProdukAttribute($value): string
+    {
+        if (filled($this->master_product_id)) {
+            if ($this->relationLoaded('masterProduct') && $this->masterProduct) {
+                return $this->masterProduct->barcode_value;
+            }
+
+            $masterBarcode = $this->masterProduct()->value('barcode');
+
+            if (filled($masterBarcode)) {
+                return $masterBarcode;
+            }
+        }
+
+        return (string) $value;
     }
 
     public function isLowStock(): bool

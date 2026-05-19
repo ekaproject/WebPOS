@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Throwable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -51,9 +52,16 @@ class AppServiceProvider extends ServiceProvider
         ];
 
         $settings = $defaults;
-        if (! $this->app->runningInConsole() && Schema::hasTable('app_settings')) {
-            $stored = AppSetting::whereIn('key', array_keys($defaults))->pluck('value', 'key')->toArray();
-            $settings = array_merge($defaults, array_filter($stored, static fn ($value) => $value !== null && $value !== ''));
+
+        if (! $this->app->runningInConsole()) {
+            try {
+                if (Schema::hasTable('app_settings')) {
+                    $stored = AppSetting::whereIn('key', array_keys($defaults))->pluck('value', 'key')->toArray();
+                    $settings = array_merge($defaults, array_filter($stored, static fn ($value) => $value !== null && $value !== ''));
+                }
+            } catch (Throwable $e) {
+                // Keep defaults when the database is unavailable during bootstrap.
+            }
         }
 
         View::share('publicSettings', $settings);

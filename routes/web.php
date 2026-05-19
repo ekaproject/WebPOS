@@ -100,6 +100,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/chart-data', [DashboardController::class, 'chartData'])->name('dashboard.chart-data');
     Route::get('categories/{category}/next-sku', [ProductController::class, 'nextSku'])->name('categories.next-sku');
+    Route::get('products/{product}/barcode', [ProductController::class, 'barcode'])->name('products.barcode');
     Route::resource('products', ProductController::class);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
     Route::get('transactions/export/pdf', [TransactionController::class, 'exportPdf'])->name('transactions.export.pdf');
@@ -121,6 +122,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('inbound-items/{inboundItem}', [InboundItemController::class, 'show'])->name('inbound-items.show');
     Route::post('inbound-items/{inboundItem}/qc', [InboundItemController::class, 'processQc'])->name('inbound-items.qc.process');
     Route::resource('master-products', MasterProductController::class)->except(['show']);
+    Route::get('master-products/{masterProduct}/barcode', [MasterProductController::class, 'barcode'])->name('master-products.barcode');
     Route::delete('master-products/{masterProduct}/image', [MasterProductController::class, 'destroyImage'])->name('master-products.image.destroy');
     Route::get('master-products/search', [MasterProductController::class, 'search'])->name('master-products.search');
     Route::resource('satuan', SatuanController::class)->except(['show']);

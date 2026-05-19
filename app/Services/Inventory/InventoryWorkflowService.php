@@ -67,6 +67,7 @@ class InventoryWorkflowService
                     sellingPrice: (float) $inboundItem->selling_price,
                     unit: $inboundItem->masterProduct?->unit,
                     masterProductId: $inboundItem->master_product_id,
+                    masterProduct: $inboundItem->masterProduct,
                 );
             }
 
@@ -112,7 +113,8 @@ class InventoryWorkflowService
                 purchasePrice: (float) ($inventoryReturn->inboundItem?->purchase_price ?? 0),
                 sellingPrice: (float) ($inventoryReturn->inboundItem?->selling_price ?? 0),
                 unit: $inventoryReturn->inboundItem?->masterProduct?->unit,
-                masterProductId: $inventoryReturn->inboundItem?->master_product_id
+                masterProductId: $inventoryReturn->inboundItem?->master_product_id,
+                masterProduct: $inventoryReturn->inboundItem?->masterProduct,
             );
         });
 
@@ -134,10 +136,20 @@ class InventoryWorkflowService
         ?float $sellingPrice = 0,
         ?string $unit = null,
         ?int $masterProductId = null,
+        ?MasterProduct $masterProduct = null,
     ): Product {
+        $resolvedMasterProduct = $masterProduct;
+
+        if (! $resolvedMasterProduct && $masterProductId) {
+            $resolvedMasterProduct = MasterProduct::find($masterProductId);
+        }
+
+        $resolvedName = $resolvedMasterProduct?->name ?: $name;
+        $resolvedBarcode = $resolvedMasterProduct?->barcode_value ?: $resolvedMasterProduct?->barcode ?: null;
+
         $payload = [
-            'name' => $name,
-            'sku' => $this->generateBatchSku($name),
+            'name' => $resolvedName,
+            'sku' => $this->generateBatchSku($resolvedName),
             'category_id' => $categoryId ?? $this->resolveFallbackCategoryId(),
             'master_product_id' => $masterProductId,
             'distributor_id' => $distributorId,
@@ -152,18 +164,18 @@ class InventoryWorkflowService
             'inbound_item_id' => $inboundItemId,
             'return_id' => $returnId,
             'expires_at' => $expiredDate,
+            'kode_produk' => $resolvedBarcode,
         ];
 
         $fallbackImage = $productImage;
 
-        if ($masterProductId) {
-            $mp = MasterProduct::find($masterProductId);
-            if ($mp && filled($mp->unit)) {
-                $payload['unit'] = $mp->unit;
+        if ($resolvedMasterProduct) {
+            if (filled($resolvedMasterProduct->unit)) {
+                $payload['unit'] = $resolvedMasterProduct->unit;
             }
 
-            if (!filled($fallbackImage) && $mp && filled($mp->image)) {
-                $fallbackImage = $mp->image;
+            if (!filled($fallbackImage) && filled($resolvedMasterProduct->image)) {
+                $fallbackImage = $resolvedMasterProduct->image;
             }
         }
 

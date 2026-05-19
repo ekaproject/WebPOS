@@ -17,6 +17,12 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
+            <a href="{{ route('admin.products.barcode', $product) }}"
+               target="_blank"
+               class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm text-on-secondary-container bg-secondary-container hover:opacity-90 transition-colors">
+                <span class="material-symbols-outlined text-xl">barcode</span>
+                Cetak Barcode
+            </a>
             <a href="{{ route('admin.products.edit', $product) }}"
                class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm text-primary bg-primary-fixed hover:bg-primary hover:text-on-primary transition-colors">
                 <span class="material-symbols-outlined text-xl">edit</span>
@@ -68,6 +74,10 @@
                         <p class="font-mono font-medium text-on-surface">{{ $product->sku }}</p>
                     </div>
                     <div class="bg-surface-container-low rounded-xl p-4">
+                        <p class="text-xs text-on-surface-variant font-bold uppercase tracking-wider mb-1">Kode Produk</p>
+                        <p class="font-mono font-medium text-on-surface">{{ $product->kode_produk ?: '-' }}</p>
+                    </div>
+                    <div class="bg-surface-container-low rounded-xl p-4">
                         <p class="text-xs text-on-surface-variant font-bold uppercase tracking-wider mb-1">Kategori</p>
                         <p class="font-medium text-on-surface">{{ $product->category->name ?? '-' }}</p>
                     </div>
@@ -108,6 +118,17 @@
                         <p class="text-xs text-on-surface-variant font-bold uppercase tracking-wider mb-1">Kadaluarsa</p>
                         <p class="font-medium text-on-surface">{{ $product->expires_at ? $product->expires_at->format('d M Y') : 'Tidak ada' }}</p>
                     </div>
+                </div>
+            </div>
+
+            <hr class="border-outline-variant/20">
+
+            <div>
+                <h3 class="text-lg font-bold text-on-surface mb-4">Barcode Produk</h3>
+                <div class="bg-surface-container-low rounded-xl p-4 inline-flex flex-col items-center gap-2">
+                    {!! $product->barcode_svg !!}
+                    <p class="font-mono text-sm text-on-surface-variant">{{ $product->barcode_value }}</p>
+                    <p class="text-xs text-on-surface-variant">Barcode dihasilkan otomatis dari kode produk.</p>
                 </div>
             </div>
 

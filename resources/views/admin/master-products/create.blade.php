@@ -61,7 +61,8 @@
                 </label>
                 <input type="text" id="barcode" name="barcode" value="{{ old('barcode') }}"
                        class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-white text-sm focus:ring-2 focus:ring-primary @error('barcode') border-error @enderror"
-                       placeholder="Opsional, isi jika ada barcode"/>
+                      placeholder="Otomatis jika dikosongkan"/>
+                  <p class="text-[11px] text-on-surface-variant mt-1">Kosongkan jika ingin barcode dibuat otomatis dari ID produk.</p>
                 @error('barcode')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
 
                 <label for="unit" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5 mt-4">

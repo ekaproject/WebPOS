@@ -26,7 +26,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen text-slate-900 flex items-center justify-center p-5 md:p-6" style="font-family: 'Inter', 'Poppins', sans-serif; background: radial-gradient(circle at top, #fee2e2 0, #ffffff 42%, #fff 100%);">
+ <body class="min-h-screen text-slate-900 flex items-center justify-center p-5 md:p-6" style="font-family: 'Inter', 'Poppins', sans-serif; background: radial-gradient(circle at top, #fee2e2 0, #ffffff 42%, #fff 100%);">
 
 <main class="w-full max-w-[400px]">
     <section class="rounded-xl border border-red-200 bg-white p-8 md:p-10 shadow-lg login-fade-in" style="box-shadow: 0 24px 60px rgba(220, 38, 38, 0.12);">

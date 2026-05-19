@@ -70,7 +70,6 @@ class ReportController extends Controller
         $validated = $request->validate([
             'from' => 'nullable|date',
             'to' => 'nullable|date|after_or_equal:from',
-            'status' => 'nullable|in:paid,pending,cancelled',
         ]);
 
         return [

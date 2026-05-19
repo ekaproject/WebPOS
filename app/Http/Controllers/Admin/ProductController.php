@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -62,14 +63,17 @@ class ProductController extends Controller
             'image'          => 'nullable|image|max:2048',
         ]);
 
-        $data['is_active'] = $request->boolean('is_active');
-        $data['sku'] = $this->generateNextSku((int) $data['category_id']);
+        DB::transaction(function () use ($request, $data) {
+            $data['is_active'] = $request->boolean('is_active');
+            $data['sku'] = $this->generateNextSku((int) $data['category_id']);
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
-        }
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->file('image')->store('products', 'public');
+            }
 
-        Product::create($data);
+            // Model event akan mengisi kode_produk otomatis setelah record dibuat.
+            Product::create($data);
+        });
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Produk berhasil ditambahkan.');
@@ -78,6 +82,11 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return view('admin.products.show', compact('product'));
+    }
+
+    public function barcode(Product $product)
+    {
+        return view('admin.products.barcode', compact('product'));
     }
 
     public function edit(Product $product)

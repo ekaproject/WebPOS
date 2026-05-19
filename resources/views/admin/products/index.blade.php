@@ -60,6 +60,8 @@
                 <thead>
                     <tr class="bg-surface-container-low text-left text-xs font-bold uppercase tracking-wider text-on-surface-variant">
                         <th class="px-6 py-3">Produk</th>
+                        <th class="px-6 py-3">Kode Produk</th>
+                        <th class="px-6 py-3">Barcode</th>
                         <th class="px-6 py-3">Kategori</th>
                         <th class="px-6 py-3">Distributor</th>
                         <th class="px-6 py-3">Sumber</th>
@@ -90,6 +92,21 @@
                                     <p class="text-xs text-on-surface-variant">{{ $product->unit }}</p>
                                 </div>
                             </div>
+                        </td>
+                        <td class="px-6 py-4 font-mono text-xs text-on-surface-variant">
+                            {{ $product->kode_produk ?: '-' }}
+                        </td>
+                        <td class="px-6 py-4 align-middle">
+                            @if($product->barcode_svg)
+                                <div class="space-y-1">
+                                    <div class="inline-flex items-center justify-center rounded-lg bg-white p-2 border border-outline-variant/20">
+                                        {!! $product->barcode_svg !!}
+                                    </div>
+                                    <p class="text-[11px] font-mono text-on-surface-variant">{{ $product->barcode_value }}</p>
+                                </div>
+                            @else
+                                <span class="text-xs text-on-surface-variant">Belum ada kode</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                             <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-primary-fixed text-primary">
@@ -125,17 +142,26 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-center border-l border-outline-variant/10">
-                            <a href="{{ route('admin.products.show', $product) }}"
-                               class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-primary bg-primary-fixed hover:bg-primary hover:text-on-primary transition-colors"
-                               title="Lihat Detail Produk">
-                                <span class="material-symbols-outlined text-sm">visibility</span>
-                                Detail
-                            </a>
+                            <div class="flex flex-wrap items-center justify-center gap-2">
+                                <a href="{{ route('admin.products.show', $product) }}"
+                                   class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-primary bg-primary-fixed hover:bg-primary hover:text-on-primary transition-colors"
+                                   title="Lihat Detail Produk">
+                                    <span class="material-symbols-outlined text-sm">visibility</span>
+                                    Detail
+                                </a>
+                                <a href="{{ route('admin.products.barcode', $product) }}"
+                                   target="_blank"
+                                   class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-on-secondary-container bg-secondary-container hover:opacity-90 transition-colors"
+                                   title="Cetak Barcode">
+                                    <span class="material-symbols-outlined text-sm">barcode</span>
+                                    Cetak
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="10" class="px-6 py-16 text-center">
+                        <td colspan="12" class="px-6 py-16 text-center">
                             <span class="material-symbols-outlined text-5xl text-on-surface-variant/30 block mb-3">inventory_2</span>
                             <p class="text-on-surface-variant font-medium">Belum ada produk aktif hasil QC</p>
                             <a href="{{ route('admin.inbound-items.create') }}" class="text-primary font-bold text-sm mt-2 inline-block hover:underline">+ Input Barang Masuk</a>

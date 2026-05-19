@@ -54,6 +54,7 @@
                 <thead>
                     <tr class="bg-surface-container-low text-left text-xs font-bold uppercase tracking-wider text-on-surface-variant">
                         <th class="px-6 py-3">Produk</th>
+                        <th class="px-6 py-3">Barcode</th>
                         <th class="px-6 py-3">Kategori</th>
                         <th class="px-6 py-3">Ukuran</th>
                         <th class="px-6 py-3">Satuan</th>
@@ -81,6 +82,20 @@
                                         <p class="text-xs text-on-surface-variant line-clamp-1">{{ $mp->description }}</p>
                                     @endif
                                 </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 align-top">
+                            <div class="space-y-2">
+                                <div class="inline-flex items-center justify-center rounded-lg bg-white p-2 border border-outline-variant/20">
+                                    {!! $mp->barcode_svg !!}
+                                </div>
+                                <p class="text-[11px] font-mono text-on-surface-variant">{{ $mp->barcode_value }}</p>
+                                <a href="{{ route('admin.master-products.barcode', $mp) }}"
+                                   target="_blank"
+                                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-on-secondary-container bg-secondary-container hover:opacity-90 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">print</span>
+                                    Print
+                                </a>
                             </div>
                         </td>
                         <td class="px-6 py-4 text-on-surface-variant">{{ $mp->category->name ?? '-' }}</td>
@@ -128,7 +143,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant">
+                        <td colspan="7" class="px-6 py-12 text-center text-on-surface-variant">
                             <span class="material-symbols-outlined text-4xl block mb-2 opacity-40">inventory_2</span>
                             <p class="font-medium">Belum ada master produk</p>
                             <p class="text-xs mt-1">Tambahkan produk agar bisa digunakan saat input barang masuk</p>

@@ -9,6 +9,7 @@ use App\Models\Satuan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class MasterProductController extends Controller
 {
@@ -63,17 +64,20 @@ class MasterProductController extends Controller
                 ->withErrors(['name' => 'Produk dengan nama, ukuran, dan satuan yang sama sudah terdaftar di master produk.']);
         }
 
-        $data['is_active'] = $request->boolean('is_active', true);
-        $data['price'] = $request->input('price');
+        DB::transaction(function () use ($request, $data) {
+            $data['is_active'] = $request->boolean('is_active', true);
+            $data['price'] = $request->input('price');
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_.-]/', '_', $file->getClientOriginalName());
-            $file->move(public_path('storage/master-products'), $filename);
-            $data['image'] = 'master-products/' . $filename;
-        }
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_.-]/', '_', $file->getClientOriginalName());
+                $file->move(public_path('storage/master-products'), $filename);
+                $data['image'] = 'master-products/' . $filename;
+            }
 
-        MasterProduct::create($data);
+            // barcode diisi otomatis oleh model event setelah record disimpan.
+            MasterProduct::create($data);
+        });
 
         return redirect()->route('admin.master-products.index')
             ->with('success', 'Master produk berhasil ditambahkan.');
@@ -85,6 +89,11 @@ class MasterProductController extends Controller
         $satuanList  = Satuan::orderBy('nama')->get();
 
         return view('admin.master-products.edit', compact('masterProduct', 'categories', 'satuanList'));
+    }
+
+    public function barcode(MasterProduct $masterProduct)
+    {
+        return view('admin.master-products.barcode', compact('masterProduct'));
     }
 
     public function update(Request $request, MasterProduct $masterProduct)
@@ -115,6 +124,10 @@ class MasterProductController extends Controller
 
         $data['is_active'] = $request->boolean('is_active', true);
         $data['price'] = $request->input('price');
+
+        if (blank($data['barcode'] ?? null)) {
+            $data['barcode'] = $masterProduct->barcode ?: sprintf('MPD-%06d', $masterProduct->id);
+        }
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
