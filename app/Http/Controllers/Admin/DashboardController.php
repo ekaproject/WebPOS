@@ -27,13 +27,12 @@ class DashboardController extends Controller
             ->orderBy('name')
             ->take(5)
             ->get();
-        $expiringProducts  = Product::whereNotNull('expires_at')
-            ->whereDate('expires_at', '<=', now()->addDays(3))
-            ->count();
-        $recentTransactions = Transaction::with('user')
-            ->latest()
-            ->take(5)
-            ->get();
+        $expiringProducts = Product::whereNotNull('expires_at')
+    ->whereBetween('expires_at', [
+        now(),
+        now()->addMonths(2)
+    ])
+    ->count();
         $topProducts = Product::query()
             ->withSum([
                 'transactionItems as total_sold' => function ($query) {
@@ -48,7 +47,7 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', compact(
             'totalRevenue', 'digitalSales', 'lowStockProducts',
-            'lowStockProductList', 'expiringProducts', 'recentTransactions', 'topProducts'
+            'lowStockProductList', 'expiringProducts', 'topProducts'
         ));
     }
 

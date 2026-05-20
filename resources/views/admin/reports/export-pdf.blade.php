@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>Laporan Transaksi</title>
+    <title>Laporan Transaksi Lunas</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #1f2937; }
         h1 { margin: 0 0 8px; font-size: 20px; }
@@ -16,11 +16,10 @@
     </style>
 </head>
 <body>
-    <h1>Laporan Transaksi</h1>
+    <h1>Laporan Transaksi Lunas</h1>
     <div class="meta">
         <p>Dibuat: {{ $generatedAt->format('d M Y H:i') }}</p>
         <p>Filter Tanggal: {{ $filters['from'] ?: '-' }} s/d {{ $filters['to'] ?: '-' }}</p>
-        <p>Filter Status: {{ $filters['status'] ?: 'semua' }}</p>
     </div>
 
     <table class="summary">
@@ -28,8 +27,6 @@
             <td><strong>Total Data</strong><br>{{ number_format($summary['count']) }}</td>
             <td><strong>Pendapatan Lunas</strong><br>Rp {{ number_format($summary['revenue'], 0, ',', '.') }}</td>
             <td><strong>Total Laba</strong><br>Rp {{ number_format($summary['profit'], 0, ',', '.') }}</td>
-            <td><strong>Pending</strong><br>{{ number_format($summary['pending']) }}</td>
-            <td><strong>Dibatalkan</strong><br>{{ number_format($summary['cancelled']) }}</td>
         </tr>
     </table>
 
@@ -40,7 +37,6 @@
                 <th>Kasir</th>
                 <th>Total</th>
                 <th>Laba</th>
-                <th>Status</th>
                 <th>Tanggal</th>
             </tr>
         </thead>
@@ -54,13 +50,12 @@
                     <td>{{ $transaction->invoice_number }}</td>
                     <td>{{ $transaction->user->name ?? '-' }}</td>
                     <td>Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
-                    <td>{{ $transaction->status === 'paid' ? 'Rp '.number_format($laba, 0, ',', '.') : '-' }}</td>
-                    <td>{{ $transaction->status }}</td>
+                    <td>Rp {{ number_format($laba, 0, ',', '.') }}</td>
                     <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" style="text-align:center;">Tidak ada data.</td>
+                    <td colspan="5" style="text-align:center;">Tidak ada data.</td>
                 </tr>
             @endforelse
         </tbody>

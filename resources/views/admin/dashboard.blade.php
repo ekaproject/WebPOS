@@ -120,166 +120,104 @@
         </div>
     </div>
 
-    {{-- Main Grid: Charts + Top Products --}}
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+    @php($topProductsTop3 = $topProducts->take(3))
+    {{-- Transaction Chart + Top Products --}}
+                            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+                                <div class="xl:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-5 border-b border-outline-variant/10 gap-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">show_chart</span>
+                                            <div>
+                                                <h2 class="text-lg font-headline font-extrabold text-on-surface">Grafik Transaksi</h2>
+                                                <p class="text-xs text-on-surface-variant mt-0.5">Pendapatan dari transaksi lunas</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-surface-container-low rounded-xl p-1" id="chartFilterGroup">
+                                            <button type="button" data-filter="today"
+                                                class="chart-filter-btn px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200">
+                                                Hari Ini
+                                            </button>
+                                            <button type="button" data-filter="week"
+                                                class="chart-filter-btn px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200">
+                                                Minggu Ini
+                                            </button>
+                                            <button type="button" data-filter="month"
+                                                class="chart-filter-btn px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 active">
+                                                Bulan Ini
+                                            </button>
+                                        </div>
+                                    </div>
 
-        {{-- Recent Transactions Table (2/3) --}}
-        <div class="xl:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
-            <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/10">
-                <h2 class="text-lg font-headline font-extrabold text-on-surface">Transaksi Terakhir</h2>
-                <a href="{{ route('admin.transactions.index') }}" class="text-xs font-bold text-primary hover:underline">Lihat Semua</a>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="bg-surface-container-low text-left text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                            <th class="px-6 py-3">Invoice</th>
-                            <th class="px-6 py-3">Kasir</th>
-                            <th class="px-6 py-3">Total</th>
-                            <th class="px-6 py-3">Status</th>
-                            <th class="px-6 py-3">Waktu</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-outline-variant/10">
-                        @forelse($recentTransactions as $tx)
-                        <tr class="hover:bg-surface-container-low/50 transition-colors">
-                            <td class="px-6 py-4 font-mono text-xs text-primary font-bold">
-                                <a href="{{ route('admin.transactions.show', $tx) }}" class="hover:underline">{{ $tx->invoice_number }}</a>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-on-primary text-xs font-bold">
-                                        {{ strtoupper(substr($tx->user->name ?? '?', 0, 1)) }}
-                                    </span>
-                                    <span class="font-medium">{{ $tx->user->name ?? 'N/A' }}</span>
+                                    <div class="p-6">
+                                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6" id="chartSummary">
+                                            <div class="bg-surface-container-low rounded-xl p-4">
+                                                <p class="text-xs text-on-surface-variant font-medium">Total Pendapatan</p>
+                                                <p class="text-xl font-headline font-extrabold text-primary mt-1" id="chartTotalRevenue">Rp 0</p>
+                                            </div>
+                                            <div class="bg-surface-container-low rounded-xl p-4">
+                                                <p class="text-xs text-on-surface-variant font-medium">Jumlah Transaksi</p>
+                                                <p class="text-xl font-headline font-extrabold text-on-surface mt-1" id="chartTotalCount">0</p>
+                                            </div>
+                                            <div class="bg-surface-container-low rounded-xl p-4 hidden sm:block">
+                                                <p class="text-xs text-on-surface-variant font-medium">Rata-rata / Hari</p>
+                                                <p class="text-xl font-headline font-extrabold text-secondary mt-1" id="chartAverage">Rp 0</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="relative" style="height: 380px;">
+                                            <canvas id="transactionLineChart" class="w-full h-full"></canvas>
+                                            <div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-surface-container-lowest/80 rounded-xl" style="display:none;">
+                                                <div class="flex items-center gap-3">
+                                                    <svg class="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                    <span class="text-sm font-semibold text-on-surface-variant">Memuat data...</span>
+                                                </div>
+                                            </div>
+                                            <div id="chartEmpty" class="absolute inset-0 flex flex-col items-center justify-center" style="display:none;">
+                                                <span class="material-symbols-outlined text-on-surface-variant/40 text-5xl mb-3">insert_chart</span>
+                                                <p class="text-sm text-on-surface-variant font-medium">Belum ada transaksi pada periode ini</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 font-bold text-on-surface">Rp {{ number_format($tx->total_amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4">
-                                @if($tx->status === 'paid')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">Lunas</span>
-                                @elseif($tx->status === 'pending')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-tertiary-fixed text-tertiary">Pending</span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-error-container text-error">Batal</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-xs text-on-surface-variant">{{ $tx->created_at->format('d M, H:i') }}</td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-on-surface-variant text-sm">Belum ada transaksi</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-        {{-- Top Products (1/3) --}}
-        @php($topProductsTop3 = $topProducts->take(3))
-        <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
-            <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/10">
-                <h2 class="text-lg font-headline font-extrabold text-on-surface">Produk Terlaris</h2>
-                <a href="{{ route('admin.products.index') }}" class="text-xs font-bold text-primary hover:underline">Semua Produk</a>
-            </div>
-            <div class="px-6 pt-5">
-                <div class="rounded-2xl border border-outline-variant/10 bg-surface-container-low p-4">
-                    <div style="height: 260px;">
-                        <canvas id="topProductsChart" class="w-full h-full"></canvas>
-                    </div>
-                    <p id="topProductsChartFallback" class="hidden text-sm text-on-surface-variant text-center py-12">Chart produk terlaris tidak tersedia</p>
-                </div>
-            </div>
-            <div class="divide-y divide-outline-variant/10">
-                @forelse($topProductsTop3 as $index => $product)
-                <div class="flex items-center gap-4 px-6 py-4 hover:bg-surface-container-low/50 transition-colors">
-                    <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold font-headline
-                        {{ $index === 0 ? 'bg-primary text-on-primary' : ($index === 1 ? 'bg-secondary text-on-secondary' : 'bg-surface-container text-on-surface-variant') }}">
-                        {{ $index + 1 }}
-                    </span>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-on-surface truncate">{{ $product->name }}</p>
-                        <p class="text-xs text-on-surface-variant">{{ $product->category->name ?? '-' }}</p>
-                    </div>
-                    <div class="text-right shrink-0">
-                        <p class="text-xs font-bold text-primary">{{ $product->total_sold ?? 0 }} terjual</p>
-                        <p class="text-xs text-on-surface-variant">Stok: {{ $product->stock }}</p>
-                    </div>
-                </div>
-                @empty
-                <div class="px-6 py-12 text-center text-on-surface-variant text-sm">Belum ada data penjualan</div>
-                @endforelse
-            </div>
-        </div>
-    </div>
-
-    {{-- Transaction Line Chart --}}
-    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-5 border-b border-outline-variant/10 gap-4">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">show_chart</span>
-                <div>
-                    <h2 class="text-lg font-headline font-extrabold text-on-surface">Grafik Transaksi</h2>
-                    <p class="text-xs text-on-surface-variant mt-0.5">Pendapatan dari transaksi lunas</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-1.5 bg-surface-container-low rounded-xl p-1" id="chartFilterGroup">
-                <button type="button" data-filter="today"
-                    class="chart-filter-btn px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200">
-                    Hari Ini
-                </button>
-                <button type="button" data-filter="week"
-                    class="chart-filter-btn px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200">
-                    Minggu Ini
-                </button>
-                <button type="button" data-filter="month"
-                    class="chart-filter-btn px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 active">
-                    Bulan Ini
-                </button>
-            </div>
-        </div>
-
-        <div class="p-6">
-            {{-- Chart Summary Stats --}}
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6" id="chartSummary">
-                <div class="bg-surface-container-low rounded-xl p-4">
-                    <p class="text-xs text-on-surface-variant font-medium">Total Pendapatan</p>
-                    <p class="text-xl font-headline font-extrabold text-primary mt-1" id="chartTotalRevenue">Rp 0</p>
-                </div>
-                <div class="bg-surface-container-low rounded-xl p-4">
-                    <p class="text-xs text-on-surface-variant font-medium">Jumlah Transaksi</p>
-                    <p class="text-xl font-headline font-extrabold text-on-surface mt-1" id="chartTotalCount">0</p>
-                </div>
-                <div class="bg-surface-container-low rounded-xl p-4 hidden sm:block">
-                    <p class="text-xs text-on-surface-variant font-medium">Rata-rata / Hari</p>
-                    <p class="text-xl font-headline font-extrabold text-secondary mt-1" id="chartAverage">Rp 0</p>
-                </div>
-            </div>
-
-            {{-- Chart Canvas --}}
-            <div class="relative" style="height: 340px;">
-                <canvas id="transactionLineChart" class="w-full h-full"></canvas>
-                {{-- Loading overlay --}}
-                <div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-surface-container-lowest/80 rounded-xl" style="display:none;">
-                    <div class="flex items-center gap-3">
-                        <svg class="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span class="text-sm font-semibold text-on-surface-variant">Memuat data...</span>
-                    </div>
-                </div>
-                {{-- Empty state --}}
-                <div id="chartEmpty" class="absolute inset-0 flex flex-col items-center justify-center" style="display:none;">
-                    <span class="material-symbols-outlined text-on-surface-variant/40 text-5xl mb-3">insert_chart</span>
-                    <p class="text-sm text-on-surface-variant font-medium">Belum ada transaksi pada periode ini</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
+                                <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
+                                    <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/10">
+                                        <h2 class="text-lg font-headline font-extrabold text-on-surface">Produk Terlaris</h2>
+                                        <a href="{{ route('admin.products.index') }}" class="text-xs font-bold text-primary hover:underline">Semua Produk</a>
+                                    </div>
+                                    <div class="px-6 pt-5">
+                                        <div class="rounded-2xl border border-outline-variant/10 bg-surface-container-low p-4">
+                                            <div style="height: 260px;">
+                                                <canvas id="topProductsChart" class="w-full h-full"></canvas>
+                                            </div>
+                                            <p id="topProductsChartFallback" class="hidden text-sm text-on-surface-variant text-center py-12">Chart produk terlaris tidak tersedia</p>
+                                        </div>
+                                    </div>
+                                    <div class="divide-y divide-outline-variant/10">
+                                        @forelse($topProductsTop3 as $index => $product)
+                                        <div class="flex items-center gap-4 px-6 py-4 hover:bg-surface-container-low/50 transition-colors">
+                                            <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold font-headline
+                                                {{ $index === 0 ? 'bg-primary text-on-primary' : ($index === 1 ? 'bg-secondary text-on-secondary' : 'bg-surface-container text-on-surface-variant') }}">
+                                                {{ $index + 1 }}
+                                            </span>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-bold text-on-surface truncate">{{ $product->name }}</p>
+                                                <p class="text-xs text-on-surface-variant">{{ $product->category->name ?? '-' }}</p>
+                                            </div>
+                                            <div class="text-right shrink-0">
+                                                <p class="text-xs font-bold text-primary">{{ $product->total_sold ?? 0 }} terjual</p>
+                                                <p class="text-xs text-on-surface-variant">Stok: {{ $product->stock }}</p>
+                                            </div>
+                                        </div>
+                                        @empty
+                                        <div class="px-6 py-12 text-center text-on-surface-variant text-sm">Belum ada data penjualan</div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -301,6 +239,16 @@ document.addEventListener('DOMContentLoaded', function () {
             @endforeach
         ];
 
+        const productColors = [
+            '#0052cc',
+            '#16a34a',
+            '#f59e0b',
+            '#ef4444',
+            '#8b5cf6',
+        ];
+
+        const barColors = labels.map((_, index) => productColors[index % productColors.length]);
+
         if (labels.length && data.length) {
             if (fallback) fallback.classList.add('hidden');
 
@@ -311,8 +259,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     datasets: [{
                         label: 'Jumlah Terjual',
                         data: data,
-                        backgroundColor: '#0052cc',
-                        borderColor: '#0052cc',
+                        backgroundColor: barColors,
+                        borderColor: barColors,
                         borderWidth: 1,
                         borderRadius: 8,
                         barThickness: 22,
