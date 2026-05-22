@@ -28,11 +28,29 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
         $expiringProducts = Product::whereNotNull('expires_at')
-    ->whereBetween('expires_at', [
-        now(),
-        now()->addMonths(2)
-    ])
-    ->count();
+            ->whereBetween('expires_at', [now(), now()->addDays(60)])
+            ->count();
+
+        $nearExpiryProductList = Product::whereNotNull('expires_at')
+            ->whereBetween('expires_at', [now(), now()->addDays(60)])
+            ->orderBy('expires_at')
+            ->select(['id', 'name', 'stock', 'expires_at', 'category_id'])
+            ->with('category:id,name')
+            ->get()
+            ->map(function ($product) {
+                $daysLeft = (int) now()->startOfDay()->diffInDays(
+                    \Carbon\Carbon::parse($product->expires_at)->startOfDay(), false
+                );
+                return [
+                    'id'         => $product->id,
+                    'name'       => $product->name,
+                    'stock'      => $product->stock,
+                    'category'   => $product->category?->name ?? '-',
+                    'expires_at' => \Carbon\Carbon::parse($product->expires_at)->format('d/m/Y'),
+                    'days_left'  => $daysLeft,
+                ];
+            });
+
         $topProducts = Product::query()
             ->withSum([
                 'transactionItems as total_sold' => function ($query) {
@@ -47,7 +65,7 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', compact(
             'totalRevenue', 'digitalSales', 'lowStockProducts',
-            'lowStockProductList', 'expiringProducts', 'topProducts'
+            'lowStockProductList', 'expiringProducts', 'nearExpiryProductList', 'topProducts'
         ));
     }
 

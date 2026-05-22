@@ -36,12 +36,13 @@ class MobileTransactionController extends Controller
         }
 
         $validated = $request->validate([
-            'items'          => 'required|array|min:1',
-            'items.*.id'     => 'required|integer|exists:products,id',
-            'items.*.qty'    => 'required|integer|min:1',
-            'paid_amount'    => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,transfer,qris',
-            'payment_proof'  => 'nullable|file|image|max:5120',
+            'items'           => 'required|array|min:1',
+            'items.*.id'      => 'required|integer|exists:products,id',
+            'items.*.qty'     => 'required|integer|min:1',
+            'paid_amount'     => 'required|numeric|min:0',
+            'payment_method'  => 'required|in:cash,transfer,qris',
+            'payment_proof'   => 'nullable|file|image|max:5120',
+            'discount_amount' => 'nullable|numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -74,9 +75,13 @@ class MobileTransactionController extends Controller
                 $proofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
             }
 
+            $discountAmount = (float) ($validated['discount_amount'] ?? 0);
+            $finalTotal     = max(0, $total - $discountAmount);
+
             $transaction = Transaction::create([
-                'total_amount'    => $total,
+                'total_amount'    => $finalTotal,
                 'paid_amount'     => $validated['paid_amount'],
+                'discount_amount' => $discountAmount,
                 'status'          => 'paid',
                 'payment_method'  => $validated['payment_method'],
                 'payment_proof'   => $proofPath,
@@ -100,6 +105,7 @@ class MobileTransactionController extends Controller
                 'message'        => 'Transaksi berhasil',
                 'invoice_number' => $transaction->invoice_number,
                 'total_amount'   => (int) $transaction->total_amount,
+                'discount_amount'=> (int) $transaction->discount_amount,
                 'paid_amount'    => (int) $transaction->paid_amount,
                 'change'         => (int) ($transaction->paid_amount - $transaction->total_amount),
             ], 201);
