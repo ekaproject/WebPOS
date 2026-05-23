@@ -23,7 +23,7 @@
         @if($inboundItem->product_photo)
             <div class="mb-4">
                 <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">Foto Produk</p>
-                <img src="{{ asset('storage/'.$inboundItem->product_photo) }}" alt="{{ $inboundItem->product_name }}"
+                <img src="{{ storage_img($inboundItem->product_photo) }}" alt="{{ $inboundItem->product_name }}"
                      class="w-40 h-40 rounded-xl border border-outline-variant/20 object-cover" />
             </div>
         @endif

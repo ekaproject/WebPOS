@@ -31,7 +31,7 @@
             foreach (($promos ?? collect()) as $promo) {
                 if (!empty($promo->image)) {
                     $heroPromoSlides[] = [
-                        'image' => asset('storage/'.$promo->image),
+                        'image' => storage_img($promo->image),
                         'title' => $promo->title,
                         'badge' => $promo->discount_label,
                     ];
@@ -344,7 +344,7 @@
                             <div id="location-gallery-track" class="flex h-full transition-transform duration-700 ease-out transition-opacity duration-300 opacity-100">
                                 @forelse($filledLocationPhotos as $index => $photo)
                                     <div class="w-full h-full flex-none">
-                                        <img src="{{ asset('storage/'.$photo) }}" alt="Foto Toko {{ $index + 1 }}" class="w-full h-full object-cover"/>
+                                        <img src="{{ storage_img($photo) }}" alt="Foto Toko {{ $index + 1 }}" class="w-full h-full object-cover"/>
                                     </div>
                                 @empty
                                     <div class="w-full h-full flex-none">

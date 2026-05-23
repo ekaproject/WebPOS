@@ -130,7 +130,7 @@
                     <div class="space-y-2">
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Foto 1</label>
                         @if(!empty($settings['landing_location_photo_1']))
-                            <img src="{{ asset('storage/'.$settings['landing_location_photo_1']) }}" alt="Foto Lokasi 1" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
+                            <img src="{{ storage_img($settings['landing_location_photo_1']) }}" alt="Foto Lokasi 1" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
                         @endif
                         <input data-settings-field type="file" name="landing_location_photo_1" accept="image/*" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-whiteest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
                         @error('landing_location_photo_1')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
@@ -139,7 +139,7 @@
                     <div class="space-y-2">
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Foto 2</label>
                         @if(!empty($settings['landing_location_photo_2']))
-                            <img src="{{ asset('storage/'.$settings['landing_location_photo_2']) }}" alt="Foto Lokasi 2" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
+                            <img src="{{ storage_img($settings['landing_location_photo_2']) }}" alt="Foto Lokasi 2" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
                         @endif
                         <input data-settings-field type="file" name="landing_location_photo_2" accept="image/*" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-whiteest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
                         @error('landing_location_photo_2')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror
@@ -148,7 +148,7 @@
                     <div class="space-y-2">
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Foto 3</label>
                         @if(!empty($settings['landing_location_photo_3']))
-                            <img src="{{ asset('storage/'.$settings['landing_location_photo_3']) }}" alt="Foto Lokasi 3" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
+                            <img src="{{ storage_img($settings['landing_location_photo_3']) }}" alt="Foto Lokasi 3" class="w-full h-32 object-cover rounded-xl border border-outline-variant/40">
                         @endif
                         <input data-settings-field type="file" name="landing_location_photo_3" accept="image/*" class="w-full h-11 px-4 py-2.5 leading-normal rounded-xl border border-outline-variant/30 bg-whiteest text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-primary"/>
                         @error('landing_location_photo_3')<p class="text-error text-xs mt-1">{{ $message }}</p>@enderror

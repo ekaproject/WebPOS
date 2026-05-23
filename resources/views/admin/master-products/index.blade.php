@@ -68,14 +68,8 @@
                     <tr class="hover:bg-surface-container-low/50 transition-colors">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                @if($mp->image)
-                                    <img src="{{ asset('storage/' . $mp->image) }}" alt="{{ $mp->name }}"
+                                <img src="{{ storage_img($mp->image) }}" alt="{{ $mp->name }}"
                                          class="w-10 h-10 rounded-xl object-cover border border-outline-variant/20">
-                                @else
-                                    <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center">
-                                        <span class="material-symbols-outlined text-primary text-xl">inventory_2</span>
-                                    </div>
-                                @endif
                                 <div>
                                     <p class="font-bold">{{ $mp->name }}</p>
                                     @if($mp->description)
