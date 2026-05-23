@@ -7,13 +7,15 @@ use App\Models\Category;
 use App\Models\Promo;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class MobileProductController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $today = now()->toDateString();
+        $includeZeroStock = $request->boolean('all', false);
 
         $activePromos = Promo::where('is_active', true)
             ->where('start_date', '<=', $today)
@@ -30,10 +32,14 @@ class MobileProductController extends Controller
             ->whereNotNull('category_id')
             ->groupBy('category_id')->map->first();
 
-        $products = Product::with(['category', 'masterProduct'])
-            ->where('is_active', true)
-            ->where('stock', '>', 0)
-            ->get()
+        $query = Product::with(['category', 'masterProduct'])
+            ->where('is_active', true);
+
+        if (! $includeZeroStock) {
+            $query->where('stock', '>', 0);
+        }
+
+        $products = $query->get()
             ->map(fn(Product $p) => $this->formatProduct($p, $promoByProduct, $promoByCategory));
 
         return response()->json(['data' => $products]);
