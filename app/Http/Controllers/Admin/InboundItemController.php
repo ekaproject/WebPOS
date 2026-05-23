@@ -42,7 +42,7 @@ class InboundItemController extends Controller
             'category_id' => $masterProduct->category_id,
             'category_name' => $masterProduct->category?->name,
             'price' => $masterProduct->price !== null ? (float) $masterProduct->price : null,
-            'image_url' => $masterProduct->image ? asset('storage/' . $masterProduct->image) : null,
+            'image_url' => $masterProduct->image && file_exists(public_path('storage/' . $masterProduct->image)) ? asset('storage/' . $masterProduct->image) : null,
         ]);
     }
 

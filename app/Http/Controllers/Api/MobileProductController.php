@@ -97,7 +97,7 @@ class MobileProductController extends Controller
             'ukuran'     => $product->masterProduct?->ukuran,
             'satuan'     => $product->masterProduct?->satuan?->singkatan,
             'category'   => $product->category?->name,
-            'image_url'  => $imagePath
+            'image_url'  => ($imagePath && file_exists(public_path('storage/' . $imagePath)))
                 ? asset('storage/' . $imagePath)
                 : null,
             'expires_at' => $product->expires_at?->format('d/m/Y'),

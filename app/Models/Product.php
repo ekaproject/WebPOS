@@ -113,13 +113,13 @@ class Product extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        if (filled($this->image)) {
+        if (filled($this->image) && file_exists(public_path('storage/' . $this->image))) {
             return asset('storage/' . $this->image);
         }
 
         $masterImage = $this->masterProduct?->image;
 
-        if (filled($masterImage)) {
+        if (filled($masterImage) && file_exists(public_path('storage/' . $masterImage))) {
             return asset('storage/' . $masterImage);
         }
 
