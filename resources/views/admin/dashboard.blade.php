@@ -120,7 +120,7 @@
         </div>
     </div>
 
-    @php($topProductsTop3 = $topProducts->take(3))
+    <?php $topProductsTop3 = $topProducts->take(3); ?>
     {{-- Transaction Chart + Top Products --}}
                             <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
                                 <div class="xl:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
