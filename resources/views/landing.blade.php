@@ -314,22 +314,25 @@
                     <div class="rounded-[20px] overflow-hidden bg-surface-container-low border border-white/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
                          style="box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);">
                         <iframe
-                            title="Lokasi Ils mart"
-                            src="https://www.openstreetmap.org/export/embed.html?bbox=106.8025%2C-6.2200%2C106.8235%2C-6.2020&layer=mapnik&marker=-6.2113%2C106.8130"
-                            class="w-full h-[320px] md:h-[380px]"
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+    title="Lokasi Toko"
+    src="https://maps.google.com/maps?q=-7.462657919504991, 112.70656713945037&z=15&output=embed"
+    class="w-full h-[320px] md:h-[380px]"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+</iframe>
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
                         <span class="inline-flex items-center gap-2 bg-white/40 px-4 py-2 rounded-full border border-white/40 text-sm text-on-surface">
                             <span class="material-symbols-outlined text-primary">location_on</span>
                             {{ $publicSettings['store_address'] }}
                         </span>
-                        <a href="https://www.openstreetmap.org/?mlat=-6.2113&mlon=106.8130#map=16/-6.2113/106.8130" target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center gap-1 px-4 py-2 rounded-full text-sm font-semibold text-primary bg-white/40 hover:bg-primary hover:text-on-primary transition-all">
-                            Buka Peta
-                            <span class="material-symbols-outlined text-base">open_in_new</span>
-                        </a>
+                        <a href="https://www.google.com/maps?q=-7.462657919504991, 112.70656713945037"
+                         target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1 px-4 py-2 rounded-full text-sm font-semibold text-primary bg-white/40 hover:bg-primary hover:text-on-primary transition-all">
+                                Buka Google Maps
+                                <span class="material-symbols-outlined text-base">open_in_new</span>
+                            </a>
                     </div>
                 </div>
 

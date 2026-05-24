@@ -61,14 +61,17 @@ class ProductController extends Controller
             'expires_at'     => 'nullable|date',
             'is_active'      => 'boolean',
             'image'          => 'nullable|image|max:2048',
+            'foto'           => 'nullable|image|max:2048',
         ]);
 
         DB::transaction(function () use ($request, $data) {
             $data['is_active'] = $request->boolean('is_active');
             $data['sku'] = $this->generateNextSku((int) $data['category_id']);
 
-            if ($request->hasFile('image')) {
-                $data['image'] = $request->file('image')->store('products', 'public');
+            $uploadedImage = $this->resolveImageUpload($request);
+
+            if ($uploadedImage) {
+                $data['image'] = $uploadedImage->store('products', 'public');
             }
 
             // Model event akan mengisi kode_produk otomatis setelah record dibuat.
@@ -110,18 +113,23 @@ class ProductController extends Controller
             'expires_at'     => 'nullable|date',
             'is_active'      => 'boolean',
             'image'          => 'nullable|image|max:2048',
+            'foto'           => 'nullable|image|max:2048',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
+        $oldImage = $product->image;
 
-        if ($request->hasFile('image')) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-            $data['image'] = $request->file('image')->store('products', 'public');
+        $uploadedImage = $this->resolveImageUpload($request);
+
+        if ($uploadedImage) {
+            $data['image'] = $uploadedImage->store('products', 'public');
         }
 
         $product->update($data);
+
+        if (isset($data['image']) && filled($oldImage) && $oldImage !== $data['image']) {
+            Storage::disk('public')->delete($oldImage);
+        }
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Produk berhasil diperbarui.');
@@ -173,6 +181,16 @@ class ProductController extends Controller
         return str_pad($prefix ?: 'PRD', 3, 'X');
     }
 
+    public function destroyImage(Product $product)
+    {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+            $product->update(['image' => null]);
+        }
+
+        return back()->with('success', 'Foto produk berhasil dihapus.');
+    }
+
     public function destroy(Product $product)
     {
         if ($product->image) {
@@ -182,5 +200,18 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Produk berhasil dihapus.');
+    }
+
+    private function resolveImageUpload(Request $request): ?\Illuminate\Http\UploadedFile
+    {
+        if ($request->hasFile('foto')) {
+            return $request->file('foto');
+        }
+
+        if ($request->hasFile('image')) {
+            return $request->file('image');
+        }
+
+        return null;
     }
 }

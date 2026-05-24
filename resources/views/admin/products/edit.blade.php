@@ -98,15 +98,27 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="image">Ganti Foto Produk</label>
+                <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="foto">Ganti Foto Produk</label>
                 @if($product->image_url)
-                    <div class="mb-2 flex items-center gap-2 text-xs text-on-surface-variant">
-                        <span class="material-symbols-outlined text-sm">image</span>
-                        Foto saat ini: <span class="font-mono">{{ $product->image }}</span>
+                    <div class="mb-3 rounded-xl border border-outline-variant/20 bg-surface-container-low p-3">
+                        <div class="flex items-start gap-3">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-20 w-20 rounded-lg object-cover border border-outline-variant/20">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Foto saat ini</p>
+                                <p class="mt-1 break-all text-xs font-mono text-on-surface-variant">{{ $product->image }}</p>
+                                <button type="button"
+                                        onclick="if (confirm('Hapus foto produk ini? Data produk tetap tersimpan.')) document.getElementById('delete-product-image-form').submit();"
+                                        class="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold text-error bg-error-container hover:opacity-90 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">delete</span>
+                                    Hapus Foto
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 @endif
-                  <input type="file" id="image" name="image" accept="image/*"
+                  <input type="file" id="foto" name="foto" accept="image/*"
                       class="w-full h-11 px-4 py-2.5 leading-normal text-sm text-on-surface-variant file:mr-4 file:rounded-full file:border-0 file:bg-primary-fixed file:px-4 file:py-2 file:text-sm file:font-bold file:text-primary hover:file:bg-primary hover:file:text-on-primary"/>
+                <p class="text-xs text-on-surface-variant mt-1">Unggah file baru untuk mengganti foto yang ada.</p>
             </div>
 
             <div class="flex items-center gap-3">
@@ -126,6 +138,11 @@
                 Batal
             </a>
         </div>
+    </form>
+
+    <form id="delete-product-image-form" action="{{ route('admin.products.image.destroy', $product) }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
     </form>
 
 </div>

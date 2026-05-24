@@ -101,6 +101,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard/chart-data', [DashboardController::class, 'chartData'])->name('dashboard.chart-data');
     Route::get('categories/{category}/next-sku', [ProductController::class, 'nextSku'])->name('categories.next-sku');
     Route::get('products/{product}/barcode', [ProductController::class, 'barcode'])->name('products.barcode');
+    Route::delete('products/{product}/image', [ProductController::class, 'destroyImage'])->name('products.image.destroy');
     Route::resource('products', ProductController::class);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
     Route::get('transactions/export/pdf', [TransactionController::class, 'exportPdf'])->name('transactions.export.pdf');
