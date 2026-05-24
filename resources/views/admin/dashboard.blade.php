@@ -111,7 +111,7 @@
             </div>
             <div>
                 <p class="text-3xl font-headline font-extrabold text-tertiary">{{ $expiringProducts }}</p>
-                <p class="text-xs mt-1 text-on-tertiary-fixed/70">Produk kadaluarsa dalam 3 hari</p>
+                <p class="text-xs mt-1 text-on-tertiary-fixed/70">Produk kadaluarsa dalam 2 bulan</p>
             </div>
             <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-tertiary text-base" style="font-variation-settings: 'FILL' 1;">nutrition</span>
@@ -120,7 +120,7 @@
         </div>
     </div>
 
-    @php($topProductsTop3 = $topProducts->take(3))
+    <?php $topProductsTop3 = $topProducts->take(3); ?>
     {{-- Transaction Chart + Top Products --}}
                             <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
                                 <div class="xl:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
@@ -494,4 +494,92 @@ document.addEventListener('DOMContentLoaded', function () {
         box-shadow: 0 2px 8px rgba(0, 82, 204, 0.25);
     }
 </style>
+
+{{-- Near Expiry Products Table --}}
+@if($nearExpiryProductList->count() > 0)
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-5 border-b border-outline-variant/10 gap-3">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-tertiary text-2xl" style="font-variation-settings: 'FILL' 1;">schedule</span>
+            <div>
+                <h2 class="text-lg font-headline font-extrabold text-on-surface">Produk Mendekati Kadaluarsa</h2>
+                <p class="text-xs text-on-surface-variant mt-0.5">Produk yang akan kadaluarsa dalam 60 hari ke depan</p>
+            </div>
+        </div>
+        <a href="{{ route('admin.promos.create') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs text-on-primary shrink-0"
+           style="background: linear-gradient(135deg, #003d9b 0%, #0052cc 100%);">
+            <span class="material-symbols-outlined text-sm">add</span>
+            Buat Promo Baru
+        </a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="bg-surface-container-low border-b border-outline-variant/10">
+                    <th class="text-left px-6 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Produk</th>
+                    <th class="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Kategori</th>
+                    <th class="text-center px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Stok</th>
+                    <th class="text-center px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Tgl Expired</th>
+                    <th class="text-center px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Sisa Hari</th>
+                    <th class="text-center px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Status</th>
+                    <th class="text-center px-4 py-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/10">
+                @foreach($nearExpiryProductList as $product)
+                @php
+                    $isKritis = $product['days_left'] <= 7;
+                    $isMendekati = !$isKritis && $product['days_left'] <= 30;
+                @endphp
+                <tr class="hover:bg-surface-container-low/50 transition-colors">
+                    <td class="px-6 py-4">
+                        <p class="font-semibold text-on-surface">{{ $product['name'] }}</p>
+                    </td>
+                    <td class="px-4 py-4 text-on-surface-variant text-xs">{{ $product['category'] }}</td>
+                    <td class="px-4 py-4 text-center">
+                        <span class="font-bold text-on-surface">{{ $product['stock'] }}</span>
+                    </td>
+                    <td class="px-4 py-4 text-center text-on-surface-variant text-xs font-medium">
+                        {{ $product['expires_at'] }}
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                        <span class="font-extrabold {{ $isKritis ? 'text-error' : 'text-tertiary' }}">
+                            {{ $product['days_left'] }} hari
+                        </span>
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                        @if($isKritis)
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-error text-on-error">
+                                <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">warning</span>
+                                Kritis
+                            </span>
+                        @elseif($isMendekati)
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-warning-container text-warning" style="background:#fff3cd;color:#92400e;">
+                                <span class="material-symbols-outlined text-xs">schedule</span>
+                                Mendekati
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-surface-container text-on-surface-variant">
+                                <span class="material-symbols-outlined text-xs">info</span>
+                                Perhatian
+                            </span>
+                        @endif
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                        <a href="{{ route('admin.promos.create', ['product_id' => $product['id']]) }}"
+                           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-on-primary transition-colors hover:opacity-90"
+                           style="background: linear-gradient(135deg, #003d9b 0%, #0052cc 100%);">
+                            <span class="material-symbols-outlined text-sm">local_offer</span>
+                            Buat Promo
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
+
 @endsection

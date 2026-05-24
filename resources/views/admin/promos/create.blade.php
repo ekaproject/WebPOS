@@ -6,8 +6,9 @@
 @php
     $defaultStartDate = now()->format('Y-m-d');
     $defaultEndDate = now()->addDays(7)->format('Y-m-d');
+    $prefillProductId = request('product_id', '');
     $oldProducts = old('products', [[
-        'product_id' => '',
+        'product_id' => $prefillProductId,
         'type' => 'fixed',
         'discount_value' => '',
         'start_date' => $defaultStartDate,

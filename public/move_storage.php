@@ -13,7 +13,7 @@ $newBase = $appRoot . '/public/storage';
 echo '<pre style="background:#111;color:#0f0;padding:20px;font-family:monospace;">';
 echo "=== MOVE STORAGE FILES ===\n\n";
 
-$dirs = ['inbound-products', 'landing-location', 'products'];
+$dirs = ['inbound-products', 'landing-location', 'products', 'master-products'];
 $totalMoved = 0;
 
 foreach ($dirs as $dir) {

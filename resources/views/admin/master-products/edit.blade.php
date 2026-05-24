@@ -96,7 +96,7 @@
                 </label>
                 @if($masterProduct->image)
                     <div class="mb-2 space-y-2">
-                        <img src="{{ asset('storage/' . $masterProduct->image) }}" alt="{{ $masterProduct->name }}"
+                        <img src="{{ storage_img($masterProduct->image) }}" alt="{{ $masterProduct->name }}"
                              class="w-20 h-20 rounded-xl object-cover border border-outline-variant/20">
                         <p class="text-[11px] text-on-surface-variant mt-1">Foto saat ini</p>
                         <form action="{{ route('admin.master-products.image.destroy', $masterProduct) }}" method="POST"

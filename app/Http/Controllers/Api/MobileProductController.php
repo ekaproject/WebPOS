@@ -4,18 +4,43 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Promo;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class MobileProductController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $products = Product::with(['category', 'masterProduct'])
-            ->where('is_active', true)
-            ->where('stock', '>', 0)
-            ->get()
-            ->map(fn(Product $p) => $this->formatProduct($p));
+        $today = now()->toDateString();
+        $includeZeroStock = $request->boolean('all', false);
+
+        $activePromos = Promo::where('is_active', true)
+            ->where('start_date', '<=', $today)
+            ->where('end_date', '>=', $today)
+            ->whereNull('voucher_code')
+            ->whereNull('min_purchase')
+            ->whereIn('type', ['percent', 'fixed'])
+            ->get();
+
+        // Product-specific promos take priority over category-wide promos
+        $promoByProduct  = $activePromos->whereNotNull('product_id')
+            ->groupBy('product_id')->map->first();
+        $promoByCategory = $activePromos->whereNull('product_id')
+            ->whereNotNull('category_id')
+            ->groupBy('category_id')->map->first();
+
+        $query = Product::with(['category', 'masterProduct'])
+            ->where('is_active', true);
+
+        if (! $includeZeroStock) {
+            $query->where('stock', '>', 0);
+        }
+
+        $products = $query->get()
+            ->map(fn(Product $p) => $this->formatProduct($p, $promoByProduct, $promoByCategory));
 
         return response()->json(['data' => $products]);
     }
@@ -34,10 +59,37 @@ class MobileProductController extends Controller
         return response()->json(['data' => $categories]);
     }
 
-    private function formatProduct(Product $product): array
+    private function formatProduct(Product $product, ?Collection $promoByProduct = null, ?Collection $promoByCategory = null): array
     {
-        // Prioritas gambar: 1) product.image, 2) masterProduct.image
         $imagePath = $product->image ?? $product->masterProduct?->image;
+
+        // Resolve active promo: product-specific first, then category-wide
+        $promo = null;
+        if ($promoByProduct?->has($product->id)) {
+            $promo = $promoByProduct->get($product->id);
+        } elseif ($product->category_id && $promoByCategory?->has($product->category_id)) {
+            $promo = $promoByCategory->get($product->category_id);
+        }
+
+        $promoData = null;
+        if ($promo) {
+            $value = (float) $promo->discount_value;
+            $price = (float) $product->price;
+            $discountedPrice = $promo->type === 'percent'
+                ? (int) round($price * (1 - $value / 100))
+                : (int) max(0, $price - $value);
+
+            $label = $promo->type === 'percent'
+                ? number_format($value, 0) . '% OFF'
+                : 'Rp ' . number_format($value, 0, ',', '.') . ' OFF';
+
+            $promoData = [
+                'type'             => $promo->type,
+                'discount_value'   => $value,
+                'label'            => $label,
+                'discounted_price' => $discountedPrice,
+            ];
+        }
 
         return [
             'id'         => $product->id,
@@ -51,10 +103,11 @@ class MobileProductController extends Controller
             'ukuran'     => $product->masterProduct?->ukuran,
             'satuan'     => $product->masterProduct?->satuan?->singkatan,
             'category'   => $product->category?->name,
-            'image_url'  => $imagePath
+            'image_url'  => ($imagePath && file_exists(public_path('storage/' . $imagePath)))
                 ? asset('storage/' . $imagePath)
                 : null,
             'expires_at' => $product->expires_at?->format('d/m/Y'),
+            'promo'      => $promoData,
         ];
     }
 }

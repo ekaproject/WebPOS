@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\AppSetting;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -65,5 +66,10 @@ class AppServiceProvider extends ServiceProvider
         }
 
         View::share('publicSettings', $settings);
+
+        // Helper: storage_img('path/to/img.jpg') → URL ke file, atau fallback ke no-image.svg
+        Blade::directive('storageImg', function ($expression) {
+            return "<?php echo (function(\$p){ return (\$p && file_exists(public_path('storage/'.\$p))) ? asset('storage/'.\$p) : asset('images/no-image.svg'); })($expression); ?>";
+        });
     }
 }
