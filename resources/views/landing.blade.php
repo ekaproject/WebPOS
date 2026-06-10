@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+a <!DOCTYPE html>
 <html class="light" lang="id">
 <head>
     <meta charset="utf-8"/>
@@ -25,27 +25,32 @@
 <main class="pt-6 md:pt-8">
     <!-- Hero Section -->
     <section class="px-5 md:px-10 pt-4 md:pt-6 pb-10 md:pb-12">
-        @php
-            $heroPromoSlides = [];
+            @php
+            // Prefer hero images from featured products (product images) first,
+            // fall back to promo images only if no product images are available.
+            $heroProductSlides = [];
+            $heroHeader = 'PRODUK KAMI';
 
-            foreach (($promos ?? collect()) as $promo) {
-                if (!empty($promo->image)) {
-                    $heroPromoSlides[] = [
-                        'image' => storage_img($promo->image),
-                        'title' => $promo->title,
-                        'badge' => $promo->discount_label,
+            foreach (($landingProducts ?? collect())->take(4) as $product) {
+                if ($product && !empty($product->image_url)) {
+                    $heroProductSlides[] = [
+                        'image' => $product->image_url,
+                        'title' => $product->name,
+                        'badge' => $product->category?->name ?? 'Produk Pilihan',
+                        'url' => $product->category ? route('categories.show', $product->category->slug) : route('categories.index'),
                     ];
                 }
             }
 
-            if (count($heroPromoSlides) === 0) {
+            if (count($heroProductSlides) === 0) {
                 foreach (($featuredProducts ?? collect()) as $promoProduct) {
                     $product = $promoProduct->product;
                     if ($product && !empty($product->image_url)) {
-                        $heroPromoSlides[] = [
+                        $heroProductSlides[] = [
                             'image' => $product->image_url,
                             'title' => $product->name,
-                            'badge' => 'Promo Aktif',
+                            'badge' => $product->category?->name ?? 'Produk Unggulan',
+                            'url' => $product->category ? route('categories.show', $product->category->slug) : route('categories.index'),
                         ];
                     }
                 }
@@ -58,7 +63,7 @@
             <div class="absolute top-24 right-14 w-44 h-44 rounded-full bg-white/10 blur-2xl hero-floating-orb"></div>
             <div class="absolute bottom-14 left-10 w-56 h-56 rounded-full bg-cyan-200/20 blur-3xl hero-floating-orb"></div>
 
-            <div class="relative z-10 grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10 items-center p-6 md:p-10 lg:p-14">
+            <div class="relative z-10 grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] gap-10 lg:gap-12 items-center p-6 md:p-12 lg:p-16">
                 <div class="max-w-2xl fade-rise">
                     <span class="inline-flex px-4 py-1.5 rounded-full bg-white/18 text-white font-headline text-xs font-bold mb-6 tracking-[0.2em] uppercase border border-white/30 backdrop-blur-sm shadow-sm">
                         {{ $publicSettings['landing_solusi_text'] ?? 'Solusi Belanja Terlengkap' }}
@@ -69,7 +74,7 @@
                     <p class="text-base md:text-lg text-white/90 mb-8 max-w-xl font-medium leading-relaxed">
                         {{ $publicSettings['landing_hero_description'] ?? 'Mulai dari bahan makanan segar, perlengkapan rumah tangga, hingga bayar tagihan. Belanja cerdas, hidup lebih berkualitas.' }}
                     </p>
-                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 md:gap-6">
                         <a href="{{ route('categories.index') }}" class="landing-btn">
                             Jelajahi Kategori Sekarang
                             <span class="material-symbols-outlined">trending_flat</span>
@@ -79,35 +84,41 @@
                         </a>
                     </div>
 
-                    <div class="mt-7 grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg">
-                        <a href="{{ route('categories.index') }}" class="group rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-4 py-3 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg">
+                    <div class="mt-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch max-w-full">
+                        <a href="{{ route('categories.index') }}" class="group h-full min-h-[96px] rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-5 py-4 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg lg:col-span-1">
                             <p class="text-[11px] uppercase tracking-wider text-white/70 font-semibold group-hover:text-white/90 transition-colors">Kategori Aktif</p>
                             <p class="text-2xl font-black text-white mt-0.5">{{ $activeCategoriesCount }}</p>
                         </a>
-                        <a href="{{ route('promos.index') }}" class="group rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-4 py-3 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg">
+                        <a href="{{ route('promos.index') }}" class="group h-full min-h-[96px] rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-5 py-4 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg lg:col-span-1">
                             <p class="text-[11px] uppercase tracking-wider text-white/70 font-semibold group-hover:text-white/90 transition-colors">Promo Aktif</p>
                             <p class="text-2xl font-black text-white mt-0.5">{{ $activePromoCount }}</p>
                         </a>
-                        <a href="#location-info" class="group rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-4 py-3 col-span-2 sm:col-span-1 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg">
+                        <a href="#location-info" class="group h-full min-h-[96px] rounded-2xl border border-white/25 bg-white/12 backdrop-blur-sm px-5 py-4 col-span-1 sm:col-span-2 lg:col-span-2 transition-all hover:border-white/50 hover:bg-white/18 hover:shadow-lg flex flex-col justify-between">
                             <p class="text-[11px] uppercase tracking-wider text-white/70 font-semibold group-hover:text-white/90 transition-colors">Lokasi</p>
-                            <p class="text-sm font-bold text-white mt-1 line-clamp-1">{{ $publicSettings['store_address'] }}</p>
+                            <p class="text-sm font-bold text-white mt-1 leading-snug break-words line-clamp-2">{{ $publicSettings['store_address'] }}</p>
                         </a>
                     </div>
                 </div>
 
                 <div class="w-full xl:max-w-[520px] xl:ml-auto fade-rise" style="animation-delay: 120ms;">
-                    <div class="promo-glass-card border-white/30 bg-white/12 p-4 md:p-5">
-                        <div class="flex items-center justify-between mb-3 px-1">
-                            <p class="text-xs uppercase tracking-[0.2em] text-white/80 font-bold">Promo {{ $publicSettings['store_name'] ?? 'ILS Mart' }}</p>
-                            <a href="{{ route('promos.index') }}" class="text-[11px] font-bold text-white/90 hover:text-white transition-colors underline-offset-4 hover:underline">Lihat Semua</a>
+                    <div class="promo-glass-card border-white/30 bg-white/12 p-5 md:p-6">
+                        <div class="flex items-center justify-between gap-3 mb-3 px-1">
+                            <p class="text-xs uppercase tracking-[0.2em] text-white/80 font-bold">{{ $heroHeader }}</p>
+                            <a href="{{ route('categories.index') }}" class="text-[11px] font-bold text-white/90 hover:text-white transition-colors underline-offset-4 hover:underline">Lihat Semua Produk</a>
                         </div>
 
                         <div id="hero-promo-gallery" class="relative">
                             <div class="rounded-2xl overflow-hidden border border-white/25 bg-white/8 h-[340px] sm:h-[380px] md:h-[420px]">
                                 <div id="hero-promo-gallery-track" class="flex h-full transition-transform duration-700 ease-out transition-opacity duration-300 opacity-100">
-                                    @forelse($heroPromoSlides as $index => $slide)
+                                    @forelse($heroProductSlides as $index => $slide)
                                         <div class="w-full h-full flex-none relative">
-                                            <img src="{{ $slide['image'] }}" alt="Promo {{ $index + 1 }}" class="w-full h-full object-cover"/>
+                                            @if(!empty($slide['url']))
+                                                <a href="{{ $slide['url'] }}" class="block w-full h-full">
+                                                    <img src="{{ $slide['image'] }}" alt="Slide {{ $index + 1 }}" class="w-full h-full object-cover"/>
+                                                </a>
+                                            @else
+                                                <img src="{{ $slide['image'] }}" alt="Slide {{ $index + 1 }}" class="w-full h-full object-cover"/>
+                                            @endif
                                             <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent"></div>
                                             <div class="absolute left-4 right-4 bottom-4">
                                                 <span class="inline-flex px-3 py-1 rounded-full bg-[#22C55E] text-white text-[11px] font-bold mb-2">{{ $slide['badge'] }}</span>
@@ -116,27 +127,27 @@
                                         </div>
                                     @empty
                                         <div class="w-full h-full flex-none">
-                                            <div class="w-full h-full flex flex-col items-center justify-center text-white/85 gap-2">
-                                                <span class="material-symbols-outlined text-5xl">local_offer</span>
-                                                <p class="text-sm font-semibold">Belum ada foto promo</p>
-                                                <p class="text-xs text-white/70">Tambahkan foto promo dari admin untuk tampil di sini.</p>
+                                            <div class="w-full h-full flex flex-col items-center justify-center text-white/85 gap-2 text-center px-6">
+                                                <span class="material-symbols-outlined text-5xl">inventory_2</span>
+                                                <p class="text-sm font-semibold">Belum ada produk tersedia</p>
+                                                <p class="text-xs text-white/70">Produk akan ditampilkan di sini setelah ditambahkan oleh admin.</p>
                                             </div>
                                         </div>
                                     @endforelse
                                 </div>
                             </div>
 
-                            @if(count($heroPromoSlides) > 1)
-                                <button type="button" id="hero-promo-gallery-prev" aria-label="Promo Sebelumnya" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white inline-flex items-center justify-center hover:bg-black/60 transition-colors backdrop-blur-sm">
+                            @if(count($heroProductSlides) > 1)
+                                <button type="button" id="hero-promo-gallery-prev" aria-label="Sebelumnya" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white inline-flex items-center justify-center hover:bg-black/60 transition-colors backdrop-blur-sm">
                                     <span class="material-symbols-outlined text-[18px]">chevron_left</span>
                                 </button>
-                                <button type="button" id="hero-promo-gallery-next" aria-label="Promo Selanjutnya" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white inline-flex items-center justify-center hover:bg-black/60 transition-colors backdrop-blur-sm">
+                                <button type="button" id="hero-promo-gallery-next" aria-label="Selanjutnya" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white inline-flex items-center justify-center hover:bg-black/60 transition-colors backdrop-blur-sm">
                                     <span class="material-symbols-outlined text-[18px]">chevron_right</span>
                                 </button>
 
                                 <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                                    @foreach($heroPromoSlides as $index => $slide)
-                                        <button type="button" data-slide-to="{{ $index }}" class="w-2.5 h-2.5 rounded-full bg-white/55 hover:bg-white transition-colors" aria-label="Ke promo {{ $index + 1 }}"></button>
+                                    @foreach($heroProductSlides as $index => $slide)
+                                        <button type="button" data-slide-to="{{ $index }}" class="w-2.5 h-2.5 rounded-full bg-white/55 hover:bg-white transition-colors" aria-label="Ke produk {{ $index + 1 }}"></button>
                                     @endforeach
                                 </div>
                             @endif
@@ -240,13 +251,13 @@
                         @php
                             $product = $promoProduct->product;
                             // calculate promo price if promo info is available on the promoProduct
-                            $hargaNormal = $product->price ?? 0;
+                            $hargaNormal = $product?->price ?? 0;
                             $hargaDiskon = $hargaNormal;
-                            if (!empty($promoProduct->discount_value)) {
+                            if (!empty($promoProduct->discount_value) && $product) {
                                 $nilaiPotongan = $promoProduct->type === 'percent'
                                     ? ($hargaNormal * ((float) $promoProduct->discount_value / 100))
                                     : (float) $promoProduct->discount_value;
-                                $hargaDiskon = max($product->purchase_price ?? 0, $hargaNormal - $nilaiPotongan);
+                                $hargaDiskon = max($product?->purchase_price ?? 0, $hargaNormal - $nilaiPotongan);
                             }
                         @endphp
                         @continue(!$product)

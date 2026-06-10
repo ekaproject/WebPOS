@@ -28,6 +28,7 @@ return array(
     'App\\Http\\Controllers\\AuthController' => $baseDir . '/app/Http/Controllers/AuthController.php',
     'App\\Http\\Controllers\\CategoryController' => $baseDir . '/app/Http/Controllers/CategoryController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
+    'App\\Http\\Controllers\\DigitalController' => $baseDir . '/app/Http/Controllers/DigitalController.php',
     'App\\Http\\Controllers\\DistributorReturnController' => $baseDir . '/app/Http/Controllers/DistributorReturnController.php',
     'App\\Http\\Controllers\\ProductController' => $baseDir . '/app/Http/Controllers/ProductController.php',
     'App\\Http\\Controllers\\PromoController' => $baseDir . '/app/Http/Controllers/PromoController.php',

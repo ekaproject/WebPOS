@@ -52,7 +52,7 @@
 
            <div class="flex items-center w-full rounded-lg border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-4 focus-within:ring-red-100 focus-within:border-[#dc2626]">
 
-    <span class="material-symbols-outlined text-slate-400 mr-2">
+    <span class="material-symbols-outlined text-slate-400 mr-2 shrink-0">
         mail
     </span>
 
@@ -62,14 +62,14 @@
         type="email"
         value="{{ old('email') }}"
         placeholder="contoh@domain.com"
-        class="flex-1 py-3 text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
+        class="min-w-0 flex-1 py-3 text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
         required
     />
 </div>
 
-           <div class="flex items-center w-full rounded-lg border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-4 focus-within:ring-red-100 focus-within:border-[#dc2626]">
+           <div class="flex items-stretch w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm focus-within:ring-4 focus-within:ring-red-100 focus-within:border-[#dc2626]">
 
-    <span class="material-symbols-outlined text-slate-400 mr-2">
+    <span class="material-symbols-outlined flex items-center px-4 text-slate-400 shrink-0">
         key
     </span>
 
@@ -78,11 +78,11 @@
         name="password" 
         type="password"
         placeholder="Masukkan password"
-        class="flex-1 py-3 text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
+        class="min-w-0 flex-1 py-3 pr-3 text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
         required
     />
 
-    <button type="button" onclick="togglePassword()" class="ml-2 text-slate-400 hover:text-slate-700">
+    <button type="button" onclick="togglePassword()" aria-label="Tampilkan atau sembunyikan password" class="flex w-12 items-center justify-center border-l border-slate-200 text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-700 cursor-pointer shrink-0">
         <span class="material-symbols-outlined" id="eyeIcon">visibility</span>
     </button>
 
